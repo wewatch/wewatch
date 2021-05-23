@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-yarn lint-staged
+lerna run --no-bail --concurrency 1 --stream pre-commit --since HEAD --exclude-dependents

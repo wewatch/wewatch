@@ -5,9 +5,10 @@
     "packages/*"
   ],
   "scripts": {
-    "start": "lerna run start --parallel --stream",
-    "build": "lerna run build",
-    "lint": "lerna run lint --parallel --stream",
+    "start": "lerna run start --parallel",
+    "build": "lerna run build --parallel",
+    "lint": "lerna run lint --parallel",
+    "format": "lerna run format --parallel",
     "publish": "lerna publish",
     "bootstrap": "lerna bootstrap --hoist",
     "lerna:add": "lerna add",
@@ -20,8 +21,5 @@
     "lerna": "^4.0.0",
     "lint-staged": "^11.0.0",
     "prettier": "^2.2.1"
-  },
-  "lint-staged": {
-    "*.{css,js,jsx,ts,tsx,yaml,yml,md}": "prettier --write"
   }
 }
