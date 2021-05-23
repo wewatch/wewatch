@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "author": "Duc-Minh Phan <alephvn@gmail.com>",
   "license": "AGPL-3.0-only",
-  "private": false,
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
