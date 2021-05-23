@@ -5,7 +5,7 @@ import { nanoid } from "nanoid";
 @Schema({
   timestamps: true,
 })
-export class User {
+export class Room {
   id!: string;
 
   @Prop({
@@ -14,17 +14,12 @@ export class User {
   _id!: string;
 
   @Prop({
-    required: true,
-    unique: true,
-  })
-  email!: string;
-
-  @Prop({
+    type: [String],
     required: true,
   })
-  hashedPassword!: string;
+  urls!: string[];
 }
 
-export type UserDocument = User & Document;
+export type RoomDocument = Room & Document;
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const RoomSchema = SchemaFactory.createForClass(Room);
