@@ -8,8 +8,8 @@ import {
 } from "@nestjs/common";
 import { MongoError } from "mongodb";
 
+import { AccessTokenDTO, CreateUserDTO, LoginDTO } from "@wewatch/schemas";
 import { AuthService, UseAuthGuard } from "modules/auth";
-import { AccessTokenDTO, CreateUserDTO, LoginDTO } from "schemas/user";
 import { InvalidCredentials } from "utils/exceptions";
 
 import { UserService } from "./service";

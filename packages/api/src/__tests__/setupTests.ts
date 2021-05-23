@@ -5,14 +5,11 @@ import {
 import { Test } from "@nestjs/testing";
 import * as dotenv from "dotenv";
 import { MongoMemoryServer } from "mongodb-memory-server";
-import path from "path";
 
 import { AppModule } from "../app.module";
 import { ValidationPipe } from "../pipes/validation";
 
-dotenv.config({
-  path: path.join(__dirname, "..", "..", ".env.test"),
-});
+dotenv.config({ path: ".env.test" });
 
 export let app: NestFastifyApplication;
 

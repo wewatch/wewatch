@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { ValidationError } from "yup";
 
-import { TypeWithSchema } from "schemas/utils";
+import { TypeWithSchema } from "@wewatch/schemas";
 
 interface _ArgumentMetadata extends ArgumentMetadata {
   readonly metatype?: TypeWithSchema | undefined;

@@ -12,6 +12,9 @@ const config: Config.InitialOptions = {
   testEnvironment: "node",
   moduleDirectories: ["node_modules", "src"],
   setupFilesAfterEnv: ["./src/__tests__/setupTests.ts"],
+  moduleNameMapper: {
+    "@wewatch/(.+)": "<rootDir>../$1/src",
+  },
 };
 
 export default config;
