@@ -1,0 +1,52 @@
+root: true
+env:
+  browser: true
+parser: "@typescript-eslint/parser"
+parserOptions:
+  project: "./tsconfig.json"
+plugins:
+  - "@typescript-eslint"
+  - "jsx-a11y"
+  - "react-hooks"
+  - "simple-import-sort"
+extends:
+  - "eslint:recommended"
+  - "react-app"
+  - "react-app/jest"
+  - "airbnb-typescript"
+  - "plugin:import/errors"
+  - "plugin:import/warnings"
+  - "plugin:@typescript-eslint/eslint-recommended"
+  - "plugin:@typescript-eslint/recommended"
+  - "plugin:react/recommended"
+  - "plugin:react-hooks/recommended"
+  - "prettier"
+rules:
+  simple-import-sort/imports:
+    - "error"
+    - groups:
+        - ["^\\u0000"]
+        - ["^@?\\w"]
+        # Since we are using absolute imports, the directories inside src
+        # must be specified here until there is a solution
+        # https://github.com/lydell/eslint-plugin-simple-import-sort/issues/31
+        - [
+            "^(actions|assets|components|contexts|enums|hooks|reducers|store|utils)(/.*|$)",
+          ]
+        - ["^\\."]
+  "@typescript-eslint/no-unused-vars":
+    - "warn"
+    - argsIgnorePattern: "^_"
+settings:
+  react:
+    version: "detect"
+  import/parsers:
+    "@typescript-eslint/parser":
+      - ".ts"
+      - ".tsx"
+  import/resolver:
+    node:
+      extensions: [".js", ".jsx", ".ts", ".tsx"]
+      paths:
+        - "node_modules"
+        - "src"
