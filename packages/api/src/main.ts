@@ -3,6 +3,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from "@nestjs/platform-fastify";
+import fastifyHelmet from "fastify-helmet";
 import { Logger } from "nestjs-pino";
 
 import { ConfigService } from "modules/config";
@@ -15,6 +16,9 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
+
+  app.enableCors();
+  await app.register(fastifyHelmet);
 
   const logger = app.get(Logger);
   app.useLogger(logger);

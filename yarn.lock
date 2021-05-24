@@ -4883,6 +4883,7 @@ __metadata:
     bcrypt: ^5.0.1
     dotenv: ^9.0.2
     faker: ^5.5.3
+    fastify-helmet: ^5.3.1
     mongodb-memory-server: ^6.9.6
     mongoose: ^5.12.9
     nanoid: ^3.1.23
@@ -9623,6 +9624,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fastify-helmet@npm:^5.3.1":
+  version: 5.3.1
+  resolution: "fastify-helmet@npm:5.3.1"
+  dependencies:
+    fastify-plugin: ^3.0.0
+    helmet: ^4.0.0
+  checksum: 574c06766e39f66427afc54a993b6b11b0f8ad8d57b49836a68791e1f5bc90a4e3f9947539e482d6fa255089f662c54bf58d3875b5577da7c75059bed228f1f5
+  languageName: node
+  linkType: hard
+
 "fastify-plugin@npm:^2.3.2":
   version: 2.3.4
   resolution: "fastify-plugin@npm:2.3.4"
@@ -10691,6 +10702,13 @@ fsevents@^1.2.7:
   bin:
     he: bin/he
   checksum: 212122003c20c8c17ac0c83a419b4c8e835411ff6ab9195d053ea6e4a0597cc005b5b8eabcbd57b0b0c0fe676f0049e09315845fff4e051198845491cbba260e
+  languageName: node
+  linkType: hard
+
+"helmet@npm:^4.0.0":
+  version: 4.6.0
+  resolution: "helmet@npm:4.6.0"
+  checksum: 5018633703ac6933b35c581d878f279b3be642c7ce68dcccbaf31be059aefb723a08ed86831df657b82fd2994b4163404b51c76a0dc3ea9cdd67794bf1b0466d
   languageName: node
   linkType: hard
 
