@@ -5,7 +5,7 @@ type Method = "get" | "post" | "put" | "delete";
 type ParamsType = Record<string, string>;
 
 class RequestUtil {
-  static request = async <T extends Json>(
+  static request = async <T>(
     urlOrEndpoint: string,
     method: Method,
     body?: Json,
@@ -51,27 +51,23 @@ class RequestUtil {
     return Promise.reject(Error(data?.errorMessage));
   };
 
-  static get = <T extends Json = Json>(
-    urlOrEndpoint: string,
-    params?: ParamsType,
-  ): Promise<T> => RequestUtil.request(urlOrEndpoint, "get", null, params);
+  static get = <T>(urlOrEndpoint: string, params?: ParamsType): Promise<T> =>
+    RequestUtil.request(urlOrEndpoint, "get", null, params);
 
-  static post = <T extends Json = Json>(
+  static post = <T>(
     urlOrEndpoint: string,
     body?: Json,
     params?: ParamsType,
   ): Promise<T> => RequestUtil.request<T>(urlOrEndpoint, "post", body, params);
 
-  static put = <T extends Json = Json>(
+  static put = <T>(
     urlOrEndpoint: string,
     body: Json,
     params?: ParamsType,
   ): Promise<T> => RequestUtil.request<T>(urlOrEndpoint, "put", body, params);
 
-  static delete = <T extends Json = Json>(
-    urlOrEndpoint: string,
-    params?: ParamsType,
-  ): Promise<T> => RequestUtil.request(urlOrEndpoint, "delete", null, params);
+  static delete = <T>(urlOrEndpoint: string, params?: ParamsType): Promise<T> =>
+    RequestUtil.request(urlOrEndpoint, "delete", null, params);
 }
 
 export default RequestUtil;

@@ -9,6 +9,7 @@ plugins:
   - "jsx-a11y"
   - "react-hooks"
   - "simple-import-sort"
+  - "import"
 extends:
   - "eslint:recommended"
   - "react-app"
@@ -31,7 +32,7 @@ rules:
         # must be specified here until there is a solution
         # https://github.com/lydell/eslint-plugin-simple-import-sort/issues/31
         - [
-            "^(actions|assets|components|contexts|enums|hooks|reducers|store|utils)(/.*|$)",
+            "^(@wewatch|actions|assets|components|contexts|enums|hooks|reducers|store|utils)(/.*|$)",
           ]
         - ["^\\."]
   "@typescript-eslint/no-unused-vars":
@@ -45,6 +46,7 @@ settings:
       - ".ts"
       - ".tsx"
   import/resolver:
+    typescript: {}
     node:
       extensions: [".js", ".jsx", ".ts", ".tsx"]
       paths:

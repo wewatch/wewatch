@@ -1,7 +1,7 @@
 import { createReducer } from "@reduxjs/toolkit";
 
+import type { Room } from "@wewatch/schemas";
 import { createRoom, getRoom } from "actions/room";
-import { Room } from "utils/types";
 
 type RoomState = Room | null;
 
