@@ -1,14 +1,11 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
-import { MongoMemoryServer } from "mongodb-memory-server";
 import { LoggerModule } from "nestjs-pino";
 
 import { ConfigModule, ConfigService } from "modules/config";
 import { RoomModule } from "modules/room";
 import { UserModule } from "modules/user";
 import mongooseId from "utils/mongooseId";
-
-export const mongod = new MongoMemoryServer();
 
 @Module({
   imports: [
@@ -22,16 +19,6 @@ export const mongod = new MongoMemoryServer();
       }),
     }),
     MongooseModule.forRootAsync({
-      // useFactory: async () => {
-      //   const uri = await mongod.getUri();
-      //   return {
-      //     uri,
-      //     useCreateIndex: true,
-      //     useNewUrlParser: true,
-      //     useFindAndModify: false,
-      //     useUnifiedTopology: true,
-      //   };
-      // },
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         uri: configService.cfg.DB_URI,
