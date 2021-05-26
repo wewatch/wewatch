@@ -1,3 +1,4 @@
+import { Container } from "@material-ui/core";
 import { Router } from "@reach/router";
 import React from "react";
 
@@ -7,11 +8,13 @@ import Room from "./Room";
 
 function App(): JSX.Element {
   return (
-    <Router>
-      <Home path="/" />
-      <Room path="/rooms/:roomId" />
-      <NotFound default />
-    </Router>
+    <Container>
+      <Router>
+        <Home path="/" />
+        <Room path="/rooms/:roomId" />
+        <NotFound default />
+      </Router>
+    </Container>
   );
 }
 

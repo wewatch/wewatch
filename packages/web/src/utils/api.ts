@@ -48,7 +48,7 @@ class RequestUtil {
       return data as T;
     }
 
-    return Promise.reject(Error(data?.errorMessage));
+    return Promise.reject(Error(data?.message));
   };
 
   static get = <T>(urlOrEndpoint: string, params?: ParamsType): Promise<T> =>

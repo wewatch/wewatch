@@ -36,3 +36,21 @@ export const convert = (obj: Json, fn: (s: string) => string): Json => {
 
 export const snakeToCamel = (o: Json): Json => convert(o, toCamel);
 export const camelToSnake = (o: Json): Json => convert(o, toSnake);
+
+export const secondsToHHMMSS = (seconds: number): string => {
+  const hh = Math.floor(seconds / 3600)
+    .toString()
+    .padStart(2, "0");
+  const mm = Math.floor((seconds % 3600) / 60)
+    .toString()
+    .padStart(2, "0");
+  const ss = Math.floor(seconds % 60)
+    .toString()
+    .padStart(2, "0");
+
+  if (hh === "00") {
+    return `${mm}:${ss}`;
+  }
+
+  return `${hh}:${mm}:${ss}`;
+};

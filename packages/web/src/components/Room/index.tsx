@@ -1,4 +1,4 @@
-import { Container } from "@material-ui/core";
+import { Container, Grid } from "@material-ui/core";
 import { navigate, RouteComponentProps } from "@reach/router";
 import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect } from "react";
@@ -6,6 +6,9 @@ import React, { useEffect } from "react";
 import { setNotification } from "actions/notification";
 import { getRoom } from "actions/room";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
+
+import Player from "./Player";
+import Playlist from "./Playlist";
 
 interface RoomProps extends RouteComponentProps {
   roomId?: string;
@@ -37,7 +40,16 @@ const Room = ({ roomId }: RoomProps): JSX.Element => {
     });
   }, [dispatch, room, roomId]);
 
-  return <Container>{`Room #${roomId}`}</Container>;
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={9}>
+        <Player url={room?.urls?.[0] ?? null} />
+      </Grid>
+      <Grid item xs={3}>
+        <Playlist urls={room?.urls ?? []} />
+      </Grid>
+    </Grid>
+  );
 };
 
 Room.defaultProps = {
