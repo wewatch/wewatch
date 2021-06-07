@@ -1,4 +1,4 @@
-import { Container } from "@material-ui/core";
+import { ChakraProvider, Container } from "@chakra-ui/react";
 import { Router } from "@reach/router";
 import React from "react";
 
@@ -8,13 +8,18 @@ import Room from "./Room";
 
 function App(): JSX.Element {
   return (
-    <Container>
-      <Router>
-        <Home path="/" />
-        <Room path="/rooms/:roomId" />
-        <NotFound default />
-      </Router>
-    </Container>
+    <ChakraProvider>
+      <Container
+        maxW={["container.sm", "container.md", "container.lg", "container.xl"]}
+        h="100vh"
+      >
+        <Router>
+          <Home path="/" />
+          <Room path="/rooms/:roomId" />
+          <NotFound default />
+        </Router>
+      </Container>
+    </ChakraProvider>
   );
 }
 

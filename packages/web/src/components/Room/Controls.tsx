@@ -1,11 +1,11 @@
-import { Box, Button, LinearProgress, Typography } from "@material-ui/core";
-import PauseIcon from "@material-ui/icons/Pause";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import { HStack, Icon, IconButton, Text } from "@chakra-ui/react";
 import React from "react";
+import { FaPause, FaPlay } from "react-icons/fa";
 
+import { Progress } from "components/common/ProgressBar";
 import { secondsToHHMMSS } from "utils/misc";
 
-export interface Progress {
+export interface ProgressInfo {
   played: number;
   loaded: number;
   playedSeconds: number;
@@ -14,7 +14,7 @@ export interface Progress {
 interface ControlsProps {
   playing: boolean;
   handleTogglePlaying: () => void;
-  progress: Progress;
+  progress: ProgressInfo;
   duration: number;
 }
 
@@ -28,21 +28,18 @@ const Controls = ({
 
   return (
     <div>
-      <LinearProgress
-        variant="buffer"
-        value={played * 100}
-        valueBuffer={loaded * 100}
-      />
-      <Box display="flex" alignItems="center">
-        <Button onClick={handleTogglePlaying}>
-          {playing ? <PauseIcon /> : <PlayArrowIcon />}
-        </Button>
-        <Box p={0.5}>
-          <Typography component="span">{`${secondsToHHMMSS(
-            playedSeconds,
-          )} / ${secondsToHHMMSS(duration)}`}</Typography>
-        </Box>
-      </Box>
+      <Progress size="xs" value={played * 100} buffer={loaded * 100} />
+      <HStack align="center">
+        <IconButton
+          onClick={handleTogglePlaying}
+          variant="ghost"
+          icon={playing ? <Icon as={FaPause} /> : <Icon as={FaPlay} />}
+          aria-label={playing ? "pause" : "play"}
+        />
+        <Text as="span">
+          {`${secondsToHHMMSS(playedSeconds)} / ${secondsToHHMMSS(duration)}`}
+        </Text>
+      </HStack>
     </div>
   );
 };

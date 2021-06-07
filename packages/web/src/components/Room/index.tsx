@@ -1,10 +1,10 @@
-import { Container, Grid } from "@material-ui/core";
+import { Box, Grid, GridItem } from "@chakra-ui/react";
 import { navigate, RouteComponentProps } from "@reach/router";
 import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect } from "react";
 
-import { setNotification } from "actions/notification";
 import { getRoom } from "actions/room";
+import useNotify from "hooks/notification";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
 
 import Player from "./Player";
@@ -15,6 +15,7 @@ interface RoomProps extends RouteComponentProps {
 }
 
 const Room = ({ roomId }: RoomProps): JSX.Element => {
+  const notify = useNotify();
   const dispatch = useAppDispatch();
   const room = useAppSelector((state) => state.room);
 
@@ -31,24 +32,24 @@ const Room = ({ roomId }: RoomProps): JSX.Element => {
     };
 
     getRoomInfo().catch((e) => {
-      dispatch(
-        setNotification({
-          severity: "error",
-          message: e.message ?? `Cannot get Room "${roomId}"`,
-        }),
-      );
+      notify({
+        status: "error",
+        title: e.message ?? `Cannot get Room "${roomId}"`,
+      });
     });
-  }, [dispatch, room, roomId]);
+  }, [dispatch, room, roomId, notify]);
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={9}>
-        <Player url={room?.urls?.[0] ?? null} />
+    <Box>
+      <Grid templateColumns="2.5fr  1fr" gap={2}>
+        <GridItem>
+          <Player url={room?.urls?.[0] ?? null} />
+        </GridItem>
+        <GridItem>
+          <Playlist urls={room?.urls ?? []} />
+        </GridItem>
       </Grid>
-      <Grid item xs={3}>
-        <Playlist urls={room?.urls ?? []} />
-      </Grid>
-    </Grid>
+    </Box>
   );
 };
 

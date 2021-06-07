@@ -1,39 +1,24 @@
-import { makeStyles } from "@material-ui/core";
+import { AspectRatio } from "@chakra-ui/react";
 import React, { useState } from "react";
 import ReactPlayer from "react-player";
 
-import type { Progress } from "./Controls";
+import type { ProgressInfo } from "./Controls";
 import Controls from "./Controls";
-
-const useStyles = makeStyles(() => ({
-  wrapper: {
-    position: "relative",
-    height: 0,
-    paddingTop: "56.25%", // 16:9
-  },
-  player: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-  },
-}));
 
 interface PlayerProps {
   url: string | null;
 }
 
 const Player = ({ url }: PlayerProps): JSX.Element => {
-  const classes = useStyles();
-
   const [playing, setPlaying] = useState<boolean>(false);
   const handleTogglePlaying = () => setPlaying((p) => !p);
 
-  const [progress, setProgress] = useState<Progress>({
+  const [progress, setProgress] = useState<ProgressInfo>({
     played: 0,
     loaded: 0,
     playedSeconds: 0,
   });
-  const handleProgressChange = (p: Progress) => setProgress(p);
+  const handleProgressChange = (p: ProgressInfo) => setProgress(p);
 
   const [duration, setDuration] = useState<number>(0);
   const handleDurationChange = (d: number) => setDuration(d);
@@ -43,25 +28,26 @@ const Player = ({ url }: PlayerProps): JSX.Element => {
   }
 
   return (
-    <div className={classes.wrapper}>
-      <ReactPlayer
-        className={classes.player}
-        playing={playing}
-        url={url}
-        width="100%"
-        height="100%"
-        onProgress={handleProgressChange}
-        onDuration={handleDurationChange}
-        onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
-      />
+    <>
+      <AspectRatio ratio={16 / 9}>
+        <ReactPlayer
+          playing={playing}
+          url={url}
+          width="100%"
+          height="100%"
+          onProgress={handleProgressChange}
+          onDuration={handleDurationChange}
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+        />
+      </AspectRatio>
       <Controls
         playing={playing}
         handleTogglePlaying={handleTogglePlaying}
         progress={progress}
         duration={duration}
       />
-    </div>
+    </>
   );
 };
 

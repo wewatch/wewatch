@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 
 import App from "components/App";
-import Notification from "components/Notification";
 import store from "store";
 
 import reportWebVitals from "./reportWebVitals";
@@ -12,7 +11,6 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <App />
-      <Notification />
     </Provider>
   </React.StrictMode>,
   document.getElementById("root"),

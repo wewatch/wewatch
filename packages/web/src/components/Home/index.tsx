@@ -1,36 +1,36 @@
-import { Button, Container } from "@material-ui/core";
+import { Button, Center } from "@chakra-ui/react";
 import { navigate, RouteComponentProps } from "@reach/router";
 import { unwrapResult } from "@reduxjs/toolkit";
 import React from "react";
 
-import { setNotification } from "actions/notification";
 import { createRoom } from "actions/room";
+import useNotify from "hooks/notification";
 import { useAppDispatch } from "hooks/redux";
 
 const Home = (_: RouteComponentProps): JSX.Element => {
+  const notify = useNotify();
   const dispatch = useAppDispatch();
 
-  const handleClick = async () => {
+  const handleCreateRoom = async () => {
     try {
       const { id } = unwrapResult(await dispatch(createRoom()));
 
       await navigate(`/rooms/${id}`);
     } catch (e) {
-      dispatch(
-        setNotification({
-          severity: "error",
-          message: e.message ?? "Add category failed",
-        }),
-      );
+      notify({
+        status: "error",
+        title: "Cannot create Room",
+        description: e?.message ?? undefined,
+      });
     }
   };
 
   return (
-    <Container>
-      <Button color="primary" variant="contained" onClick={handleClick}>
+    <Center minH="100vh">
+      <Button variant="solid" colorScheme="blue" onClick={handleCreateRoom}>
         Create a new room
       </Button>
-    </Container>
+    </Center>
   );
 };
 

@@ -4,6 +4,7 @@ export type PaginationParams = {
 };
 
 export type Notification = {
-  severity: "error" | "warning" | "info" | "success";
-  message: string;
+  status: "error" | "warning" | "info" | "success";
+  title: string;
+  description?: string;
 };
