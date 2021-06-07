@@ -4,6 +4,7 @@ import { LoggerModule } from "nestjs-pino";
 
 import { ConfigModule, ConfigService } from "modules/config";
 import { RoomModule } from "modules/room";
+import { SearchModule } from "modules/search";
 import { UserModule } from "modules/user";
 import mongooseId from "utils/mongooseId";
 
@@ -36,6 +37,7 @@ import mongooseId from "utils/mongooseId";
       }),
     }),
     RoomModule,
+    SearchModule,
     UserModule,
   ],
 })
