@@ -1,14 +1,18 @@
 import { VStack } from "@chakra-ui/react";
 import React from "react";
 
+import { PlaylistDTO } from "@wewatch/schemas";
+
 import PlaylistItem from "./PlaylistItem";
 
 interface PlaylistProps {
-  urls: string[];
+  playlist: PlaylistDTO;
 }
 
-const Playlist = ({ urls }: PlaylistProps): JSX.Element => {
-  const items = urls.map((url) => <PlaylistItem url={url} key={url} />);
+const Playlist = ({ playlist }: PlaylistProps): JSX.Element | null => {
+  const items = playlist.videos.map((video) => (
+    <PlaylistItem video={video} key={video.url} />
+  ));
   return <VStack>{items}</VStack>;
 };
 
