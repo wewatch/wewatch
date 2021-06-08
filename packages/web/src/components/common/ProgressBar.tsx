@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
-
 import { Flex } from "@chakra-ui/react";
 import {
   chakra,

@@ -2,7 +2,6 @@ import {
   AspectRatio,
   Box,
   HStack,
-  Icon,
   IconButton,
   Image,
   VStack,
@@ -23,25 +22,26 @@ const PlaylistItem = ({ video }: PlaylistItemProps): JSX.Element => (
     borderRadius="lg"
     overflow="hidden"
     paddingInlineEnd={1}
+    width="100%"
   >
     <HStack>
       <AspectRatio ratio={16 / 9} minW={24}>
         <Image src={video.thumbnailUrl} alt={video.title} />
       </AspectRatio>
-      <OverflowText fontSize="xs" noOfLines={3}>
+      <OverflowText fontSize="xs" noOfLines={3} flexGrow={1}>
         {video.title}
       </OverflowText>
       <VStack spacing={0}>
         <IconButton
           aria-label="hello"
-          icon={<Icon as={FaPlay} />}
+          icon={<FaPlay />}
           size="xs"
           variant="ghost"
           isRound
         />
         <IconButton
           aria-label="hello"
-          icon={<Icon as={FaTrashAlt} />}
+          icon={<FaTrashAlt />}
           size="xs"
           variant="ghost"
           isRound

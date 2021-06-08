@@ -26,7 +26,6 @@ const OverflowText = ({ children, ...rest }: TextProps): JSX.Element => {
 
   return (
     <Tooltip label={children} isDisabled={!showToolTip} hasArrow>
-      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <Text {...rest} ref={elementRef}>
         {children}
       </Text>

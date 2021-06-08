@@ -1,4 +1,4 @@
-import { HStack, Icon, IconButton, Text } from "@chakra-ui/react";
+import { HStack, IconButton, Text } from "@chakra-ui/react";
 import React from "react";
 import { FaPause, FaPlay } from "react-icons/fa";
 
@@ -33,7 +33,7 @@ const Controls = ({
         <IconButton
           onClick={handleTogglePlaying}
           variant="ghost"
-          icon={playing ? <Icon as={FaPause} /> : <Icon as={FaPlay} />}
+          icon={playing ? <FaPause /> : <FaPlay />}
           aria-label={playing ? "pause" : "play"}
         />
         <Text as="span">
