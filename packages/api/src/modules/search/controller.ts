@@ -1,6 +1,7 @@
 import { Body, Controller, HttpCode, Post } from "@nestjs/common";
 
-import { SearchVideoDTO, SearchVideoResultDTO } from "@wewatch/schemas";
+import { SearchDTO, SearchVideoResultDTO } from "@wewatch/schemas";
+import { TooManyRequests } from "utils/exceptions";
 
 import { SearchService } from "./service";
 
@@ -11,8 +12,16 @@ export class SearchController {
   @Post()
   @HttpCode(200)
   async search(
-    @Body() searchVideoDTO: SearchVideoDTO,
+    @Body() searchVideoDTO: SearchDTO,
   ): Promise<SearchVideoResultDTO> {
-    return this.searchService.search(searchVideoDTO);
+    try {
+      return await this.searchService.search(searchVideoDTO);
+    } catch (e) {
+      if (e?.errors?.[0]?.reason === "quotaExceeded") {
+        throw new TooManyRequests();
+      }
+
+      throw e;
+    }
   }
 }

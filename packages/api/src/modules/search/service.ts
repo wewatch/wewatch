@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { google, youtube_v3 } from "googleapis";
 
-import { SearchVideoDTO, SearchVideoResultDTO } from "@wewatch/schemas";
+import { SearchDTO, SearchVideoResultDTO } from "@wewatch/schemas";
 import { ConfigService } from "modules/config";
 
 @Injectable()
@@ -15,7 +15,7 @@ export class SearchService {
     });
   }
 
-  async search(searchVideoDTO: SearchVideoDTO): Promise<SearchVideoResultDTO> {
+  async search(searchVideoDTO: SearchDTO): Promise<SearchVideoResultDTO> {
     const result = await this.youtube.search.list({
       ...searchVideoDTO,
       maxResults: 10,

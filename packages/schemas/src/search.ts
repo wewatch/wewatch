@@ -3,12 +3,12 @@ import * as yup from "yup";
 import { withSchema } from "./utils";
 import { VideoDTO } from "./room";
 
-export const searchVideoSchema = yup.object({
-  q: yup.string().required(),
+export const searchSchema = yup.object({
+  q: yup.string().required("A query string is required").trim(),
 });
 
-@withSchema(searchVideoSchema)
-export class SearchVideoDTO {
+@withSchema(searchSchema)
+export class SearchDTO {
   q!: string;
 }
 
