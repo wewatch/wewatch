@@ -1,32 +1,27 @@
 import { Injectable } from "@nestjs/common";
-import { google, youtube_v3 } from "googleapis";
+import axios from "axios";
 
 import { SearchDTO, SearchVideoResultDTO } from "@wewatch/schemas";
 import { ConfigService } from "modules/config";
 
 @Injectable()
 export class SearchService {
-  private youtube: youtube_v3.Youtube;
-
-  constructor(private readonly configService: ConfigService) {
-    this.youtube = google.youtube({
-      version: "v3",
-      auth: this.configService.cfg.YOUTUBE_API_KEY,
-    });
-  }
+  constructor(private readonly configService: ConfigService) {}
 
   async search(searchVideoDTO: SearchDTO): Promise<SearchVideoResultDTO> {
-    const result = await this.youtube.search.list({
-      ...searchVideoDTO,
-      maxResults: 10,
-      part: ["snippet"],
-    });
-    const items = result.data.items ?? [];
+    const result = await axios.post<SearchVideoResultDTO>(
+      this.configService.cfg.SEARCH_SERVICE_URL,
+      {
+        ...searchVideoDTO,
+        type: "youtube",
+      },
+      {
+        headers: {
+          "X-API-KEY": this.configService.cfg.SEARCH_SERVICE_API_KEY,
+        },
+      },
+    );
 
-    return items.map((item) => ({
-      url: `https://www.youtube.com/watch?v=${item?.id?.videoId}`,
-      thumbnailUrl: item?.snippet?.thumbnails?.default?.url ?? "",
-      title: item?.snippet?.title ?? "Untitled",
-    }));
+    return result.data;
   }
 }

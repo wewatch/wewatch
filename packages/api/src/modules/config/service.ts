@@ -18,7 +18,8 @@ type Config = {
   JWT_SECRET: string;
   JWT_EXPIRE_INTERVAL: string;
 
-  YOUTUBE_API_KEY: string;
+  SEARCH_SERVICE_URL: string;
+  SEARCH_SERVICE_API_KEY: string;
 };
 
 export const configSchema: yup.SchemaOf<Config> = yup.object({
@@ -41,7 +42,8 @@ export const configSchema: yup.SchemaOf<Config> = yup.object({
   JWT_SECRET: yup.string().required(),
   JWT_EXPIRE_INTERVAL: yup.string().default("30d"),
 
-  YOUTUBE_API_KEY: yup.string().required(),
+  SEARCH_SERVICE_URL: yup.string().required(),
+  SEARCH_SERVICE_API_KEY: yup.string().required(),
 });
 
 @Injectable()
