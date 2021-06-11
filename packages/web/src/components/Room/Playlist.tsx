@@ -4,7 +4,7 @@ import React from "react";
 import { PlaylistDTO } from "@wewatch/schemas";
 
 import PlaylistItem from "./PlaylistItem";
-import VideoSearchBox from "./VideoSearchBox";
+import SearchBox from "./SearchBox";
 
 interface PlaylistProps {
   playlist: PlaylistDTO;
@@ -12,12 +12,12 @@ interface PlaylistProps {
 
 const Playlist = ({ playlist }: PlaylistProps): JSX.Element | null => {
   const items = playlist.videos.map((video) => (
-    <PlaylistItem video={video} key={video.url} />
+    <PlaylistItem {...video} key={video.url} />
   ));
   return (
     <VStack>
       {items}
-      <VideoSearchBox />
+      <SearchBox />
     </VStack>
   );
 };
