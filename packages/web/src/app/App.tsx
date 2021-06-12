@@ -2,9 +2,9 @@ import { ChakraProvider, Container } from "@chakra-ui/react";
 import { Router } from "@reach/router";
 import React from "react";
 
-import Home from "./Home";
-import NotFound from "./NotFound";
-import Room from "./Room";
+import NotFound from "features/404";
+import Home from "features/home";
+import Room from "features/room";
 
 function App(): JSX.Element {
   return (

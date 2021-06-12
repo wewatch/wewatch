@@ -3,10 +3,10 @@ import { navigate, RouteComponentProps } from "@reach/router";
 import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect } from "react";
 
-import { getRoom } from "actions/room";
-import useNotify from "hooks/notification";
-import { useAppDispatch, useAppSelector } from "hooks/redux";
+import useNotify from "common/hooks/notification";
+import { useAppDispatch, useAppSelector } from "common/hooks/redux";
 
+import { getRoom } from "../slice";
 import Player from "./Player";
 import Playlist from "./Playlist";
 

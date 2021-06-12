@@ -1,6 +1,6 @@
 import { combineReducers } from "@reduxjs/toolkit";
 
-import room from "./room";
+import room from "features/room/slice";
 
 const rootReducer = combineReducers({
   room,

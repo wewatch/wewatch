@@ -3,9 +3,9 @@ import { navigate, RouteComponentProps } from "@reach/router";
 import { unwrapResult } from "@reduxjs/toolkit";
 import React from "react";
 
-import { createRoom } from "actions/room";
-import useNotify from "hooks/notification";
-import { useAppDispatch } from "hooks/redux";
+import useNotify from "common/hooks/notification";
+import { useAppDispatch } from "common/hooks/redux";
+import { createRoom } from "features/room/slice";
 
 const Home = (_: RouteComponentProps): JSX.Element => {
   const notify = useNotify();

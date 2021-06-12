@@ -2,8 +2,8 @@ import { HStack, IconButton, Text } from "@chakra-ui/react";
 import React from "react";
 import { FaPause, FaPlay } from "react-icons/fa";
 
-import { Progress } from "components/common/ProgressBar";
-import { secondsToHHMMSS } from "utils/misc";
+import { Progress } from "common/components/ProgressBar";
+import { secondsToHHMMSS } from "common/misc";
 
 export interface ProgressInfo {
   played: number;

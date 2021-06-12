@@ -1,7 +1,7 @@
 import { useToast } from "@chakra-ui/react";
 import { useCallback } from "react";
 
-import type { Notification } from "utils/types";
+import type { Notification } from "common/types";
 
 const useNotify = (): ((notification: Notification) => void) => {
   const toast = useToast();

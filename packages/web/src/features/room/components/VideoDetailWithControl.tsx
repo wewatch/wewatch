@@ -2,7 +2,7 @@ import { AspectRatio, Box, HStack, Image } from "@chakra-ui/react";
 import React from "react";
 
 import type { NonPersistedVideoDTO } from "@wewatch/schemas";
-import OverflowText from "components/common/OverflowText";
+import OverflowText from "common/components/OverflowText";
 
 interface VideoDetailWithControlProps<T> {
   video: T;
