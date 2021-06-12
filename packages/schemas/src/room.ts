@@ -12,7 +12,7 @@ export class PlaylistDTO {
 
 export class RoomDTO {
   id!: string;
-  playlist!: PlaylistDTO;
+  playlists!: PlaylistDTO[];
 }
 
 export type Room = RoomDTO;

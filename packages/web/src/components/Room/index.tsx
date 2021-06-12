@@ -43,9 +43,11 @@ const Room = ({ roomId }: RoomProps): JSX.Element => {
     <Box>
       <Grid templateColumns="2.5fr 1fr" gap={2}>
         <GridItem>
-          <Player url={room?.playlist.videos[0].url ?? null} />
+          <Player url={room?.playlists?.[0]?.videos[0].url ?? null} />
         </GridItem>
-        <GridItem>{room && <Playlist playlist={room.playlist} />}</GridItem>
+        <GridItem>
+          {room?.playlists && <Playlist playlist={room.playlists[0]} />}
+        </GridItem>
       </Grid>
     </Box>
   );
