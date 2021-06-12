@@ -1,11 +1,10 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
-import { PlaylistDTO, VideoDTO } from "@wewatch/schemas";
 import { BaseSchema } from "utils/baseSchema";
 
-@Schema({ _id: false })
-class Video {
+@Schema()
+class Video extends BaseSchema {
   @Prop({ required: true })
   url!: string;
 
@@ -16,6 +15,7 @@ class Video {
   thumbnailUrl!: string;
 }
 
+export type VideoDocument = Video & Document;
 const VideoSchema = SchemaFactory.createForClass(Video);
 
 @Schema({
@@ -30,9 +30,10 @@ class Playlist extends BaseSchema {
     type: [VideoSchema],
     default: [],
   })
-  videos!: VideoDTO[];
+  videos!: Types.DocumentArray<VideoDocument>;
 }
 
+export type PlaylistDocument = Playlist & Document;
 const PlaylistSchema = SchemaFactory.createForClass(Playlist);
 
 @Schema({
@@ -43,7 +44,7 @@ export class Room extends BaseSchema {
     required: true,
     type: [PlaylistSchema],
   })
-  playlists!: PlaylistDTO[];
+  playlists!: Types.DocumentArray<PlaylistDocument>;
 }
 
 export type RoomDocument = Room & Document;

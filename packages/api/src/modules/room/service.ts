@@ -1,15 +1,21 @@
-import { Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { nanoid } from "nanoid";
 
-import { Room, RoomDocument } from "./model";
+import { NonPersistedVideoDTO } from "@wewatch/schemas";
+
+import { PlaylistDocument, Room, RoomDocument } from "./model";
 
 @Injectable()
 export class RoomService {
   constructor(@InjectModel(Room.name) private roomModel: Model<RoomDocument>) {}
 
-  async create(): Promise<Room> {
+  async create(): Promise<RoomDocument> {
     const room = new this.roomModel({
       playlists: [
         {
@@ -34,7 +40,69 @@ export class RoomService {
     return await room.save();
   }
 
-  async get(id: string): Promise<Room | null> {
+  async get(id: string): Promise<RoomDocument | null> {
     return this.roomModel.findById(id).exec();
+  }
+
+  async getRoomAndPlaylist(
+    roomId: string,
+    playlistId: string,
+  ): Promise<{
+    room: RoomDocument;
+    playlist: PlaylistDocument;
+  }> {
+    const room = await this.get(roomId);
+    if (room === null) {
+      throw new NotFoundException("Room not found");
+    }
+
+    const playlist = room.playlists.id(playlistId);
+    if (playlist === null) {
+      throw new NotFoundException("Playlist not found");
+    }
+
+    return { room, playlist };
+  }
+
+  async addVideoToPlaylist(
+    roomId: string,
+    playlistId: string,
+    videoDTO: NonPersistedVideoDTO,
+  ): Promise<RoomDocument> {
+    const { room, playlist } = await this.getRoomAndPlaylist(
+      roomId,
+      playlistId,
+    );
+
+    const existingVideo = playlist.videos.find(
+      (video) => video.url === videoDTO.url,
+    );
+    if (existingVideo) {
+      throw new BadRequestException("This video is already in the playlist");
+    }
+
+    playlist.videos.push(videoDTO);
+
+    return await room.save();
+  }
+
+  async deleteVideoFromPlaylist(
+    roomId: string,
+    playlistId: string,
+    videoId: string,
+  ): Promise<RoomDocument> {
+    const { room, playlist } = await this.getRoomAndPlaylist(
+      roomId,
+      playlistId,
+    );
+
+    const existingVideo = playlist.videos.id(videoId);
+    if (existingVideo === null) {
+      throw new NotFoundException("Video not found");
+    }
+
+    playlist.videos.remove(videoId);
+
+    return await room.save();
   }
 }

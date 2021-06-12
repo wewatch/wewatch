@@ -1,16 +1,18 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
   Post,
 } from "@nestjs/common";
 
-import { RoomDTO } from "@wewatch/schemas";
+import { NonPersistedVideoDTO, RoomDTO, VideoDTO } from "@wewatch/schemas";
 
 import { RoomService } from "./service";
 
-@Controller("rooms")
+@Controller("/rooms")
 export class RoomController {
   constructor(private readonly roomService: RoomService) {}
 
@@ -19,7 +21,7 @@ export class RoomController {
     return await this.roomService.create();
   }
 
-  @Get(":id")
+  @Get("/:id")
   async getRoom(@Param("id") roomId: string): Promise<RoomDTO> {
     const room = await this.roomService.get(roomId);
     if (room === null) {
@@ -27,5 +29,27 @@ export class RoomController {
     }
 
     return room;
+  }
+
+  @Post("/:roomId/playlists/:playlistId/videos")
+  async addVideoToPlaylist(
+    @Param("roomId") roomId: string,
+    @Param("playlistId") playlistId: string,
+    @Body() videoDTO: NonPersistedVideoDTO,
+  ): Promise<RoomDTO> {
+    return this.roomService.addVideoToPlaylist(roomId, playlistId, videoDTO);
+  }
+
+  @Delete("/:roomId/playlists/:playlistId/videos/:videoId")
+  async deleteVideoFromPlaylist(
+    @Param("roomId") roomId: string,
+    @Param("playlistId") playlistId: string,
+    @Param("videoId") videoId: string,
+  ): Promise<RoomDTO> {
+    return this.roomService.deleteVideoFromPlaylist(
+      roomId,
+      playlistId,
+      videoId,
+    );
   }
 }
