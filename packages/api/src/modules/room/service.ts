@@ -28,6 +28,7 @@ export class RoomService {
         ],
       },
     });
+
     return await room.save();
   }
 

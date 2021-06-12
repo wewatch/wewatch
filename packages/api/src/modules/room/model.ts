@@ -1,48 +1,51 @@
-import { Prop, raw, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
-import { nanoid } from "nanoid";
 
-import { PlaylistDTO } from "@wewatch/schemas";
+import { BaseSchema } from "utils/baseSchema";
+
+@Schema({ _id: false })
+class Video {
+  @Prop({ required: true })
+  url!: string;
+
+  @Prop({ required: true })
+  title!: string;
+
+  @Prop({ required: true })
+  thumbnailUrl!: string;
+}
+
+type VideoDocument = Video & Document;
+const VideoSchema = SchemaFactory.createForClass(Video);
 
 @Schema({
   timestamps: true,
 })
-export class Room {
-  id!: string;
+class Playlist extends BaseSchema {
+  @Prop({ required: true })
+  name!: string;
 
   @Prop({
-    default: nanoid,
-  })
-  _id!: string;
-
-  @Prop({
-    type: raw({
-      name: {
-        type: String,
-        required: true,
-      },
-      videos: [
-        {
-          url: {
-            type: String,
-            required: true,
-          },
-          title: {
-            type: String,
-            required: true,
-          },
-          thumbnailUrl: {
-            type: String,
-            required: true,
-          },
-        },
-      ],
-    }),
     required: true,
+    type: [VideoSchema],
+    default: [],
   })
-  playlist!: PlaylistDTO;
+  videos!: VideoDocument[];
+}
+
+type PlaylistDocument = Playlist & Document;
+const PlaylistSchema = SchemaFactory.createForClass(Playlist);
+
+@Schema({
+  timestamps: true,
+})
+export class Room extends BaseSchema {
+  @Prop({
+    required: true,
+    type: PlaylistSchema,
+  })
+  playlist!: PlaylistDocument;
 }
 
 export type RoomDocument = Room & Document;
-
 export const RoomSchema = SchemaFactory.createForClass(Room);

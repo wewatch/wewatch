@@ -5,6 +5,7 @@ export class VideoDTO {
 }
 
 export class PlaylistDTO {
+  id!: string;
   name!: string;
   videos!: VideoDTO[];
 }
