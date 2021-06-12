@@ -84,9 +84,10 @@ const SearchBox = (): JSX.Element => {
   const search = useCallback(
     async (values: SearchDTO) => {
       try {
-        const result = await RequestUtil.post<SearchVideoResultDTO>("/search", {
-          ...values,
-        });
+        const result: SearchVideoResultDTO = await RequestUtil.post(
+          "/search",
+          values,
+        );
         setSearchResult(result);
       } catch (e) {
         notify({

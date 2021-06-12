@@ -1,16 +1,15 @@
-import { Json } from "./misc";
 import storage from "./storage";
 
 type Method = "get" | "post" | "put" | "delete";
 type ParamsType = Record<string, string>;
 
 class RequestUtil {
-  static request = async <T>(
+  static request = async <Response, Body>(
     urlOrEndpoint: string,
     method: Method,
-    body?: Json,
+    body?: Body,
     params?: ParamsType,
-  ): Promise<T> => {
+  ): Promise<Response> => {
     let url: URL;
     if (urlOrEndpoint.startsWith("/")) {
       url = new URL(process.env.REACT_APP_API_URL.concat(urlOrEndpoint));
@@ -45,28 +44,36 @@ class RequestUtil {
     const data = await response.json();
 
     if (response.ok) {
-      return data as T;
+      return data as Response;
     }
 
     return Promise.reject(Error(data?.message));
   };
 
-  static get = <T>(urlOrEndpoint: string, params?: ParamsType): Promise<T> =>
+  static get = <Response>(
+    urlOrEndpoint: string,
+    params?: ParamsType,
+  ): Promise<Response> =>
     RequestUtil.request(urlOrEndpoint, "get", null, params);
 
-  static post = <T>(
+  static post = <Response, Body = unknown>(
     urlOrEndpoint: string,
-    body?: Json,
+    body?: Body,
     params?: ParamsType,
-  ): Promise<T> => RequestUtil.request<T>(urlOrEndpoint, "post", body, params);
+  ): Promise<Response> =>
+    RequestUtil.request<Response, Body>(urlOrEndpoint, "post", body, params);
 
-  static put = <T>(
+  static put = <Response, Body = unknown>(
     urlOrEndpoint: string,
-    body: Json,
+    body: Body,
     params?: ParamsType,
-  ): Promise<T> => RequestUtil.request<T>(urlOrEndpoint, "put", body, params);
+  ): Promise<Response> =>
+    RequestUtil.request<Response, Body>(urlOrEndpoint, "put", body, params);
 
-  static delete = <T>(urlOrEndpoint: string, params?: ParamsType): Promise<T> =>
+  static delete = <Response>(
+    urlOrEndpoint: string,
+    params?: ParamsType,
+  ): Promise<Response> =>
     RequestUtil.request(urlOrEndpoint, "delete", null, params);
 }
 
