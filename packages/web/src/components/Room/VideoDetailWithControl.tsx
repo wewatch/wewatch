@@ -1,19 +1,18 @@
 import { AspectRatio, Box, HStack, Image } from "@chakra-ui/react";
 import React from "react";
 
-import type { VideoDTO } from "@wewatch/schemas";
+import type { NonPersistedVideoDTO } from "@wewatch/schemas";
 import OverflowText from "components/common/OverflowText";
 
-export type VideoDetailProps = VideoDTO;
-
-interface VideoDetailWithControlProps extends VideoDetailProps {
-  controller: (video: VideoDetailProps) => JSX.Element;
+interface VideoDetailWithControlProps<T> {
+  video: T;
+  controller: (video: T) => React.ReactNode;
 }
 
-const VideoDetailWithControl = ({
+const VideoDetailWithControl = <T extends NonPersistedVideoDTO>({
+  video,
   controller,
-  ...video
-}: VideoDetailWithControlProps): JSX.Element => (
+}: VideoDetailWithControlProps<T>): JSX.Element => (
   <Box
     borderWidth="1px"
     borderRadius="lg"

@@ -2,15 +2,16 @@ import { IconButton, VStack } from "@chakra-ui/react";
 import React from "react";
 import { FaPlay, FaTrashAlt } from "react-icons/fa";
 
-import type { VideoDetailProps } from "./VideoDetailWithControl";
+import type { VideoDTO } from "@wewatch/schemas";
+
 import VideoDetailWithControl from "./VideoDetailWithControl";
 
-const PlaylistItemController = ({ title }: VideoDetailProps): JSX.Element => {
+const PlaylistItemController = ({ title, id }: VideoDTO): JSX.Element => {
   const handlePlay = () => {
     console.log(`Play ${title}`);
   };
   const handleDelete = () => {
-    console.log(`Delete ${title}`);
+    console.log(`Delete ${id}`);
   };
 
   return (
@@ -35,8 +36,8 @@ const PlaylistItemController = ({ title }: VideoDetailProps): JSX.Element => {
   );
 };
 
-const PlaylistItem = (props: VideoDetailProps): JSX.Element => (
-  <VideoDetailWithControl {...props} controller={PlaylistItemController} />
+const PlaylistItem = (video: VideoDTO): JSX.Element => (
+  <VideoDetailWithControl video={video} controller={PlaylistItemController} />
 );
 
 export default PlaylistItem;

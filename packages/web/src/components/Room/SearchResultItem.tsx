@@ -2,12 +2,13 @@ import { IconButton, VStack } from "@chakra-ui/react";
 import React from "react";
 import { FaPlus } from "react-icons/fa";
 
-import type { VideoDetailProps } from "./VideoDetailWithControl";
+import { NonPersistedVideoDTO } from "@wewatch/schemas";
+
 import VideoDetailWithControl from "./VideoDetailWithControl";
 
 const SearchResultItemController = ({
   title,
-}: VideoDetailProps): JSX.Element => {
+}: NonPersistedVideoDTO): JSX.Element => {
   const handleAdd = () => {
     console.log(`Add ${title}`);
   };
@@ -26,8 +27,11 @@ const SearchResultItemController = ({
   );
 };
 
-const SearchResultItem = (props: VideoDetailProps): JSX.Element => (
-  <VideoDetailWithControl {...props} controller={SearchResultItemController} />
+const SearchResultItem = (video: NonPersistedVideoDTO): JSX.Element => (
+  <VideoDetailWithControl
+    video={video}
+    controller={SearchResultItemController}
+  />
 );
 
 export default SearchResultItem;
