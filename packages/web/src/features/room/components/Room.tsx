@@ -21,23 +21,21 @@ const Room = ({ roomId }: RoomProps): JSX.Element => {
   const room = useRoom();
 
   useEffect(() => {
-    const getRoomInfo = async () => {
-      if (roomId === undefined) {
-        await navigate("/");
-        return;
-      }
+    if (roomId === undefined) {
+      navigate("/");
+      return;
+    }
 
-      if (room.id !== roomId) {
-        unwrapResult(await dispatch(getRoom(roomId)));
-      }
-    };
-
-    getRoomInfo().catch((e) => {
-      notify({
-        status: "error",
-        title: e?.message ?? `Cannot get Room "${roomId}"`,
-      });
-    });
+    if (room.id !== roomId) {
+      dispatch(getRoom(roomId))
+        .then(unwrapResult)
+        .catch((e) =>
+          notify({
+            status: "error",
+            title: e?.message ?? `Cannot get Room "${roomId}"`,
+          }),
+        );
+    }
   }, [dispatch, room, roomId, notify]);
 
   useEffect(() => {
