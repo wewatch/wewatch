@@ -1,19 +1,17 @@
 import { Button, Center } from "@chakra-ui/react";
 import { navigate, RouteComponentProps } from "@reach/router";
-import { unwrapResult } from "@reduxjs/toolkit";
 import React from "react";
 
+import { CreationResultDTO } from "@wewatch/schemas";
+import RequestUtil from "common/api";
 import useNotify from "common/hooks/notification";
-import { useAppDispatch } from "common/hooks/redux";
-import { createRoom } from "features/room/slice";
 
 const Home = (_: RouteComponentProps): JSX.Element => {
   const notify = useNotify();
-  const dispatch = useAppDispatch();
 
   const handleCreateRoom = async () => {
     try {
-      const { id } = unwrapResult(await dispatch(createRoom()));
+      const { id } = await RequestUtil.post<CreationResultDTO>("/rooms");
 
       await navigate(`/rooms/${id}`);
     } catch (e) {

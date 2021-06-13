@@ -1,24 +1,32 @@
 import { VStack } from "@chakra-ui/react";
 import React from "react";
 
-import { PlaylistDTO } from "@wewatch/schemas";
+import { useRoom, useRoomState } from "common/hooks/selector";
 
+import PlaylistContext from "../contexts/Playlist";
 import PlaylistItem from "./PlaylistItem";
 import SearchBox from "./SearchBox";
 
-interface PlaylistProps {
-  playlist: PlaylistDTO;
-}
+const Playlist = (): JSX.Element | null => {
+  const { playlists } = useRoom();
+  const { activePlaylistId: playlistId } = useRoomState();
+  const playlist = playlists.find((p) => p.id === playlistId);
 
-const Playlist = ({ playlist }: PlaylistProps): JSX.Element | null => {
+  if (playlist === undefined) {
+    return null;
+  }
+
   const items = playlist.videos.map((video) => (
     <PlaylistItem {...video} key={video.url} />
   ));
+
   return (
-    <VStack>
-      {items}
-      <SearchBox />
-    </VStack>
+    <PlaylistContext.Provider value={playlist}>
+      <VStack>
+        {items}
+        <SearchBox />
+      </VStack>
+    </PlaylistContext.Provider>
   );
 };
 

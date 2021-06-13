@@ -4,9 +4,10 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect } from "react";
 
 import useNotify from "common/hooks/notification";
-import { useAppDispatch, useAppSelector } from "common/hooks/redux";
+import { useAppDispatch } from "common/hooks/redux";
+import { useRoom } from "common/hooks/selector";
 
-import { getRoom } from "../slice";
+import { getRoom, setActivePlaylistId } from "../slice";
 import Player from "./Player";
 import Playlist from "./Playlist";
 
@@ -17,7 +18,7 @@ interface RoomProps extends RouteComponentProps {
 const Room = ({ roomId }: RoomProps): JSX.Element => {
   const notify = useNotify();
   const dispatch = useAppDispatch();
-  const room = useAppSelector((state) => state.room);
+  const room = useRoom();
 
   useEffect(() => {
     const getRoomInfo = async () => {
@@ -26,7 +27,7 @@ const Room = ({ roomId }: RoomProps): JSX.Element => {
         return;
       }
 
-      if (room?.id !== roomId) {
+      if (room.id !== roomId) {
         unwrapResult(await dispatch(getRoom(roomId)));
       }
     };
@@ -34,10 +35,15 @@ const Room = ({ roomId }: RoomProps): JSX.Element => {
     getRoomInfo().catch((e) => {
       notify({
         status: "error",
-        title: e.message ?? `Cannot get Room "${roomId}"`,
+        title: e?.message ?? `Cannot get Room "${roomId}"`,
       });
     });
   }, [dispatch, room, roomId, notify]);
+
+  useEffect(() => {
+    const activePlaylistId = room.playlists?.[0]?.id ?? "";
+    dispatch(setActivePlaylistId(activePlaylistId));
+  }, [dispatch, room]);
 
   return (
     <Box>
@@ -46,7 +52,7 @@ const Room = ({ roomId }: RoomProps): JSX.Element => {
           <Player url={room?.playlists?.[0]?.videos[0].url ?? null} />
         </GridItem>
         <GridItem>
-          {room?.playlists && <Playlist playlist={room.playlists[0]} />}
+          <Playlist />
         </GridItem>
       </Grid>
     </Box>
