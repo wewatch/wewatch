@@ -3,7 +3,7 @@ import * as yup from "yup";
 export interface TypeWithSchema<T = unknown> extends Function {
   schema?: yup.SchemaOf<T>;
 
-  new (...args: unknown[]): T;
+  new (...args: never[]): T;
 }
 
 export function withSchema<T>(schema: yup.SchemaOf<T>) {
@@ -11,3 +11,5 @@ export function withSchema<T>(schema: yup.SchemaOf<T>) {
     target.schema = schema;
   };
 }
+
+export type EmptyObject = Record<string, never>;

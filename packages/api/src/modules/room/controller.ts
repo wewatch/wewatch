@@ -8,7 +8,13 @@ import {
   Post,
 } from "@nestjs/common";
 
-import { NonPersistedVideoDTO, RoomDTO, VideoDTO } from "@wewatch/schemas";
+import {
+  CreationResultDTO,
+  EmptyObject,
+  NonPersistedVideoDTO,
+  RoomDTO,
+} from "@wewatch/schemas";
+import { Schema } from "decorators/Schema";
 
 import { RoomService } from "./service";
 
@@ -17,11 +23,13 @@ export class RoomController {
   constructor(private readonly roomService: RoomService) {}
 
   @Post()
-  async createRoom(): Promise<RoomDTO> {
+  @Schema(CreationResultDTO)
+  async createRoom(): Promise<CreationResultDTO> {
     return await this.roomService.create();
   }
 
   @Get("/:id")
+  @Schema(RoomDTO)
   async getRoom(@Param("id") roomId: string): Promise<RoomDTO> {
     const room = await this.roomService.get(roomId);
     if (room === null) {
@@ -32,11 +40,12 @@ export class RoomController {
   }
 
   @Post("/:roomId/playlists/:playlistId/videos")
+  @Schema(CreationResultDTO)
   async addVideoToPlaylist(
     @Param("roomId") roomId: string,
     @Param("playlistId") playlistId: string,
     @Body() videoDTO: NonPersistedVideoDTO,
-  ): Promise<RoomDTO> {
+  ): Promise<CreationResultDTO> {
     return this.roomService.addVideoToPlaylist(roomId, playlistId, videoDTO);
   }
 
@@ -45,11 +54,8 @@ export class RoomController {
     @Param("roomId") roomId: string,
     @Param("playlistId") playlistId: string,
     @Param("videoId") videoId: string,
-  ): Promise<RoomDTO> {
-    return this.roomService.deleteVideoFromPlaylist(
-      roomId,
-      playlistId,
-      videoId,
-    );
+  ): Promise<EmptyObject> {
+    await this.roomService.deleteVideoFromPlaylist(roomId, playlistId, videoId);
+    return {};
   }
 }

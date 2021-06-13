@@ -9,7 +9,7 @@ import { nanoid } from "nanoid";
 
 import { NonPersistedVideoDTO } from "@wewatch/schemas";
 
-import { PlaylistDocument, Room, RoomDocument } from "./model";
+import { PlaylistDocument, Room, RoomDocument, VideoDocument } from "./model";
 
 @Injectable()
 export class RoomService {
@@ -68,7 +68,7 @@ export class RoomService {
     roomId: string,
     playlistId: string,
     videoDTO: NonPersistedVideoDTO,
-  ): Promise<RoomDocument> {
+  ): Promise<VideoDocument> {
     const { room, playlist } = await this.getRoomAndPlaylist(
       roomId,
       playlistId,
@@ -81,9 +81,10 @@ export class RoomService {
       throw new BadRequestException("This video is already in the playlist");
     }
 
-    playlist.videos.push(videoDTO);
+    const length = playlist.videos.push(videoDTO);
+    await room.save();
 
-    return await room.save();
+    return playlist.videos[length - 1];
   }
 
   async deleteVideoFromPlaylist(
