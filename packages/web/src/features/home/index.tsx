@@ -2,7 +2,7 @@ import { Button, Center } from "@chakra-ui/react";
 import { navigate, RouteComponentProps } from "@reach/router";
 import React from "react";
 
-import { CreationResultDTO } from "@wewatch/schemas";
+import { IdDTO } from "@wewatch/schemas";
 import RequestUtil from "common/api";
 import useNotify from "common/hooks/notification";
 
@@ -11,7 +11,7 @@ const Home = (_: RouteComponentProps): JSX.Element => {
 
   const handleCreateRoom = async () => {
     try {
-      const { id } = await RequestUtil.post<CreationResultDTO>("/rooms");
+      const { id } = await RequestUtil.post<IdDTO>("/rooms");
 
       await navigate(`/rooms/${id}`);
     } catch (e) {

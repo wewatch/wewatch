@@ -2,11 +2,11 @@ import * as yup from "yup";
 
 import { withSchema } from "./utils";
 
-export const creationResultSchema = yup.object({
-  id: yup.string().required(),
+export const idSchema = yup.object({
+  id: yup.string().required().trim(),
 });
 
-@withSchema(creationResultSchema)
-export class CreationResultDTO {
+@withSchema(idSchema)
+export class IdDTO {
   id!: string;
 }

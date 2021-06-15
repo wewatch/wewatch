@@ -9,8 +9,8 @@ import {
 } from "@nestjs/common";
 
 import {
-  CreationResultDTO,
   EmptyObject,
+  IdDTO,
   NonPersistedVideoDTO,
   RoomDTO,
 } from "@wewatch/schemas";
@@ -23,8 +23,8 @@ export class RoomController {
   constructor(private readonly roomService: RoomService) {}
 
   @Post()
-  @Schema(CreationResultDTO)
-  async createRoom(): Promise<CreationResultDTO> {
+  @Schema(IdDTO)
+  async createRoom(): Promise<IdDTO> {
     return await this.roomService.create();
   }
 
@@ -40,12 +40,12 @@ export class RoomController {
   }
 
   @Post("/:roomId/playlists/:playlistId/videos")
-  @Schema(CreationResultDTO)
+  @Schema(IdDTO)
   async addVideoToPlaylist(
     @Param("roomId") roomId: string,
     @Param("playlistId") playlistId: string,
     @Body() videoDTO: NonPersistedVideoDTO,
-  ): Promise<CreationResultDTO> {
+  ): Promise<IdDTO> {
     return this.roomService.addVideoToPlaylist(roomId, playlistId, videoDTO);
   }
 
