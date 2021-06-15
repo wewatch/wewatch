@@ -6,7 +6,6 @@ import { ConfigModule, ConfigService } from "modules/config";
 import { RoomModule } from "modules/room";
 import { SearchModule } from "modules/search";
 import { UserModule } from "modules/user";
-import mongooseId from "utils/mongooseId";
 
 @Module({
   imports: [
@@ -30,10 +29,6 @@ import mongooseId from "utils/mongooseId";
         useNewUrlParser: true,
         useFindAndModify: false,
         useUnifiedTopology: true,
-        connectionFactory: (connection) => {
-          connection.plugin(mongooseId);
-          return connection;
-        },
       }),
     }),
     RoomModule,
