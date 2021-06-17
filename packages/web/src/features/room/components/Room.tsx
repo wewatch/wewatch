@@ -1,12 +1,13 @@
 import { Box, Grid, GridItem } from "@chakra-ui/react";
 import { navigate, RouteComponentProps } from "@reach/router";
 import { unwrapResult } from "@reduxjs/toolkit";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import useNotify from "common/hooks/notification";
 import { useAppDispatch } from "common/hooks/redux";
 import { useRoom } from "common/hooks/selector";
 
+import { SocketProvider } from "../contexts/Socket";
 import { getRoom, setActivePlaylistId } from "../slice";
 import Player from "./Player";
 import Playlist from "./Playlist";
@@ -43,17 +44,28 @@ const Room = ({ roomId }: RoomProps): JSX.Element => {
     dispatch(setActivePlaylistId(activePlaylistId));
   }, [dispatch, room]);
 
+  const socketOpts = useMemo(
+    () => ({
+      query: {
+        roomId: roomId ?? "",
+      },
+    }),
+    [roomId],
+  );
+
   return (
-    <Box>
-      <Grid templateColumns="2.5fr 1fr" gap={2}>
-        <GridItem>
-          <Player url={room?.playlists?.[0]?.videos[0].url ?? null} />
-        </GridItem>
-        <GridItem>
-          <Playlist />
-        </GridItem>
-      </Grid>
-    </Box>
+    <SocketProvider namespace="rooms" socketOpts={socketOpts}>
+      <Box>
+        <Grid templateColumns="2.5fr 1fr" gap={2}>
+          <GridItem>
+            <Player url={room?.playlists?.[0]?.videos[0].url ?? null} />
+          </GridItem>
+          <GridItem>
+            <Playlist />
+          </GridItem>
+        </Grid>
+      </Box>
+    </SocketProvider>
   );
 };
 

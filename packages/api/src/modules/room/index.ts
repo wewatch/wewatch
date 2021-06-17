@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 
 import { RoomController } from "./controller";
+import { RoomGateway } from "./gateway";
 import { Room, RoomSchema } from "./model";
 import { RoomService } from "./service";
 
@@ -15,7 +16,7 @@ import { RoomService } from "./service";
     ]),
   ],
   controllers: [RoomController],
-  providers: [RoomService],
+  providers: [RoomService, RoomGateway],
   exports: [RoomService],
 })
 export class RoomModule {}

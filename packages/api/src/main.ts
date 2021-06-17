@@ -11,6 +11,7 @@ import { ConfigService } from "modules/config";
 import { ValidationPipe } from "pipes/validation";
 
 import { AppModule } from "./app.module";
+import { IoAdapter } from "./io.adapter";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -26,6 +27,8 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new SerializerInterceptor(app.get(Reflector)));
+
+  app.useWebSocketAdapter(new IoAdapter(app));
 
   const configService = app.get(ConfigService);
   await app.listen(configService.cfg.PORT);
