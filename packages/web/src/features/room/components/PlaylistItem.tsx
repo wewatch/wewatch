@@ -1,19 +1,29 @@
 import { IconButton, VStack } from "@chakra-ui/react";
 import React from "react";
-import { FaPlay, FaTrashAlt } from "react-icons/fa";
+import { FaPause, FaPlay, FaTrashAlt } from "react-icons/fa";
 
 import { roomActions } from "@wewatch/actions";
 import type { VideoDTO } from "@wewatch/schemas";
 import { useSocket } from "common/contexts/Socket";
+import { useAppDispatch } from "common/hooks/redux";
+import { usePlayerState } from "common/hooks/selector";
 
 import { usePlaylist } from "../contexts/Playlist";
 import VideoDetailWithControl from "./VideoDetailWithControl";
 
-const PlaylistItemController = ({ id }: VideoDTO): JSX.Element => {
+const PlaylistItemController = ({ id, url }: VideoDTO): JSX.Element => {
+  const { url: activeURL, playing } = usePlayerState();
   const { id: playlistId } = usePlaylist();
   const { socketEmit } = useSocket();
+  const dispatch = useAppDispatch();
 
-  const handlePlay = () => {};
+  const isActiveUrl = url === activeURL;
+
+  const handlePlay = () => {
+    if (isActiveUrl) {
+      dispatch(roomActions.setPlaying(!playing));
+    }
+  };
 
   const handleDelete = () => {
     socketEmit(
@@ -29,7 +39,7 @@ const PlaylistItemController = ({ id }: VideoDTO): JSX.Element => {
     <VStack spacing={0}>
       <IconButton
         aria-label="hello"
-        icon={<FaPlay />}
+        icon={isActiveUrl && playing ? <FaPause /> : <FaPlay />}
         size="xs"
         variant="ghost"
         isRound

@@ -57,7 +57,7 @@ const Room = ({ roomId }: RoomProps): JSX.Element | null => {
       socketOpts={socketOpts}
       eventHandlers={socketEventHandlers}
     >
-      <Box>
+      <Box paddingY={2}>
         <Grid templateColumns="2.5fr 1fr" gap={2}>
           <GridItem>
             <Player />
