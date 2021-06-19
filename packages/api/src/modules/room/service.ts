@@ -60,6 +60,8 @@ export class RoomService {
       await this.deleteVideoFromPlaylist(roomId, playlistId, videoId);
     } else if (actions.setPlaying.match(action)) {
       await this.setPlaying(roomId, action.payload);
+    } else if (actions.setActiveURL.match(action)) {
+      await this.setActiveURL(roomId, action.payload);
     }
 
     if (payload !== null) {
@@ -155,6 +157,17 @@ export class RoomService {
   async setPlaying(roomId: string, playing: boolean): Promise<void> {
     const room = await this.getRoom(roomId);
     room.playerState.playing = playing;
+    await room.save();
+  }
+
+  async setActiveURL(roomId: string, activeURL: string): Promise<void> {
+    const room = await this.getRoom(roomId);
+    if (activeURL === room.playerState.url) {
+      return;
+    }
+
+    room.playerState.url = activeURL;
+    room.playerState.played = 0;
     await room.save();
   }
 }

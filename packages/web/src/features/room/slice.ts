@@ -42,6 +42,15 @@ const slice = createSlice({
       })
       .addCase(actions.setPlaying, (state, action) => {
         state.playerState.playing = action.payload;
+      })
+      .addCase(actions.setActiveURL, (state, action) => {
+        const newActiveURL = action.payload;
+        if (newActiveURL === state.playerState.url) {
+          return;
+        }
+
+        state.playerState.url = newActiveURL;
+        state.playerState.played = 0;
       }),
 });
 

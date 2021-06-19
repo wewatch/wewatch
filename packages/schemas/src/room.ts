@@ -37,7 +37,7 @@ export class PlaylistDTO {
 }
 
 export const playerStateSchema = yup.object({
-  url: yup.string().nullable(),
+  url: yup.string().url().required().nullable(),
   playing: yup.boolean().required(),
   played: yup.number().required().min(0).max(100),
 });
@@ -52,7 +52,7 @@ export class PlayerStateDTO {
 export const roomSchema = yup
   .object({
     playlists: yup.array().of(playlistSchema),
-    activePlaylistId: yup.string().nullable(),
+    activePlaylistId: yup.string().required().nullable(),
     playerState: playerStateSchema,
   })
   .concat(idSchema);
