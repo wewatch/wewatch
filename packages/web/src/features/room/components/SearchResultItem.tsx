@@ -11,14 +11,10 @@ import VideoDetailWithControl from "./VideoDetailWithControl";
 
 const SearchResultItemController = (video: VideoDTO): JSX.Element => {
   const { id: playlistId } = usePlaylist();
-  const { socket, socketConnected } = useSocket();
+  const { socketEmit, socketConnected } = useSocket();
 
   const handleAdd = () => {
-    if (!socketConnected) {
-      return;
-    }
-
-    socket?.emit(
+    socketEmit(
       "actions",
       roomActions.addVideo({
         playlistId,

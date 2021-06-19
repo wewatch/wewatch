@@ -1,6 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import io, { Socket } from "socket.io-client";
 import {
+  EventNames,
+  EventParams,
   EventsMap,
   ReservedOrUserListener,
 } from "socket.io-client/build/typed-events";
@@ -9,16 +11,23 @@ import useNotify from "common/hooks/notification";
 
 type SocketStatus = "connecting" | "connected" | "disconnected";
 
+type SocketEmit = (
+  event: string,
+  ...args: EventParams<EventsMap, EventNames<EventsMap>>
+) => void;
+
 interface SocketContextValue {
   socket: Socket | null;
   socketStatus: SocketStatus;
   socketConnected: boolean;
+  socketEmit: SocketEmit;
 }
 
 const defaultContext: SocketContextValue = {
   socket: null,
   socketStatus: "connecting",
   socketConnected: false,
+  socketEmit: () => {},
 };
 
 const SocketContext = React.createContext<SocketContextValue>(defaultContext);
@@ -78,12 +87,24 @@ export const SocketProvider = ({
     };
   }, [namespace, socketOpts, eventHandlers, notify]);
 
+  const socketEmit: SocketEmit = useCallback(
+    (event, ...args) => {
+      if (!socketConnected) {
+        return;
+      }
+
+      socket?.emit(event, ...args);
+    },
+    [socket, socketConnected],
+  );
+
   return (
     <SocketContext.Provider
       value={{
         socket,
         socketStatus,
         socketConnected,
+        socketEmit,
       }}
     >
       {children}

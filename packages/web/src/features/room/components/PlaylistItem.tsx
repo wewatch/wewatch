@@ -11,16 +11,12 @@ import VideoDetailWithControl from "./VideoDetailWithControl";
 
 const PlaylistItemController = ({ id }: VideoDTO): JSX.Element => {
   const { id: playlistId } = usePlaylist();
-  const { socket, socketConnected } = useSocket();
+  const { socketEmit } = useSocket();
 
   const handlePlay = () => {};
 
   const handleDelete = () => {
-    if (!socketConnected) {
-      return;
-    }
-
-    socket?.emit(
+    socketEmit(
       "actions",
       roomActions.deleteVideo({
         playlistId,
