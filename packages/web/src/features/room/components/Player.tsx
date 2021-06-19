@@ -1,17 +1,23 @@
-import { AspectRatio } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { AspectRatio, Skeleton } from "@chakra-ui/react";
+import React, { useCallback, useState } from "react";
 import ReactPlayer from "react-player";
+
+import { roomActions } from "@wewatch/actions";
+import { useSocket } from "common/contexts/Socket";
+import { useAppSelector } from "common/hooks/redux";
 
 import type { ProgressInfo } from "./Controls";
 import Controls from "./Controls";
 
-interface PlayerProps {
-  url: string | null;
-}
+const Player = (): JSX.Element => {
+  const { url, playing } = useAppSelector((state) => state.room.playerState);
+  const { socketEmit } = useSocket();
 
-const Player = ({ url }: PlayerProps): JSX.Element => {
-  const [playing, setPlaying] = useState<boolean>(false);
-  const handleTogglePlaying = () => setPlaying((p) => !p);
+  const setPlaying = useCallback(
+    (newPlaying: boolean) =>
+      socketEmit("actions", roomActions.setPlaying(newPlaying)),
+    [socketEmit],
+  );
 
   const [progress, setProgress] = useState<ProgressInfo>({
     played: 0,
@@ -23,16 +29,12 @@ const Player = ({ url }: PlayerProps): JSX.Element => {
   const [duration, setDuration] = useState<number>(0);
   const handleDurationChange = (d: number) => setDuration(d);
 
-  if (!url) {
-    return <div>Loading</div>;
-  }
-
   return (
-    <>
+    <Skeleton isLoaded={!!url}>
       <AspectRatio ratio={16 / 9}>
         <ReactPlayer
           playing={playing}
-          url={url}
+          url={url ?? undefined}
           width="100%"
           height="100%"
           onProgress={handleProgressChange}
@@ -41,13 +43,8 @@ const Player = ({ url }: PlayerProps): JSX.Element => {
           onPause={() => setPlaying(false)}
         />
       </AspectRatio>
-      <Controls
-        playing={playing}
-        handleTogglePlaying={handleTogglePlaying}
-        progress={progress}
-        duration={duration}
-      />
-    </>
+      <Controls playing={playing} progress={progress} duration={duration} />
+    </Skeleton>
   );
 };
 

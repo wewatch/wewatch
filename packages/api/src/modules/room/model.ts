@@ -37,6 +37,32 @@ export type PlaylistDocument = Playlist & Document;
 const PlaylistSchema = SchemaFactory.createForClass(Playlist);
 
 @Schema({
+  _id: false,
+})
+class PlayerState {
+  @Prop({
+    type: String,
+    default: null,
+  })
+  url!: string | null;
+
+  @Prop({
+    required: true,
+    default: false,
+  })
+  playing!: boolean;
+
+  @Prop({
+    required: true,
+    default: 0,
+  })
+  played!: number;
+}
+
+export type PlayerStateDocument = PlayerState & Document;
+const PlayerStateSchema = SchemaFactory.createForClass(PlayerState);
+
+@Schema({
   timestamps: true,
 })
 export class Room extends BaseSchema {
@@ -53,10 +79,11 @@ export class Room extends BaseSchema {
   activePlaylistId!: string | null;
 
   @Prop({
-    type: String,
-    default: null,
+    required: true,
+    type: PlayerStateSchema,
+    default: {},
   })
-  activeVideoURL!: string | null;
+  playerState!: PlayerStateDocument;
 }
 
 export type RoomDocument = Room & Document;

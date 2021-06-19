@@ -58,6 +58,8 @@ export class RoomService {
     } else if (actions.deleteVideo.match(action)) {
       const { playlistId, videoId } = action.payload;
       await this.deleteVideoFromPlaylist(roomId, playlistId, videoId);
+    } else if (actions.setPlaying.match(action)) {
+      await this.setPlaying(roomId, action.payload);
     }
 
     if (payload !== null) {
@@ -81,6 +83,15 @@ export class RoomService {
     return action;
   }
 
+  async getRoom(roomId: string): Promise<RoomDocument> {
+    const room = await this.get(roomId);
+    if (room === null) {
+      throw new NotFoundException("Room not found");
+    }
+
+    return room;
+  }
+
   async getRoomAndPlaylist(
     roomId: string,
     playlistId: string,
@@ -88,10 +99,7 @@ export class RoomService {
     room: RoomDocument;
     playlist: PlaylistDocument;
   }> {
-    const room = await this.get(roomId);
-    if (room === null) {
-      throw new NotFoundException("Room not found");
-    }
+    const room = await this.getRoom(roomId);
 
     const playlist = room.playlists.id(playlistId);
     if (playlist === null) {
@@ -128,7 +136,7 @@ export class RoomService {
     roomId: string,
     playlistId: string,
     videoId: string,
-  ): Promise<RoomDocument> {
+  ): Promise<void> {
     const { room, playlist } = await this.getRoomAndPlaylist(
       roomId,
       playlistId,
@@ -141,6 +149,12 @@ export class RoomService {
 
     playlist.videos.remove(videoId);
 
-    return await room.save();
+    await room.save();
+  }
+
+  async setPlaying(roomId: string, playing: boolean): Promise<void> {
+    const room = await this.getRoom(roomId);
+    room.playerState.playing = playing;
+    await room.save();
   }
 }

@@ -7,7 +7,11 @@ const initialState: Room = {
   id: "",
   playlists: [],
   activePlaylistId: null,
-  activeVideoURL: null,
+  playerState: {
+    url: null,
+    playing: false,
+    played: 0,
+  },
 };
 
 const slice = createSlice({
@@ -35,6 +39,9 @@ const slice = createSlice({
         if (playlist !== undefined) {
           playlist.videos = playlist.videos.filter((v) => v.id !== videoId);
         }
+      })
+      .addCase(actions.setPlaying, (state, action) => {
+        state.playerState.playing = action.payload;
       }),
 });
 

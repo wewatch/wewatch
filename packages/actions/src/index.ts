@@ -1,6 +1,7 @@
+import { withSchema } from "@wewatch/schemas";
+
 import * as roomActions from "./room";
 import { createActionSchema } from "./utils";
-import { withSchema } from "@wewatch/schemas";
 
 export { roomActions };
 

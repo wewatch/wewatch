@@ -1,7 +1,7 @@
 import { createAction } from "@reduxjs/toolkit";
+import * as yup from "yup";
 
 import { VideoDTO, videoSchema, withSchema } from "@wewatch/schemas";
-import * as yup from "yup";
 
 export const addVideoPayloadSchema = yup.object({
   playlistId: yup.string().required(),
@@ -28,3 +28,7 @@ export class DeleteVideoPayload {
 }
 
 export const deleteVideo = createAction<DeleteVideoPayload>("room/deleteVideo");
+
+export const setPlayingPayloadSchema = yup.boolean().required();
+
+export const setPlaying = createAction<boolean>("room/setPlaying");

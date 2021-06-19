@@ -36,10 +36,24 @@ export class PlaylistDTO {
   videos!: VideoDTO[];
 }
 
+export const playerStateSchema = yup.object({
+  url: yup.string().nullable(),
+  playing: yup.boolean().required(),
+  played: yup.number().required().min(0).max(100),
+});
+
+@withSchema(playerStateSchema)
+class PlayerStateDTO {
+  url!: string | null;
+  playing!: boolean;
+  played!: number;
+}
+
 export const roomSchema = yup
   .object({
     playlists: yup.array().of(playlistSchema),
     activePlaylistId: yup.string().nullable(),
+    playerState: playerStateSchema,
   })
   .concat(idSchema);
 
@@ -48,7 +62,7 @@ export class RoomDTO {
   id!: string;
   playlists!: PlaylistDTO[];
   activePlaylistId!: string | null;
-  activeVideoURL!: string | null;
+  playerState!: PlayerStateDTO;
 }
 
 export type Room = RoomDTO;

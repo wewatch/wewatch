@@ -60,7 +60,7 @@ const Room = ({ roomId }: RoomProps): JSX.Element | null => {
       <Box>
         <Grid templateColumns="2.5fr 1fr" gap={2}>
           <GridItem>
-            <Player url={room?.playlists?.[0]?.videos[0].url ?? null} />
+            <Player />
           </GridItem>
           <GridItem>
             <Playlist />
