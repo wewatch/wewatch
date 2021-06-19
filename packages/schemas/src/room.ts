@@ -43,7 +43,7 @@ export const playerStateSchema = yup.object({
 });
 
 @withSchema(playerStateSchema)
-class PlayerStateDTO {
+export class PlayerStateDTO {
   url!: string | null;
   playing!: boolean;
   played!: number;
