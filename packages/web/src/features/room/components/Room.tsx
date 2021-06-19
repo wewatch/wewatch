@@ -1,14 +1,13 @@
 import { Box, Grid, GridItem } from "@chakra-ui/react";
-import { navigate, RouteComponentProps } from "@reach/router";
-import { unwrapResult } from "@reduxjs/toolkit";
+import { RouteComponentProps } from "@reach/router";
 import React, { useEffect, useMemo } from "react";
 
+import { useGetRoomQuery } from "api";
 import { SocketProvider } from "common/contexts/Socket";
 import useNotify from "common/hooks/notification";
 import { useAppDispatch } from "common/hooks/redux";
-import { useRoom } from "common/hooks/selector";
 
-import { getRoom } from "../slice";
+import { setRoom } from "../slice";
 import Player from "./Player";
 import Playlist from "./Playlist";
 
@@ -16,28 +15,25 @@ interface RoomProps extends RouteComponentProps {
   roomId?: string;
 }
 
-const Room = ({ roomId }: RoomProps): JSX.Element => {
+const Room = ({ roomId }: RoomProps): JSX.Element | null => {
   const notify = useNotify();
   const dispatch = useAppDispatch();
-  const room = useRoom();
+  const { data: room, isError, isSuccess } = useGetRoomQuery(roomId ?? "");
 
   useEffect(() => {
-    if (roomId === undefined) {
-      navigate("/");
-      return;
+    if (isError) {
+      notify({
+        status: "error",
+        title: `Cannot get Room "${roomId}"`,
+      });
     }
+  }, [roomId, notify, isError]);
 
-    if (room.id !== roomId) {
-      dispatch(getRoom(roomId))
-        .then(unwrapResult)
-        .catch((e) =>
-          notify({
-            status: "error",
-            title: e?.message ?? `Cannot get Room "${roomId}"`,
-          }),
-        );
+  useEffect(() => {
+    if (isSuccess && room) {
+      dispatch(setRoom(room));
     }
-  }, [dispatch, room, roomId, notify]);
+  }, [dispatch, isSuccess, room]);
 
   const socketOpts = useMemo(
     () => ({
@@ -55,7 +51,7 @@ const Room = ({ roomId }: RoomProps): JSX.Element => {
     [dispatch],
   );
 
-  return (
+  return isSuccess ? (
     <SocketProvider
       namespace="rooms"
       socketOpts={socketOpts}
@@ -72,7 +68,7 @@ const Room = ({ roomId }: RoomProps): JSX.Element => {
         </Grid>
       </Box>
     </SocketProvider>
-  );
+  ) : null;
 };
 
 Room.defaultProps = {

@@ -1,31 +1,36 @@
 import { Button, Center } from "@chakra-ui/react";
 import { navigate, RouteComponentProps } from "@reach/router";
-import React from "react";
+import React, { useEffect } from "react";
 
-import { IdDTO } from "@wewatch/schemas";
-import RequestUtil from "common/api";
+import { useCreateRoomMutation } from "api";
 import useNotify from "common/hooks/notification";
 
 const Home = (_: RouteComponentProps): JSX.Element => {
   const notify = useNotify();
+  const [createRoom, { data, isError, isSuccess }] = useCreateRoomMutation();
 
-  const handleCreateRoom = async () => {
-    try {
-      const { id } = await RequestUtil.post<IdDTO>("/rooms");
-
-      await navigate(`/rooms/${id}`);
-    } catch (e) {
+  useEffect(() => {
+    if (isError) {
       notify({
         status: "error",
         title: "Cannot create Room",
-        description: e?.message ?? undefined,
       });
     }
-  };
+  });
+
+  useEffect(() => {
+    if (isSuccess && data?.id) {
+      navigate(`/rooms/${data.id}`);
+    }
+  });
 
   return (
     <Center minH="100vh">
-      <Button variant="solid" colorScheme="blue" onClick={handleCreateRoom}>
+      <Button
+        variant="solid"
+        colorScheme="blue"
+        onClick={() => createRoom(null)}
+      >
         Create a new room
       </Button>
     </Center>

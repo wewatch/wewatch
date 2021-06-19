@@ -1,9 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { roomActions as actions } from "@wewatch/actions";
 import type { Room } from "@wewatch/schemas";
-
-import { getRoom } from "./action";
 
 const initialState: Room = {
   id: "",
@@ -15,11 +13,15 @@ const initialState: Room = {
 const slice = createSlice({
   name: "room",
   initialState,
-  reducers: {},
+
+  reducers: {
+    setRoom(state, action: PayloadAction<Room>) {
+      return action.payload;
+    },
+  },
 
   extraReducers: (builder) =>
     builder
-      .addCase(getRoom.fulfilled, (state, action) => action.payload)
       .addCase(actions.addVideo, (state, action) => {
         const { playlistId, video } = action.payload;
         const playlist = state.playlists.find((p) => p.id === playlistId);
@@ -36,5 +38,5 @@ const slice = createSlice({
       }),
 });
 
-export { getRoom };
+export const { setRoom } = slice.actions;
 export default slice.reducer;
