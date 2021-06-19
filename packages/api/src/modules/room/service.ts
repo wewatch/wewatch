@@ -7,7 +7,11 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { nanoid } from "nanoid";
 
-import { NonPersistedVideoDTO } from "@wewatch/schemas";
+import {
+  RoomActionDTO as ActionDTO,
+  roomActions as actions,
+} from "@wewatch/actions";
+import { TypeWithSchema, VideoDTO } from "@wewatch/schemas";
 
 import { PlaylistDocument, Room, RoomDocument, VideoDocument } from "./model";
 
@@ -44,6 +48,39 @@ export class RoomService {
     return this.roomModel.findById(id).exec();
   }
 
+  async handleAction(roomId: string, action: ActionDTO): Promise<ActionDTO> {
+    let payload = null;
+
+    if (actions.addVideo.match(action)) {
+      const { playlistId, video } = action.payload;
+      const newVideo = await this.addVideoToPlaylist(roomId, playlistId, video);
+      payload = { playlistId, video: newVideo };
+    } else if (actions.deleteVideo.match(action)) {
+      const { playlistId, videoId } = action.payload;
+      await this.deleteVideoFromPlaylist(roomId, playlistId, videoId);
+    }
+
+    if (payload !== null) {
+      const schema = (ActionDTO as TypeWithSchema<ActionDTO>).schema;
+
+      if (schema === undefined) {
+        return action;
+      }
+
+      return schema.cast(
+        {
+          ...action,
+          payload,
+        },
+        {
+          stripUnknown: true,
+        },
+      ) as ActionDTO;
+    }
+
+    return action;
+  }
+
   async getRoomAndPlaylist(
     roomId: string,
     playlistId: string,
@@ -67,7 +104,7 @@ export class RoomService {
   async addVideoToPlaylist(
     roomId: string,
     playlistId: string,
-    videoDTO: NonPersistedVideoDTO,
+    videoDTO: VideoDTO,
   ): Promise<VideoDocument> {
     const { room, playlist } = await this.getRoomAndPlaylist(
       roomId,

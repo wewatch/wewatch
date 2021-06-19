@@ -45,6 +45,18 @@ export class Room extends BaseSchema {
     type: [PlaylistSchema],
   })
   playlists!: Types.DocumentArray<PlaylistDocument>;
+
+  @Prop({
+    type: String,
+    default: null,
+  })
+  activePlaylistId!: string | null;
+
+  @Prop({
+    type: String,
+    default: null,
+  })
+  activeVideoURL!: string | null;
 }
 
 export type RoomDocument = Room & Document;

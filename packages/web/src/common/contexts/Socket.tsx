@@ -1,5 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import io, { Socket } from "socket.io-client";
+import {
+  EventsMap,
+  ReservedOrUserListener,
+} from "socket.io-client/build/typed-events";
 
 import useNotify from "common/hooks/notification";
 
@@ -19,16 +23,20 @@ const defaultContext: SocketContextValue = {
 
 const SocketContext = React.createContext<SocketContextValue>(defaultContext);
 
+type Handler = ReservedOrUserListener<EventsMap, EventsMap, string>;
+
 interface SocketProviderProps {
   namespace: string;
   children: React.ReactNode;
   socketOpts: Parameters<typeof io>[1];
+  eventHandlers: Record<string, Handler>;
 }
 
 export const SocketProvider = ({
   namespace,
   children,
   socketOpts,
+  eventHandlers,
 }: SocketProviderProps): JSX.Element => {
   const [socket, setSocket] = useState<SocketContextValue["socket"]>(
     defaultContext.socket,
@@ -60,11 +68,15 @@ export const SocketProvider = ({
       }),
     );
 
+    Object.entries(eventHandlers).forEach(([event, handler]) => {
+      newSocket.on(event, handler);
+    });
+
     return () => {
       setSocket(null);
       newSocket.disconnect();
     };
-  }, [namespace, socketOpts, notify]);
+  }, [namespace, socketOpts, eventHandlers, notify]);
 
   return (
     <SocketContext.Provider

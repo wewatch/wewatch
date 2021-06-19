@@ -2,23 +2,23 @@ import { withSchema } from "./utils";
 import * as yup from "yup";
 import { idSchema } from "./common";
 
-export const nonPersistedVideoSchema = yup.object({
+export const newVideoSchema = yup.object({
   url: yup.string().url().required().trim(),
   title: yup.string().required().trim(),
   thumbnailUrl: yup.string().url().required().trim(),
 });
 
-@withSchema(nonPersistedVideoSchema)
-export class NonPersistedVideoDTO {
+@withSchema(newVideoSchema)
+export class NewVideoDTO {
   url!: string;
   title!: string;
   thumbnailUrl!: string;
 }
 
-export const videoSchema = nonPersistedVideoSchema.concat(idSchema);
+export const videoSchema = newVideoSchema.concat(idSchema);
 
 @withSchema(videoSchema)
-export class VideoDTO extends NonPersistedVideoDTO {
+export class VideoDTO extends NewVideoDTO {
   id!: string;
 }
 
@@ -39,6 +39,7 @@ export class PlaylistDTO {
 export const roomSchema = yup
   .object({
     playlists: yup.array().of(playlistSchema),
+    activePlaylistId: yup.string().nullable(),
   })
   .concat(idSchema);
 
@@ -46,6 +47,8 @@ export const roomSchema = yup
 export class RoomDTO {
   id!: string;
   playlists!: PlaylistDTO[];
+  activePlaylistId!: string | null;
+  activeVideoURL!: string | null;
 }
 
 export type Room = RoomDTO;

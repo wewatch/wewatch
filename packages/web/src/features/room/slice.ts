@@ -1,61 +1,40 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
+import { roomActions as actions } from "@wewatch/actions";
 import type { Room } from "@wewatch/schemas";
 
-import { addVideoToPlaylist, deleteVideoFromPlaylist, getRoom } from "./action";
+import { getRoom } from "./action";
 
-export interface RoomState {
-  activePlaylistId: string;
-}
-
-interface RoomSliceState {
-  data: Room;
-  state: RoomState;
-}
-
-const initialState: RoomSliceState = {
-  data: {
-    id: "",
-    playlists: [],
-  },
-  state: {
-    activePlaylistId: "",
-  },
+const initialState: Room = {
+  id: "",
+  playlists: [],
+  activePlaylistId: null,
+  activeVideoURL: null,
 };
 
 const slice = createSlice({
   name: "room",
   initialState,
-
-  reducers: {
-    setActivePlaylistId(state, action: PayloadAction<string>) {
-      state.state.activePlaylistId = action.payload;
-    },
-  },
+  reducers: {},
 
   extraReducers: (builder) =>
     builder
-      .addCase(getRoom.fulfilled, (state, action) => {
-        state.data = action.payload;
-      })
-      .addCase(addVideoToPlaylist.fulfilled, (state, action) => {
-        const { roomId, playlistId, video } = action.meta.arg;
-        const room = state.data;
-        const playlist = room.playlists.find((p) => p.id === playlistId);
-        if (room.id === roomId && playlist !== undefined) {
-          playlist.videos.push({ ...video, ...action.payload });
+      .addCase(getRoom.fulfilled, (state, action) => action.payload)
+      .addCase(actions.addVideo, (state, action) => {
+        const { playlistId, video } = action.payload;
+        const playlist = state.playlists.find((p) => p.id === playlistId);
+        if (playlist !== undefined) {
+          playlist.videos.push(video);
         }
       })
-      .addCase(deleteVideoFromPlaylist.fulfilled, (state, action) => {
-        const { roomId, playlistId, videoId } = action.meta.arg;
-        const room = state.data;
-        const playlist = room.playlists.find((p) => p.id === playlistId);
-        if (room.id === roomId && playlist !== undefined) {
+      .addCase(actions.deleteVideo, (state, action) => {
+        const { playlistId, videoId } = action.payload;
+        const playlist = state.playlists.find((p) => p.id === playlistId);
+        if (playlist !== undefined) {
           playlist.videos = playlist.videos.filter((v) => v.id !== videoId);
         }
       }),
 });
 
-export { getRoom, addVideoToPlaylist, deleteVideoFromPlaylist };
-export const { setActivePlaylistId } = slice.actions;
+export { getRoom };
 export default slice.reducer;

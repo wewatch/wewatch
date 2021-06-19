@@ -1,6 +1,8 @@
-import { UseFilters } from "@nestjs/common";
+import { UseFilters, UsePipes } from "@nestjs/common";
 import {
   BaseWsExceptionFilter,
+  ConnectedSocket,
+  MessageBody,
   OnGatewayConnection,
   SubscribeMessage,
   WebSocketGateway,
@@ -9,32 +11,62 @@ import {
 } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 
+import { RoomActionDTO } from "@wewatch/actions";
+import { WsValidationPipe } from "pipes/validation";
+import { isHttpException } from "utils/types";
+
+import { RoomService } from "./service";
+
+@UseFilters(new BaseWsExceptionFilter())
+@UsePipes(new WsValidationPipe())
 @WebSocketGateway({
   namespace: "rooms",
 })
 export class RoomGateway implements OnGatewayConnection {
+  constructor(private readonly roomService: RoomService) {}
+
   @WebSocketServer()
   server!: Server;
 
-  handleConnection(client: Socket): void {
-    const roomId: string | string[] | undefined =
-      client.handshake.query?.roomId;
+  getRoomId(socket: Socket): string {
+    const roomId = socket.handshake.query?.roomId;
 
     if (roomId === undefined) {
-      client.disconnect(true);
+      throw new Error("roomId is not provided");
+    }
+
+    if (typeof roomId === "string") {
+      return roomId;
+    }
+
+    return roomId[0];
+  }
+
+  handleConnection(socket: Socket): void {
+    try {
+      const roomId = this.getRoomId(socket);
+      socket.join(roomId);
+    } catch {
+      socket.disconnect();
     }
   }
 
-  @UseFilters(new BaseWsExceptionFilter())
   @SubscribeMessage("actions")
-  async onEvent(client: Socket, data: string): Promise<Record<string, string>> {
-    // console.log(`>>> ${JSON.stringify(client.handshake.query)}`);
-    // console.log(data);
-    // console.log(typeof data);
-    // return {
-    //   event: "actions",
-    //   data: data,
-    // };
-    throw new WsException("nope");
+  async onActionEvent(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() action: RoomActionDTO,
+  ): Promise<void> {
+    const roomId = this.getRoomId(socket);
+
+    try {
+      const newAction = await this.roomService.handleAction(roomId, action);
+      this.server.to(roomId).emit("actions", newAction);
+    } catch (e) {
+      if (isHttpException(e)) {
+        throw new WsException(e.getResponse());
+      }
+
+      throw e;
+    }
   }
 }

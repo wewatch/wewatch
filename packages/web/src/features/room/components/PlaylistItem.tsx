@@ -1,34 +1,33 @@
 import { IconButton, VStack } from "@chakra-ui/react";
-import { unwrapResult } from "@reduxjs/toolkit";
 import React from "react";
 import { FaPlay, FaTrashAlt } from "react-icons/fa";
 
+import { roomActions } from "@wewatch/actions";
 import type { VideoDTO } from "@wewatch/schemas";
-import useNotify from "common/hooks/notification";
-import { useAppDispatch } from "common/hooks/redux";
-import { useRoom } from "common/hooks/selector";
+import { useSocket } from "common/contexts/Socket";
 
-import { deleteVideoFromPlaylist } from "../action";
 import { usePlaylist } from "../contexts/Playlist";
 import VideoDetailWithControl from "./VideoDetailWithControl";
 
-const PlaylistItemController = ({ title, id }: VideoDTO): JSX.Element => {
-  const notify = useNotify();
-  const dispatch = useAppDispatch();
-  const { id: roomId } = useRoom();
+const PlaylistItemController = ({ id }: VideoDTO): JSX.Element => {
   const { id: playlistId } = usePlaylist();
+  const { socket, socketConnected } = useSocket();
 
   const handlePlay = () => {};
 
-  const handleDelete = () =>
-    dispatch(deleteVideoFromPlaylist({ roomId, playlistId, videoId: id }))
-      .then(unwrapResult)
-      .catch((e) =>
-        notify({
-          status: "error",
-          title: e?.message ?? "Cannot remove video",
-        }),
-      );
+  const handleDelete = () => {
+    if (!socketConnected) {
+      return;
+    }
+
+    socket?.emit(
+      "actions",
+      roomActions.deleteVideo({
+        playlistId,
+        videoId: id,
+      }),
+    );
+  };
 
   return (
     <VStack spacing={0}>

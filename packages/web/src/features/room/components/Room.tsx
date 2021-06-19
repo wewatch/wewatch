@@ -3,12 +3,12 @@ import { navigate, RouteComponentProps } from "@reach/router";
 import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect, useMemo } from "react";
 
+import { SocketProvider } from "common/contexts/Socket";
 import useNotify from "common/hooks/notification";
 import { useAppDispatch } from "common/hooks/redux";
 import { useRoom } from "common/hooks/selector";
 
-import { SocketProvider } from "../contexts/Socket";
-import { getRoom, setActivePlaylistId } from "../slice";
+import { getRoom } from "../slice";
 import Player from "./Player";
 import Playlist from "./Playlist";
 
@@ -39,11 +39,6 @@ const Room = ({ roomId }: RoomProps): JSX.Element => {
     }
   }, [dispatch, room, roomId, notify]);
 
-  useEffect(() => {
-    const activePlaylistId = room.playlists?.[0]?.id ?? "";
-    dispatch(setActivePlaylistId(activePlaylistId));
-  }, [dispatch, room]);
-
   const socketOpts = useMemo(
     () => ({
       query: {
@@ -53,8 +48,19 @@ const Room = ({ roomId }: RoomProps): JSX.Element => {
     [roomId],
   );
 
+  const socketEventHandlers = useMemo(
+    () => ({
+      actions: dispatch,
+    }),
+    [dispatch],
+  );
+
   return (
-    <SocketProvider namespace="rooms" socketOpts={socketOpts}>
+    <SocketProvider
+      namespace="rooms"
+      socketOpts={socketOpts}
+      eventHandlers={socketEventHandlers}
+    >
       <Box>
         <Grid templateColumns="2.5fr 1fr" gap={2}>
           <GridItem>

@@ -1,34 +1,31 @@
 import { IconButton, VStack } from "@chakra-ui/react";
-import { unwrapResult } from "@reduxjs/toolkit";
 import React from "react";
 import { FaPlus } from "react-icons/fa";
 
-import { NonPersistedVideoDTO } from "@wewatch/schemas";
-import useNotify from "common/hooks/notification";
-import { useAppDispatch } from "common/hooks/redux";
-import { useRoom } from "common/hooks/selector";
+import { roomActions } from "@wewatch/actions";
+import { VideoDTO } from "@wewatch/schemas";
+import { useSocket } from "common/contexts/Socket";
 
 import { usePlaylist } from "../contexts/Playlist";
-import { addVideoToPlaylist } from "../slice";
 import VideoDetailWithControl from "./VideoDetailWithControl";
 
-const SearchResultItemController = (
-  video: NonPersistedVideoDTO,
-): JSX.Element => {
-  const notify = useNotify();
-  const dispatch = useAppDispatch();
-  const { id: roomId } = useRoom();
+const SearchResultItemController = (video: VideoDTO): JSX.Element => {
   const { id: playlistId } = usePlaylist();
+  const { socket, socketConnected } = useSocket();
 
-  const handleAdd = () =>
-    dispatch(addVideoToPlaylist({ roomId, playlistId, video }))
-      .then(unwrapResult)
-      .catch((e) =>
-        notify({
-          status: "error",
-          title: e?.message ?? "Cannot add video",
-        }),
-      );
+  const handleAdd = () => {
+    if (!socketConnected) {
+      return;
+    }
+
+    socket?.emit(
+      "actions",
+      roomActions.addVideo({
+        playlistId,
+        video,
+      }),
+    );
+  };
 
   return (
     <VStack spacing={0}>
@@ -39,12 +36,13 @@ const SearchResultItemController = (
         variant="ghost"
         isRound
         onClick={handleAdd}
+        disabled={!socketConnected}
       />
     </VStack>
   );
 };
 
-const SearchResultItem = (video: NonPersistedVideoDTO): JSX.Element => (
+const SearchResultItem = (video: VideoDTO): JSX.Element => (
   <VideoDetailWithControl
     video={video}
     controller={SearchResultItemController}

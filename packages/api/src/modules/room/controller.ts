@@ -1,19 +1,12 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
   NotFoundException,
   Param,
   Post,
 } from "@nestjs/common";
 
-import {
-  EmptyObject,
-  IdDTO,
-  NonPersistedVideoDTO,
-  RoomDTO,
-} from "@wewatch/schemas";
+import { IdDTO, RoomDTO } from "@wewatch/schemas";
 import { Schema } from "decorators/Schema";
 
 import { RoomService } from "./service";
@@ -37,25 +30,5 @@ export class RoomController {
     }
 
     return room;
-  }
-
-  @Post("/:roomId/playlists/:playlistId/videos")
-  @Schema(IdDTO)
-  async addVideoToPlaylist(
-    @Param("roomId") roomId: string,
-    @Param("playlistId") playlistId: string,
-    @Body() videoDTO: NonPersistedVideoDTO,
-  ): Promise<IdDTO> {
-    return this.roomService.addVideoToPlaylist(roomId, playlistId, videoDTO);
-  }
-
-  @Delete("/:roomId/playlists/:playlistId/videos/:videoId")
-  async deleteVideoFromPlaylist(
-    @Param("roomId") roomId: string,
-    @Param("playlistId") playlistId: string,
-    @Param("videoId") videoId: string,
-  ): Promise<EmptyObject> {
-    await this.roomService.deleteVideoFromPlaylist(roomId, playlistId, videoId);
-    return {};
   }
 }

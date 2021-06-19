@@ -1,0 +1,20 @@
+{
+  "name": "@wewatch/actions",
+  "version": "0.1.0",
+  "description": "",
+  "author": "Duc-Minh Phan <alephvn@gmail.com>",
+  "homepage": "https://github.com/wewatch/wewatch#readme",
+  "license": "AGPL-3.0-only",
+  "main": "dist/index",
+  "types": "dist/index",
+  "scripts": {
+    "format": "prettier --write \"./**/*.{ts,yaml,md}\"",
+    "lint": "eslint \"src/**/*.ts\" --fix",
+    "pre-commit": "lint-staged"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.6.0",
+    "@wewatch/schemas": "*",
+    "redux": "^4.1.0"
+  }
+}

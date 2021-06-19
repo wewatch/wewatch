@@ -4,6 +4,7 @@ import {
   Injectable,
   PipeTransform,
 } from "@nestjs/common";
+import { WsException } from "@nestjs/websockets";
 import { ValidationError } from "yup";
 
 import { TypeWithSchema } from "@wewatch/schemas";
@@ -14,6 +15,10 @@ interface _ArgumentMetadata extends ArgumentMetadata {
 
 @Injectable()
 export class ValidationPipe implements PipeTransform {
+  constructException(errors?: string[], description?: string): Error {
+    return new BadRequestException(errors, description);
+  }
+
   async transform(
     value: unknown,
     metadata: _ArgumentMetadata,
@@ -24,7 +29,7 @@ export class ValidationPipe implements PipeTransform {
     }
 
     if (value === null) {
-      throw new BadRequestException();
+      throw this.constructException();
     }
 
     try {
@@ -33,10 +38,20 @@ export class ValidationPipe implements PipeTransform {
       });
     } catch (e) {
       if (e instanceof ValidationError) {
-        throw new BadRequestException(e.errors, e.name);
+        throw this.constructException(e.errors, e.name);
       }
 
       throw e;
     }
+  }
+}
+
+@Injectable()
+export class WsValidationPipe extends ValidationPipe implements PipeTransform {
+  constructException(errors?: string[], description?: string): Error {
+    return new WsException({
+      error: description,
+      message: errors,
+    });
   }
 }
