@@ -1,6 +1,6 @@
 import * as yup from "yup";
-
 import { withSchema } from "./utils";
+import { UserTypes } from "./constants";
 
 export const createUserSchema = yup.object({
   email: yup.string().email().required().trim(),
@@ -35,4 +35,17 @@ export class VisitorLoginDTO {
 
 export class AccessTokenDTO {
   accessToken!: string;
+}
+
+export const userInfoSchema = yup.object({
+  id: yup.string().required(),
+  type: yup.string().required().oneOf(UserTypes),
+  name: yup.string().required(),
+});
+
+@withSchema(userInfoSchema)
+export class UserInfoDTO {
+  id!: string;
+  type!: string;
+  name!: string;
 }

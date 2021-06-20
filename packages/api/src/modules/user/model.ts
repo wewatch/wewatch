@@ -2,6 +2,8 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 import { nanoid } from "nanoid";
 
+import { constants } from "@wewatch/schemas";
+
 @Schema({
   timestamps: true,
 })
@@ -15,9 +17,14 @@ export class User {
 
   @Prop({
     required: true,
-    enum: ["user", "visitor"],
+    enum: constants.UserTypes,
   })
   type!: string;
+
+  @Prop({
+    required: true,
+  })
+  name!: string;
 
   @Prop({
     unique: true,

@@ -5,12 +5,20 @@ import {
   Get,
   HttpCode,
   Post,
+  Request,
 } from "@nestjs/common";
 import { MongoError } from "mongodb";
 
-import { AccessTokenDTO, CreateUserDTO, UserLoginDTO } from "@wewatch/schemas";
+import {
+  AccessTokenDTO,
+  CreateUserDTO,
+  UserInfoDTO,
+  UserLoginDTO,
+} from "@wewatch/schemas";
+import { Schema } from "decorators/Schema";
 import { AuthService, UseAuthGuard } from "modules/auth";
 import { InvalidCredentials } from "utils/exceptions";
+import { RequestWithUser } from "utils/interface";
 
 import { UserService } from "./service";
 
@@ -56,7 +64,8 @@ export class UserController {
 
   @UseAuthGuard
   @Get("me")
-  getUserInfo(): string {
-    return "hello";
+  @Schema(UserInfoDTO)
+  getUserInfo(@Request() request: RequestWithUser): UserInfoDTO {
+    return request.user;
   }
 }
