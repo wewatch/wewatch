@@ -2,12 +2,13 @@ import { Button, Center } from "@chakra-ui/react";
 import { navigate, RouteComponentProps } from "@reach/router";
 import React, { useEffect } from "react";
 
-import { useCreateRoomMutation } from "api";
+import roomApi from "api/room";
 import useNotify from "common/hooks/notification";
 
 const Home = (_: RouteComponentProps): JSX.Element => {
   const notify = useNotify();
-  const [createRoom, { data, isError, isSuccess }] = useCreateRoomMutation();
+  const [createRoom, { data, isError, isSuccess }] =
+    roomApi.endpoints.createRoom.useMutation();
 
   useEffect(() => {
     if (isError) {

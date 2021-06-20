@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { UserInfoDTO } from "@wewatch/schemas";
-import api from "api";
+import authApi from "api/auth";
 
 interface AuthState {
   accessToken?: string;
@@ -31,11 +31,14 @@ const slice = createSlice({
 
   extraReducers: (builder) =>
     builder
-      .addMatcher(api.endpoints.getUserInfo.matchFulfilled, (state, action) => {
-        state.user = action.payload;
-      })
       .addMatcher(
-        api.endpoints.visitorLogin.matchFulfilled,
+        authApi.endpoints.getUserInfo.matchFulfilled,
+        (state, action) => {
+          state.user = action.payload;
+        },
+      )
+      .addMatcher(
+        authApi.endpoints.visitorLogin.matchFulfilled,
         (state, action) => {
           state.accessToken = action.payload.accessToken;
         },

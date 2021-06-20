@@ -1,8 +1,9 @@
 import { Box, Grid, GridItem } from "@chakra-ui/react";
 import { RouteComponentProps } from "@reach/router";
+import { skipToken } from "@reduxjs/toolkit/query";
 import React, { useEffect, useMemo } from "react";
 
-import { useGetRoomQuery } from "api";
+import roomApi from "api/room";
 import { SocketProvider } from "common/contexts/Socket";
 import useNotify from "common/hooks/notification";
 import { useAppDispatch } from "common/hooks/redux";
@@ -18,7 +19,11 @@ interface RoomProps extends RouteComponentProps {
 const Room = ({ roomId }: RoomProps): JSX.Element | null => {
   const notify = useNotify();
   const dispatch = useAppDispatch();
-  const { data: room, isError, isSuccess } = useGetRoomQuery(roomId ?? "");
+  const {
+    data: room,
+    isError,
+    isSuccess,
+  } = roomApi.endpoints.getRoom.useQuery(roomId ?? skipToken);
 
   useEffect(() => {
     if (isError) {

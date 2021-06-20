@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
 import { useEffect } from "react";
 
-import api from "api";
+import authApi from "api/auth";
 import { useAppDispatch, useAppSelector } from "common/hooks/redux";
 
 import { setVisitorId } from "./slice";
@@ -11,8 +11,8 @@ const Auth = (): null => {
   const visitorId = useAppSelector((state) => state.auth.visitorId);
   const accessToken = useAppSelector((state) => state.auth.accessToken);
 
-  const [triggerGetUserInfo] = api.endpoints.getUserInfo.useLazyQuery();
-  const [triggerVisitorLogin] = api.endpoints.visitorLogin.useMutation();
+  const [triggerGetUserInfo] = authApi.endpoints.getUserInfo.useLazyQuery();
+  const [triggerVisitorLogin] = authApi.endpoints.visitorLogin.useMutation();
 
   useEffect(() => {
     if (accessToken) {
