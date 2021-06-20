@@ -41,6 +41,13 @@ const Player = (): JSX.Element => {
           onDuration={handleDurationChange}
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
+          config={{
+            youtube: {
+              playerVars: {
+                disablekb: 1,
+              },
+            },
+          }}
         />
       </AspectRatio>
       <Controls playing={playing} progress={progress} duration={duration} />
