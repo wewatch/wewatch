@@ -3,7 +3,7 @@ import * as yup from "yup";
 import { withSchema } from "./utils";
 
 export const createUserSchema = yup.object({
-  email: yup.string().email().required(),
+  email: yup.string().email().required().trim(),
   password: yup.string().min(8).required(),
 });
 
@@ -13,15 +13,24 @@ export class CreateUserDTO {
   password!: string;
 }
 
-export const loginSchema = yup.object({
-  email: yup.string().email().required(),
+export const userLoginSchema = yup.object({
+  email: yup.string().email().required().trim(),
   password: yup.string().required(),
 });
 
-@withSchema(loginSchema)
-export class LoginDTO {
+@withSchema(userLoginSchema)
+export class UserLoginDTO {
   email!: string;
   password!: string;
+}
+
+export const visitorLoginSchema = yup.object({
+  visitorId: yup.string().required().trim(),
+});
+
+@withSchema(visitorLoginSchema)
+export class VisitorLoginDTO {
+  visitorId!: string;
 }
 
 export class AccessTokenDTO {

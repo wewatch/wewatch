@@ -3,9 +3,10 @@ import { MongooseModule } from "@nestjs/mongoose";
 
 import { AuthModule } from "modules/auth";
 
-import { UserController } from "./controller";
 import { User, UserSchema } from "./model";
 import { UserService } from "./service";
+import { UserController } from "./user.controller";
+import { VisitorController } from "./visitor.controller";
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { UserService } from "./service";
     ]),
     forwardRef(() => AuthModule),
   ],
-  controllers: [UserController],
+  controllers: [UserController, VisitorController],
   providers: [UserService],
   exports: [UserService],
 })

@@ -8,7 +8,7 @@ import {
 } from "@nestjs/common";
 import { MongoError } from "mongodb";
 
-import { AccessTokenDTO, CreateUserDTO, LoginDTO } from "@wewatch/schemas";
+import { AccessTokenDTO, CreateUserDTO, UserLoginDTO } from "@wewatch/schemas";
 import { AuthService, UseAuthGuard } from "modules/auth";
 import { InvalidCredentials } from "utils/exceptions";
 
@@ -26,7 +26,8 @@ export class UserController {
     @Body() createUserDTO: CreateUserDTO,
   ): Promise<AccessTokenDTO> {
     try {
-      const user = await this.userService.create(createUserDTO);
+      const { email, password } = createUserDTO;
+      const user = await this.userService.createUser(email, password);
       return {
         accessToken: this.authService.createAccessToken(user),
       };
@@ -41,8 +42,9 @@ export class UserController {
 
   @Post("login")
   @HttpCode(200)
-  async login(@Body() loginDTO: LoginDTO): Promise<AccessTokenDTO> {
-    const user = await this.userService.findByEmailAndPassword(loginDTO);
+  async login(@Body() loginDTO: UserLoginDTO): Promise<AccessTokenDTO> {
+    const { email, password } = loginDTO;
+    const user = await this.userService.findByEmailAndPassword(email, password);
     if (user === null) {
       throw new InvalidCredentials();
     }

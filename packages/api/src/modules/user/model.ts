@@ -15,14 +15,22 @@ export class User {
 
   @Prop({
     required: true,
+    enum: ["user", "visitor"],
+  })
+  type!: string;
+
+  @Prop({
     unique: true,
   })
   email!: string;
 
-  @Prop({
-    required: true,
-  })
+  @Prop()
   hashedPassword!: string;
+
+  @Prop({
+    unique: true,
+  })
+  visitorId!: string;
 }
 
 export type UserDocument = User & Document;
