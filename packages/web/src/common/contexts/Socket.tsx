@@ -8,6 +8,7 @@ import {
 } from "socket.io-client/build/typed-events";
 
 import useNotify from "common/hooks/notification";
+import { useAccessToken } from "common/hooks/selector";
 
 type SocketStatus = "connecting" | "connected" | "disconnected";
 
@@ -57,35 +58,49 @@ export const SocketProvider = ({
 
   const socketConnected = socketStatus === "connected";
 
+  const accessToken = useAccessToken();
   const notify = useNotify();
 
   useEffect(() => {
-    const newSocket = io(
-      `${process.env.REACT_APP_API_URL}/${namespace}`,
-      socketOpts,
-    );
+    if (accessToken !== undefined) {
+      const newSocket = io(`${process.env.REACT_APP_API_URL}/${namespace}`, {
+        ...socketOpts,
+        auth: {
+          accessToken,
+        },
+      });
 
-    setSocket(newSocket);
+      setSocket(newSocket);
 
-    newSocket.on("connect", () => setSocketStatus("connected"));
-    newSocket.on("disconnect", () => setSocketStatus("connecting"));
-    newSocket.on("connect_error", () => setSocketStatus("disconnected"));
-    newSocket.on("exception", (response) =>
-      notify({
-        status: "error",
-        title: response.message,
-      }),
-    );
+      newSocket.on("connect", () => setSocketStatus("connected"));
+      newSocket.on("disconnect", () => setSocketStatus("connecting"));
+      newSocket.on("connect_error", () => setSocketStatus("disconnected"));
+      newSocket.on("exception", (response) =>
+        notify({
+          status: "error",
+          title: response.message,
+        }),
+      );
 
-    Object.entries(eventHandlers).forEach(([event, handler]) => {
-      newSocket.on(event, handler);
-    });
+      Object.entries(eventHandlers).forEach(([event, handler]) => {
+        newSocket.on(event, handler);
+      });
 
-    return () => {
+      return () => {
+        setSocket(null);
+        newSocket.disconnect();
+      };
+    }
+
+    return () => {};
+  }, [namespace, socketOpts, eventHandlers, notify, accessToken]);
+
+  useEffect(() => {
+    if (accessToken === undefined) {
+      socket?.disconnect();
       setSocket(null);
-      newSocket.disconnect();
-    };
-  }, [namespace, socketOpts, eventHandlers, notify]);
+    }
+  }, [accessToken, socket]);
 
   const socketEmit: SocketEmit = useCallback(
     (event, ...args) => {

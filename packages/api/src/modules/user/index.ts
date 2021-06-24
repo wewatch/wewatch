@@ -24,4 +24,4 @@ import { VisitorController } from "./visitor.controller";
 })
 export class UserModule {}
 
-export { UserService };
+export { UserService, User };

@@ -1,9 +1,11 @@
 import { UseFilters, UsePipes } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 import {
   BaseWsExceptionFilter,
   ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
+  OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -12,21 +14,66 @@ import {
 import { Server, Socket } from "socket.io";
 
 import { RoomActionDTO } from "@wewatch/actions";
+import { AuthService } from "modules/auth";
 import { WsValidationPipe } from "pipes/validation";
 import { isHttpException } from "utils/types";
 
 import { RoomService } from "./service";
+
+interface SocketInfo {
+  roomId: string;
+  userId: string;
+}
+
+interface SocketsInfo {
+  [key: string]: SocketInfo;
+}
 
 @UseFilters(new BaseWsExceptionFilter())
 @UsePipes(new WsValidationPipe())
 @WebSocketGateway({
   namespace: "rooms",
 })
-export class RoomGateway implements OnGatewayConnection {
-  constructor(private readonly roomService: RoomService) {}
+export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  private readonly socketsInfo: SocketsInfo;
+
+  constructor(
+    private readonly roomService: RoomService,
+    private readonly jwtService: JwtService,
+    private readonly authService: AuthService,
+  ) {
+    this.socketsInfo = {};
+  }
 
   @WebSocketServer()
   server!: Server;
+
+  async handleConnection(socket: Socket): Promise<void> {
+    try {
+      const accessToken = this.getAccessToken(socket);
+      const { sub } = this.jwtService.verify(accessToken);
+      await this.authService.verifyJwtSubject(sub);
+
+      const roomId = this.getRoomId(socket);
+      socket.join(roomId);
+
+      this.socketsInfo[socket.id] = {
+        roomId,
+        userId: sub,
+      };
+    } catch (e) {
+      socket.disconnect();
+    }
+  }
+
+  getAccessToken(socket: Socket): string {
+    const accessToken: string | undefined = socket.handshake.auth?.accessToken;
+    if (accessToken === undefined) {
+      throw new Error("Access token is not provided");
+    }
+
+    return accessToken;
+  }
 
   getRoomId(socket: Socket): string {
     const roomId = socket.handshake.query?.roomId;
@@ -42,13 +89,8 @@ export class RoomGateway implements OnGatewayConnection {
     return roomId[0];
   }
 
-  handleConnection(socket: Socket): void {
-    try {
-      const roomId = this.getRoomId(socket);
-      socket.join(roomId);
-    } catch {
-      socket.disconnect();
-    }
+  handleDisconnect(socket: Socket): void {
+    delete this.socketsInfo[socket.id];
   }
 
   @SubscribeMessage("actions")
@@ -56,7 +98,7 @@ export class RoomGateway implements OnGatewayConnection {
     @ConnectedSocket() socket: Socket,
     @MessageBody() action: RoomActionDTO,
   ): Promise<void> {
-    const roomId = this.getRoomId(socket);
+    const roomId = this.socketsInfo[socket.id].roomId;
 
     try {
       const newAction = await this.roomService.handleAction(roomId, action);
