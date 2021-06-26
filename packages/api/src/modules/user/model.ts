@@ -26,9 +26,7 @@ export class User {
   })
   name!: string;
 
-  @Prop({
-    unique: true,
-  })
+  @Prop()
   email!: string;
 
   @Prop()
@@ -43,3 +41,16 @@ export class User {
 export type UserDocument = User & Document;
 
 export const UserSchema = SchemaFactory.createForClass(User);
+UserSchema.index(
+  {
+    email: 1,
+  },
+  {
+    unique: true,
+    partialFilterExpression: {
+      email: {
+        $exists: true,
+      },
+    },
+  },
+);
