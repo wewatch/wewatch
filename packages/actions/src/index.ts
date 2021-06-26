@@ -12,3 +12,8 @@ export class RoomActionDTO {
   type!: string;
   payload!: any;
 }
+
+export class RoomActionWithUserDTO {
+  userId!: string;
+  action!: RoomActionDTO;
+}

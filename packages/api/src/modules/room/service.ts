@@ -48,7 +48,11 @@ export class RoomService {
     return this.roomModel.findById(id).exec();
   }
 
-  async handleAction(roomId: string, action: ActionDTO): Promise<ActionDTO> {
+  async handleAction(
+    roomId: string,
+    userId: string,
+    action: ActionDTO,
+  ): Promise<ActionDTO> {
     let payload = null;
 
     if (actions.addVideo.match(action)) {

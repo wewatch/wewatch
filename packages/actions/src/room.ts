@@ -1,13 +1,7 @@
 import { createAction } from "@reduxjs/toolkit";
 import * as yup from "yup";
 
-import {
-  PlayerStateDTO,
-  playerStateSchema,
-  VideoDTO,
-  videoSchema,
-  withSchema,
-} from "@wewatch/schemas";
+import { VideoDTO, videoSchema, withSchema } from "@wewatch/schemas";
 
 export const addVideoPayloadSchema = yup.object({
   playlistId: yup.string().required(),

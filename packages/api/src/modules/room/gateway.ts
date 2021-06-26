@@ -98,11 +98,18 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() socket: Socket,
     @MessageBody() action: RoomActionDTO,
   ): Promise<void> {
-    const roomId = this.socketsInfo[socket.id].roomId;
+    const { roomId, userId } = this.socketsInfo[socket.id];
 
     try {
-      const newAction = await this.roomService.handleAction(roomId, action);
-      this.server.to(roomId).emit("actions", newAction);
+      const newAction = await this.roomService.handleAction(
+        roomId,
+        userId,
+        action,
+      );
+      this.server.to(roomId).emit("actions", {
+        userId,
+        action: newAction,
+      });
     } catch (e) {
       if (isHttpException(e)) {
         throw new WsException(e.getResponse());

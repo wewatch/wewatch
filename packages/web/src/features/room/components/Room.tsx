@@ -3,6 +3,7 @@ import { RouteComponentProps } from "@reach/router";
 import { skipToken } from "@reduxjs/toolkit/query";
 import React, { useEffect, useMemo } from "react";
 
+import { RoomActionWithUserDTO } from "@wewatch/actions";
 import roomApi from "api/room";
 import { SocketProvider } from "common/contexts/Socket";
 import useNotify from "common/hooks/notification";
@@ -51,7 +52,7 @@ const Room = ({ roomId }: RoomProps): JSX.Element | null => {
 
   const socketEventHandlers = useMemo(
     () => ({
-      actions: dispatch,
+      actions: ({ action }: RoomActionWithUserDTO) => dispatch(action),
     }),
     [dispatch],
   );
