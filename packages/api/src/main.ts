@@ -26,7 +26,6 @@ async function bootstrap() {
   await app.register(
     fp(async (fastify: FastifyInstance) => {
       fastify.addHook("onRequest", async (req, reply) => {
-        console.log(req);
         reply.headers({
           "Surrogate-Control": "no-store",
           "Cache-Control": "no-store, max-age=0, must-revalidate",

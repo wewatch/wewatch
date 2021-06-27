@@ -11,7 +11,8 @@ import {
   RoomActionDTO as ActionDTO,
   roomActions as actions,
 } from "@wewatch/actions";
-import { TypeWithSchema, VideoDTO } from "@wewatch/schemas";
+import { TypeWithSchema, userInfoSchema, VideoDTO } from "@wewatch/schemas";
+import { User } from "modules/user";
 
 import { PlaylistDocument, Room, RoomDocument, VideoDocument } from "./model";
 
@@ -87,6 +88,32 @@ export class RoomService {
     }
 
     return action;
+  }
+
+  async handleUserJoinRoom(roomId: string, user: User): Promise<void> {
+    const room = await this.getRoom(roomId);
+    const member = room.members.find((m) => m.id === user.id);
+
+    if (member === undefined) {
+      room.members.push({
+        ...userInfoSchema.cast(user, { stripUnknown: true }),
+        isOnline: true,
+      });
+    } else {
+      member.isOnline = true;
+    }
+
+    await room.save();
+  }
+
+  async handleUserLeaveRoom(roomId: string, userId: string): Promise<void> {
+    const room = await this.getRoom(roomId);
+    const member = room.members.find((m) => m.id === userId);
+
+    if (member !== undefined) {
+      member.isOnline = false;
+      await room.save();
+    }
   }
 
   async getRoom(roomId: string): Promise<RoomDocument> {

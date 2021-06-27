@@ -12,6 +12,7 @@ const initialState: Room = {
     playing: false,
     played: 0,
   },
+  members: [],
 };
 
 const slice = createSlice({

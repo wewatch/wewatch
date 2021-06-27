@@ -52,10 +52,11 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     try {
       const accessToken = this.getAccessToken(socket);
       const { sub } = this.jwtService.verify(accessToken);
-      await this.authService.verifyJwtSubject(sub);
+      const user = await this.authService.verifyJwtSubject(sub);
 
       const roomId = this.getRoomId(socket);
       socket.join(roomId);
+      await this.roomService.handleUserJoinRoom(roomId, user);
 
       this.socketsInfo[socket.id] = {
         roomId,
@@ -89,7 +90,9 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return roomId[0];
   }
 
-  handleDisconnect(socket: Socket): void {
+  async handleDisconnect(socket: Socket): Promise<void> {
+    const { roomId, userId } = this.socketsInfo[socket.id];
+    await this.roomService.handleUserLeaveRoom(roomId, userId);
     delete this.socketsInfo[socket.id];
   }
 
