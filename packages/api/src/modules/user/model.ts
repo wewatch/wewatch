@@ -1,20 +1,13 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
-import { nanoid } from "nanoid";
 
 import { constants } from "@wewatch/schemas";
+import { BaseSchema } from "utils/baseSchema";
 
 @Schema({
   timestamps: true,
 })
-export class User {
-  id!: string;
-
-  @Prop({
-    default: nanoid,
-  })
-  _id!: string;
-
+export class User extends BaseSchema {
   @Prop({
     required: true,
     type: String,
