@@ -17,9 +17,9 @@ export class User {
 
   @Prop({
     required: true,
-    enum: constants.UserTypes,
+    type: String,
   })
-  type!: string;
+  type!: constants.UserType;
 
   @Prop({
     required: true,
