@@ -14,9 +14,12 @@ const Player = (): JSX.Element => {
   const { socketEmit } = useSocket();
 
   const setPlaying = useCallback(
-    (newPlaying: boolean) =>
-      socketEmit("actions", roomActions.setPlaying(newPlaying)),
-    [socketEmit],
+    (newPlaying: boolean) => {
+      if (newPlaying !== playing) {
+        socketEmit("actions", roomActions.setPlaying(newPlaying));
+      }
+    },
+    [socketEmit, playing],
   );
 
   const [progress, setProgress] = useState<ProgressInfo>({
@@ -50,7 +53,12 @@ const Player = (): JSX.Element => {
           }}
         />
       </AspectRatio>
-      <Controls playing={playing} progress={progress} duration={duration} />
+      <Controls
+        playing={playing}
+        setPlaying={setPlaying}
+        progress={progress}
+        duration={duration}
+      />
     </Skeleton>
   );
 };
