@@ -3,7 +3,9 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from "@nestjs/platform-fastify";
+import { FastifyInstance } from "fastify";
 import fastifyHelmet from "fastify-helmet";
+import fp from "fastify-plugin";
 import { Logger } from "nestjs-pino";
 
 import { SerializerInterceptor } from "interceptors/serializer";
@@ -21,6 +23,19 @@ async function bootstrap() {
 
   app.enableCors();
   await app.register(fastifyHelmet);
+  await app.register(
+    fp(async (fastify: FastifyInstance) => {
+      fastify.addHook("onRequest", async (req, reply) => {
+        console.log(req);
+        reply.headers({
+          "Surrogate-Control": "no-store",
+          "Cache-Control": "no-store, max-age=0, must-revalidate",
+          Pragma: "no-cache",
+          Expires: "0",
+        });
+      });
+    }),
+  );
 
   const logger = app.get(Logger);
   app.useLogger(logger);
