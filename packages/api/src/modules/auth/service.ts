@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 
-import { User, UserService } from "modules/user";
+import { UserDocument, UserService } from "modules/user";
 
 @Injectable()
 export class AuthService {
@@ -16,12 +16,12 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  createAccessToken(user: User): string {
+  createAccessToken(user: UserDocument): string {
     const payload = { sub: user._id };
     return this.jwtService.sign(payload);
   }
 
-  async verifyJwtSubject(subject: string): Promise<User> {
+  async verifyJwtSubject(subject: string): Promise<UserDocument> {
     const user = await this.userService.get(subject);
 
     if (user === null) {

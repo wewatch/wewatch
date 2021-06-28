@@ -12,7 +12,7 @@ import {
   roomActions as actions,
 } from "@wewatch/actions";
 import { TypeWithSchema, userInfoSchema, VideoDTO } from "@wewatch/schemas";
-import { User } from "modules/user";
+import { UserDocument } from "modules/user";
 
 import { PlaylistDocument, Room, RoomDocument, VideoDocument } from "./model";
 
@@ -90,7 +90,7 @@ export class RoomService {
     return action;
   }
 
-  async handleUserJoinRoom(roomId: string, user: User): Promise<void> {
+  async handleUserJoinRoom(roomId: string, user: UserDocument): Promise<void> {
     const room = await this.getRoom(roomId);
     const member = room.members.find((m) => m.id === user.id);
 

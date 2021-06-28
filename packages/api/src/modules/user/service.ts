@@ -10,7 +10,7 @@ import { User, UserDocument } from "./model";
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  async createUser(email: string, password: string): Promise<User> {
+  async createUser(email: string, password: string): Promise<UserDocument> {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
     const type = "user";
@@ -24,7 +24,7 @@ export class UserService {
     return user.save();
   }
 
-  async createVisitor(visitorId: string): Promise<User> {
+  async createVisitor(visitorId: string): Promise<UserDocument> {
     const type = "visitor";
 
     const visitor = new this.userModel({
@@ -35,14 +35,14 @@ export class UserService {
     return visitor.save();
   }
 
-  async get(id: string): Promise<User | null> {
+  async get(id: string): Promise<UserDocument | null> {
     return this.userModel.findById(id).exec();
   }
 
   async findByEmailAndPassword(
     email: string,
     password: string,
-  ): Promise<User | null> {
+  ): Promise<UserDocument | null> {
     const user = await this.userModel.findOne({ email }).exec();
     if (user === null) {
       return null;
@@ -52,7 +52,7 @@ export class UserService {
     return passwordIsValid ? user : null;
   }
 
-  async findByVisitorId(visitorId: string): Promise<User | null> {
+  async findByVisitorId(visitorId: string): Promise<UserDocument | null> {
     return this.userModel.findOne({ visitorId }).exec();
   }
 }
