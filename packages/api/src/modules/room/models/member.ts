@@ -10,7 +10,6 @@ import { BaseSchema } from "utils/baseSchema";
 export class Member extends BaseSchema {
   @Prop({
     required: true,
-    index: true,
   })
   room!: string;
 
@@ -30,3 +29,13 @@ export class Member extends BaseSchema {
 
 export type MemberDocument = Member & Document;
 export const MemberSchema = SchemaFactory.createForClass(Member);
+
+MemberSchema.index(
+  {
+    room: 1,
+    user: 1,
+  },
+  {
+    unique: true,
+  },
+);

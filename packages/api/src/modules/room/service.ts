@@ -84,7 +84,6 @@ export class RoomService {
 
   async handleUserJoinRoom(roomId: string, user: UserDocument): Promise<void> {
     const room = await this.getRoom(roomId);
-    console.log("user join room");
     await this.memberModel
       .findOneAndUpdate(
         {
