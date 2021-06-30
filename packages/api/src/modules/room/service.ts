@@ -11,14 +11,23 @@ import {
   RoomActionDTO as ActionDTO,
   roomActions as actions,
 } from "@wewatch/actions";
-import { TypeWithSchema, userInfoSchema, VideoDTO } from "@wewatch/schemas";
+import { TypeWithSchema, VideoDTO } from "@wewatch/schemas";
 import { UserDocument } from "modules/user";
 
-import { PlaylistDocument, Room, RoomDocument, VideoDocument } from "./model";
+import { Member, MemberDocument } from "./models/member";
+import {
+  PlaylistDocument,
+  Room,
+  RoomDocument,
+  VideoDocument,
+} from "./models/room";
 
 @Injectable()
 export class RoomService {
-  constructor(@InjectModel(Room.name) private roomModel: Model<RoomDocument>) {}
+  constructor(
+    @InjectModel(Room.name) private roomModel: Model<RoomDocument>,
+    @InjectModel(Member.name) private memberModel: Model<MemberDocument>,
+  ) {}
 
   async create(): Promise<RoomDocument> {
     const room = new this.roomModel({
@@ -47,6 +56,48 @@ export class RoomService {
 
   async get(id: string): Promise<RoomDocument | null> {
     return this.roomModel.findById(id).exec();
+  }
+
+  async getRoom(roomId: string): Promise<RoomDocument> {
+    const room = await this.get(roomId);
+    if (room === null) {
+      throw new NotFoundException("Room not found");
+    }
+
+    return room;
+  }
+
+  async handleUserJoinRoom(roomId: string, user: UserDocument): Promise<void> {
+    const room = await this.getRoom(roomId);
+    console.log("user join room");
+    await this.memberModel
+      .findOneAndUpdate(
+        {
+          room: room.id,
+          user: user.id,
+        },
+        {
+          online: true,
+        },
+        {
+          upsert: true,
+        },
+      )
+      .exec();
+  }
+
+  async handleUserLeaveRoom(roomId: string, userId: string): Promise<void> {
+    await this.memberModel
+      .findOneAndUpdate(
+        {
+          room: roomId,
+          user: userId,
+        },
+        {
+          online: false,
+        },
+      )
+      .exec();
   }
 
   async handleAction(
@@ -88,41 +139,6 @@ export class RoomService {
     }
 
     return action;
-  }
-
-  async handleUserJoinRoom(roomId: string, user: UserDocument): Promise<void> {
-    const room = await this.getRoom(roomId);
-    const member = room.members.find((m) => m.id === user.id);
-
-    if (member === undefined) {
-      room.members.push({
-        ...userInfoSchema.cast(user, { stripUnknown: true }),
-        isOnline: true,
-      });
-    } else {
-      member.isOnline = true;
-    }
-
-    await room.save();
-  }
-
-  async handleUserLeaveRoom(roomId: string, userId: string): Promise<void> {
-    const room = await this.getRoom(roomId);
-    const member = room.members.find((m) => m.id === userId);
-
-    if (member !== undefined) {
-      member.isOnline = false;
-      await room.save();
-    }
-  }
-
-  async getRoom(roomId: string): Promise<RoomDocument> {
-    const room = await this.get(roomId);
-    if (room === null) {
-      throw new NotFoundException("Room not found");
-    }
-
-    return room;
   }
 
   async getRoomAndPlaylist(

@@ -1,7 +1,7 @@
-import { withSchema } from "./utils";
 import * as yup from "yup";
+
 import { idSchema } from "./common";
-import { MemberDTO, memberSchema } from "./member";
+import { withSchema } from "./utils";
 
 export const newVideoSchema = yup.object({
   url: yup.string().url().required().trim(),
@@ -55,7 +55,6 @@ export const roomSchema = yup
     playlists: yup.array().of(playlistSchema),
     activePlaylistId: yup.string().required().nullable(),
     playerState: playerStateSchema,
-    members: yup.array().of(memberSchema),
   })
   .concat(idSchema);
 
@@ -65,7 +64,6 @@ export class RoomDTO {
   playlists!: PlaylistDTO[];
   activePlaylistId!: string | null;
   playerState!: PlayerStateDTO;
-  members!: MemberDTO[];
 }
 
 export type Room = RoomDTO;

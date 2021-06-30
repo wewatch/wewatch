@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Get,
-  NotFoundException,
-  Param,
-  Post,
-} from "@nestjs/common";
+import { Controller, Get, Param, Post } from "@nestjs/common";
 
 import { IdDTO, RoomDTO } from "@wewatch/schemas";
 import { Schema } from "decorators/Schema";
@@ -24,11 +18,6 @@ export class RoomController {
   @Get("/:id")
   @Schema(RoomDTO)
   async getRoom(@Param("id") roomId: string): Promise<RoomDTO> {
-    const room = await this.roomService.get(roomId);
-    if (room === null) {
-      throw new NotFoundException();
-    }
-
-    return room;
+    return await this.roomService.getRoom(roomId);
   }
 }

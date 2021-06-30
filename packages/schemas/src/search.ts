@@ -1,7 +1,7 @@
 import * as yup from "yup";
 
-import { withSchema } from "./utils";
 import { NewVideoDTO } from "./room";
+import { withSchema } from "./utils";
 
 export const searchSchema = yup.object({
   query: yup.string().required("A query string is required").trim(),

@@ -16,6 +16,9 @@ extends:
   - "plugin:@typescript-eslint/eslint-recommended"
   - "plugin:@typescript-eslint/recommended"
   - "plugin:prettier/recommended"
+rules:
+  simple-import-sort/imports:
+    - "error"
 settings:
   import/parsers:
     "@typescript-eslint/parser":

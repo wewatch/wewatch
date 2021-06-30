@@ -5,7 +5,8 @@ import { UserModule } from "modules/user";
 
 import { RoomController } from "./controller";
 import { RoomGateway } from "./gateway";
-import { Room, RoomSchema } from "./model";
+import { Member, MemberSchema } from "./models/member";
+import { Room, RoomSchema } from "./models/room";
 import { RoomService } from "./service";
 
 @Module({
@@ -14,6 +15,10 @@ import { RoomService } from "./service";
       {
         name: Room.name,
         schema: RoomSchema,
+      },
+      {
+        name: Member.name,
+        schema: MemberSchema,
       },
     ]),
     UserModule,

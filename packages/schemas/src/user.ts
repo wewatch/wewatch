@@ -1,6 +1,7 @@
 import * as yup from "yup";
-import { withSchema } from "./utils";
+
 import { UserType, UserTypes } from "./constants";
+import { withSchema } from "./utils";
 
 export const createUserSchema = yup.object({
   email: yup.string().email().required().trim(),
