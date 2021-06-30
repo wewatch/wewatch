@@ -4,14 +4,14 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { FilterQuery, Model } from "mongoose";
 import { nanoid } from "nanoid";
 
 import {
   RoomActionDTO as ActionDTO,
   roomActions as actions,
 } from "@wewatch/actions";
-import { TypeWithSchema, VideoDTO } from "@wewatch/schemas";
+import { MemberDTO, TypeWithSchema, VideoDTO } from "@wewatch/schemas";
 import { UserDocument } from "modules/user";
 
 import { Member, MemberDocument } from "./models/member";
@@ -65,6 +65,21 @@ export class RoomService {
     }
 
     return room;
+  }
+
+  async getMembers<B extends boolean>(
+    roomId: string,
+    populate: B,
+  ): Promise<
+    B extends true ? (MemberDocument & MemberDTO)[] : MemberDocument[]
+  > {
+    let query = this.memberModel.find({ room: roomId });
+
+    if (populate) {
+      query = query.populate("user");
+    }
+
+    return (await query.exec()) as never;
   }
 
   async handleUserJoinRoom(roomId: string, user: UserDocument): Promise<void> {

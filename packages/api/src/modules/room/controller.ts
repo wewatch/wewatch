@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Post } from "@nestjs/common";
 
-import { IdDTO, RoomDTO } from "@wewatch/schemas";
+import { IdDTO, MemberDTO, RoomDTO } from "@wewatch/schemas";
 import { Schema } from "decorators/Schema";
 
 import { RoomService } from "./service";
@@ -19,5 +19,11 @@ export class RoomController {
   @Schema(RoomDTO)
   async getRoom(@Param("id") roomId: string): Promise<RoomDTO> {
     return await this.roomService.getRoom(roomId);
+  }
+
+  @Get("/:id/members")
+  @Schema(MemberDTO)
+  async getRoomMembers(@Param("id") roomId: string): Promise<MemberDTO[]> {
+    return await this.roomService.getMembers(roomId, true);
   }
 }
