@@ -4,6 +4,7 @@ import ReactPlayer from "react-player";
 
 import { roomActions } from "@wewatch/actions";
 import { useSocket } from "common/contexts/Socket";
+import { useAppDispatch } from "common/hooks/redux";
 import { usePlayerState } from "common/hooks/selector";
 
 import type { ProgressInfo } from "./Controls";
@@ -12,14 +13,16 @@ import Controls from "./Controls";
 const Player = (): JSX.Element => {
   const { url, playing } = usePlayerState();
   const { socketEmit } = useSocket();
+  const dispatch = useAppDispatch();
 
   const setPlaying = useCallback(
     (newPlaying: boolean) => {
       if (newPlaying !== playing) {
+        dispatch(roomActions.setPlaying(newPlaying));
         socketEmit("actions", roomActions.setPlaying(newPlaying));
       }
     },
-    [socketEmit, playing],
+    [dispatch, playing, socketEmit],
   );
 
   const [progress, setProgress] = useState<ProgressInfo>({

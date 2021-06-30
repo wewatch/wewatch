@@ -22,6 +22,7 @@ const PlaylistItemController = ({ id, url }: VideoDTO): JSX.Element => {
   const handlePlay = () => {
     if (isActiveUrl) {
       dispatch(roomActions.setPlaying(!playing));
+      socketEmit("actions", roomActions.setPlaying(!playing));
     } else {
       socketEmit("actions", roomActions.setActiveURL(url));
     }
