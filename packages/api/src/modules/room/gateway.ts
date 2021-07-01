@@ -1,4 +1,5 @@
 import { UseFilters, UsePipes } from "@nestjs/common";
+import { OnEvent } from "@nestjs/event-emitter";
 import { JwtService } from "@nestjs/jwt";
 import {
   BaseWsExceptionFilter,
@@ -14,6 +15,7 @@ import {
 import { Server, Socket } from "socket.io";
 
 import { RoomActionDTO } from "@wewatch/actions";
+import { constants } from "@wewatch/schemas";
 import { AuthService } from "modules/auth";
 import { WsValidationPipe } from "pipes/validation";
 import { isHttpException } from "utils/types";
@@ -25,17 +27,13 @@ interface SocketInfo {
   userId: string;
 }
 
-interface SocketsInfo {
-  [key: string]: SocketInfo;
-}
-
 @UseFilters(new BaseWsExceptionFilter())
 @UsePipes(new WsValidationPipe())
 @WebSocketGateway({
   namespace: "rooms",
 })
 export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  private readonly socketsInfo: SocketsInfo;
+  private readonly socketsInfo: Record<string, SocketInfo>;
 
   constructor(
     private readonly roomService: RoomService,
@@ -104,11 +102,7 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const { roomId, userId } = this.socketsInfo[socket.id];
 
     try {
-      const newAction = await this.roomService.handleAction(
-        roomId,
-        userId,
-        action,
-      );
+      const newAction = await this.roomService.handleAction(roomId, action);
       this.server.to(roomId).emit("actions", {
         userId,
         action: newAction,
@@ -120,5 +114,28 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       throw e;
     }
+  }
+
+  @OnEvent("room.actions")
+  onBackendActionEvent({
+    roomId,
+    action,
+  }: {
+    roomId: string;
+    action: RoomActionDTO;
+  }): void {
+    this.server.to(roomId).emit("actions", {
+      userId: null,
+      action,
+    });
+  }
+
+  @SubscribeMessage("members")
+  async onMemberEvent(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() payload: constants.MemberEventPayload,
+  ): Promise<void> {
+    const { roomId, userId } = this.socketsInfo[socket.id];
+    await this.roomService.handleMemberEvent(roomId, userId, payload);
   }
 }

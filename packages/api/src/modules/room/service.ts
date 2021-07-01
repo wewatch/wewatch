@@ -3,7 +3,9 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 import { InjectModel } from "@nestjs/mongoose";
+import { SchedulerRegistry } from "@nestjs/schedule";
 import { FilterQuery, Model } from "mongoose";
 import { nanoid } from "nanoid";
 
@@ -11,7 +13,12 @@ import {
   RoomActionDTO as ActionDTO,
   roomActions as actions,
 } from "@wewatch/actions";
-import { MemberDTO, TypeWithSchema, VideoDTO } from "@wewatch/schemas";
+import {
+  constants,
+  MemberDTO,
+  TypeWithSchema,
+  VideoDTO,
+} from "@wewatch/schemas";
 import { UserDocument } from "modules/user";
 
 import { Member, MemberDocument } from "./models/member";
@@ -27,6 +34,8 @@ export class RoomService {
   constructor(
     @InjectModel(Room.name) private roomModel: Model<RoomDocument>,
     @InjectModel(Member.name) private memberModel: Model<MemberDocument>,
+    private eventEmitter: EventEmitter2,
+    private schedulerRegistry: SchedulerRegistry,
   ) {}
 
   async create(): Promise<RoomDocument> {
@@ -70,10 +79,14 @@ export class RoomService {
   async getMembers<B extends boolean>(
     roomId: string,
     populate: B,
+    additionalFilter: FilterQuery<MemberDocument> = {},
   ): Promise<
     B extends true ? (MemberDocument & MemberDTO)[] : MemberDocument[]
   > {
-    let query = this.memberModel.find({ room: roomId });
+    let query = this.memberModel.find({
+      room: roomId,
+      ...additionalFilter,
+    });
 
     if (populate) {
       query = query.populate("user");
@@ -114,11 +127,103 @@ export class RoomService {
       .exec();
   }
 
-  async handleAction(
+  async handleMemberEvent(
     roomId: string,
     userId: string,
-    action: ActionDTO,
-  ): Promise<ActionDTO> {
+    payload: constants.MemberEventPayload,
+  ): Promise<void> {
+    if (payload === constants.MemberEventPayload.READY_TO_NEXT) {
+      await this.handleMemberReadyToNext(roomId, userId);
+    }
+  }
+
+  async handleMemberReadyToNext(roomId: string, userId: string): Promise<void> {
+    const member = await this.memberModel
+      .findOneAndUpdate(
+        {
+          room: roomId,
+          user: userId,
+        },
+        {
+          readyToNext: true,
+        },
+      )
+      .exec();
+    if (member === null) {
+      return;
+    }
+
+    const timeoutName = `selectAndPlayNextVideo:${roomId}`;
+
+    const members = await this.getMembers(roomId, false);
+    if (members.every((m) => m.readyToNext)) {
+      if (this.schedulerRegistry.doesExists("timeout", timeoutName)) {
+        this.schedulerRegistry.deleteTimeout(timeoutName);
+      }
+
+      return await this.selectAndPlayNextVideo(roomId);
+    }
+
+    const isFirstReadyMember =
+      members.filter((m) => m.readyToNext).length === 1;
+    if (isFirstReadyMember) {
+      const timeout = setTimeout(
+        this.selectAndPlayNextVideo.bind(this),
+        5000,
+        roomId,
+      );
+      this.schedulerRegistry.addTimeout(timeoutName, timeout);
+    }
+  }
+
+  async selectAndPlayNextVideo(roomId: string): Promise<void> {
+    const nextVideoURL = await this.selectNextVideo(roomId);
+
+    let action: ActionDTO;
+    if (nextVideoURL === null) {
+      action = actions.setPlaying(false);
+    } else {
+      action = actions.setActiveURL(nextVideoURL);
+    }
+
+    await this.handleAction(roomId, action);
+
+    this.eventEmitter.emit("room.actions", {
+      roomId,
+      action,
+    });
+
+    await this.memberModel
+      .updateMany(
+        {
+          room: roomId,
+        },
+        {
+          readyToNext: false,
+        },
+      )
+      .exec();
+  }
+
+  async selectNextVideo(roomId: string): Promise<string | null> {
+    const room = await this.getRoom(roomId);
+    const playlist = room.playlists.id(room.activePlaylistId);
+    if (playlist === null) {
+      return null;
+    }
+
+    const currentURL = room.playerState.url ?? "";
+    const videoURLs = playlist.videos.map((v) => v.url);
+    const index = videoURLs.indexOf(currentURL);
+    const candidateURL = videoURLs[(index + 1) % videoURLs.length];
+    if (candidateURL === undefined || candidateURL === currentURL) {
+      return null;
+    }
+
+    return candidateURL;
+  }
+
+  async handleAction(roomId: string, action: ActionDTO): Promise<ActionDTO> {
     let payload = null;
 
     if (actions.addVideo.match(action)) {

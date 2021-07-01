@@ -3,6 +3,7 @@ import React, { useCallback, useState } from "react";
 import ReactPlayer from "react-player";
 
 import { roomActions } from "@wewatch/actions";
+import { constants } from "@wewatch/schemas";
 import { useSocket } from "common/contexts/Socket";
 import { useAppDispatch } from "common/hooks/redux";
 import { usePlayerState } from "common/hooks/selector";
@@ -25,6 +26,11 @@ const Player = (): JSX.Element => {
     [dispatch, playing, socketEmit],
   );
 
+  const handleEnded = useCallback(
+    () => socketEmit("members", constants.MemberEventPayload.READY_TO_NEXT),
+    [socketEmit],
+  );
+
   const [progress, setProgress] = useState<ProgressInfo>({
     played: 0,
     loaded: 0,
@@ -43,6 +49,7 @@ const Player = (): JSX.Element => {
           url={url ?? undefined}
           width="100%"
           height="100%"
+          onEnded={handleEnded}
           onProgress={handleProgressChange}
           onDuration={handleDurationChange}
           onPlay={() => setPlaying(true)}

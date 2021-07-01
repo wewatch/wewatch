@@ -1,5 +1,7 @@
 import { Module } from "@nestjs/common";
+import { EventEmitterModule } from "@nestjs/event-emitter";
 import { MongooseModule } from "@nestjs/mongoose";
+import { ScheduleModule } from "@nestjs/schedule";
 import { LoggerModule } from "nestjs-pino";
 
 import { ConfigModule, ConfigService } from "modules/config";
@@ -31,6 +33,8 @@ import { UserModule } from "modules/user";
         useUnifiedTopology: true,
       }),
     }),
+    EventEmitterModule.forRoot(),
+    ScheduleModule.forRoot(),
     RoomModule,
     SearchModule,
     UserModule,

@@ -3881,6 +3881,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nestjs/event-emitter@npm:^0.0.4":
+  version: 0.0.4
+  resolution: "@nestjs/event-emitter@npm:0.0.4"
+  dependencies:
+    eventemitter2: 6.4.4
+  peerDependencies:
+    "@nestjs/common": ^7.0.0
+    "@nestjs/core": ^7.0.0
+    reflect-metadata: ^0.1.12
+    rxjs: ^6.0.0
+  checksum: e943ec85a9ad8c3415276e2b736046ca1fa2ea5cff4d62435566087af90a5e8eaec5a40f62ea0ce881eaaffc3ed57b2b53f8b7e4fc84a4b51fe20119888b6c23
+  languageName: node
+  linkType: hard
+
 "@nestjs/jwt@npm:^7.2.0":
   version: 7.2.0
   resolution: "@nestjs/jwt@npm:7.2.0"
@@ -3945,6 +3959,19 @@ __metadata:
     "@nestjs/websockets": ^7.0.0
     rxjs: ^6.0.0
   checksum: 645876b2b9cc0a43ecc28af137e3c513937d2b2d24dfaf63f18b9728853f3265539deb27201a59902bf80517880eae30a6844c04e0336dd9075041faca0afea1
+  languageName: node
+  linkType: hard
+
+"@nestjs/schedule@npm:^0.4.3":
+  version: 0.4.3
+  resolution: "@nestjs/schedule@npm:0.4.3"
+  dependencies:
+    cron: 1.7.2
+    uuid: 8.3.2
+  peerDependencies:
+    "@nestjs/common": ^6.10.11 || ^7.0.0
+    reflect-metadata: ^0.1.12
+  checksum: 4d6c5c3587a0ac243fdde8ba67a4a3c5aba1b21a61390c98fc29f7f3c901ea356c61d49fc5e29f1d48fa11b38894b954b568915d277ed1672f82f27a59cb1300
   languageName: node
   linkType: hard
 
@@ -4757,6 +4784,16 @@ __metadata:
   version: 2.8.10
   resolution: "@types/cors@npm:2.8.10"
   checksum: c3f3d6feee59ff75127fec3030d55c3d5f1adfc07953facdae67c47dcd54c83c46a5e92f08afa53542ec978da38a388697d30731019798cb157c9e96c64ef6c3
+  languageName: node
+  linkType: hard
+
+"@types/cron@npm:^1.7.2":
+  version: 1.7.2
+  resolution: "@types/cron@npm:1.7.2"
+  dependencies:
+    "@types/node": "*"
+    moment: ">=2.14.0"
+  checksum: 24628218d0645cfa82167451de1d38103bdc2e6ddb447a447ba2021b4c9da0d88cb51b39695ba51ddf31499ba4fd295694d702b5418871a255ef503c6eddc4be
   languageName: node
   linkType: hard
 
@@ -5815,15 +5852,18 @@ __metadata:
     "@nestjs/cli": ^7.6.0
     "@nestjs/common": 8.0.0-alpha.7
     "@nestjs/core": 8.0.0-alpha.7
+    "@nestjs/event-emitter": ^0.0.4
     "@nestjs/jwt": ^7.2.0
     "@nestjs/mongoose": ^7.2.4
     "@nestjs/passport": ^7.1.5
     "@nestjs/platform-fastify": 8.0.0-alpha.7
     "@nestjs/platform-socket.io": 8.0.0-alpha.7
+    "@nestjs/schedule": ^0.4.3
     "@nestjs/schematics": ^7.3.0
     "@nestjs/testing": ^7.6.15
     "@nestjs/websockets": 8.0.0-alpha.7
     "@types/bcrypt": ^5.0.0
+    "@types/cron": ^1.7.2
     "@types/faker": ^5.5.5
     "@types/mongodb": ^3.6.12
     "@types/passport-jwt": ^3.0.5
@@ -8492,6 +8532,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cron@npm:1.7.2":
+  version: 1.7.2
+  resolution: "cron@npm:1.7.2"
+  dependencies:
+    moment-timezone: ^0.5.x
+  checksum: 99e1343f5117f62dab6204d54a720943c97db187eb2d0c54d582ca829ac963f714fc1bd7cd9ac8139e7fc2a6bd9389020c9dc1cd6c60e8d5e460451b846f5391
+  languageName: node
+  linkType: hard
+
 "cross-env@npm:^7.0.3":
   version: 7.0.3
   resolution: "cross-env@npm:7.0.3"
@@ -10313,6 +10362,13 @@ __metadata:
   version: 1.8.1
   resolution: "etag@npm:1.8.1"
   checksum: f18341a3c12a554ec46c0d4756bc9cae177e92f25a4ebd9ceefebf0ee448b675972fc110879f22b1bf514174713921ae5de9ff77af2062d422b1085588465a57
+  languageName: node
+  linkType: hard
+
+"eventemitter2@npm:6.4.4":
+  version: 6.4.4
+  resolution: "eventemitter2@npm:6.4.4"
+  checksum: 632e4e96be6d34c55855980dfe051d684ed9555d9ce800b824369a7f3a9ba9d792775bba45182f0280c5635eab96e8d7cbbcdd6a8f2f4c0d703304632391b9be
   languageName: node
   linkType: hard
 
@@ -15060,6 +15116,22 @@ fsevents@^1.2.7:
   version: 1.0.1
   resolution: "modify-values@npm:1.0.1"
   checksum: 55165ae8b4ea2aafebe5027dd427d4a833d54606c81546f4d3c04943d99d194ac9481fa076719f326d243c475e2dfa5cf0219e68cffbbf9c44b24e46eb889779
+  languageName: node
+  linkType: hard
+
+"moment-timezone@npm:^0.5.x":
+  version: 0.5.33
+  resolution: "moment-timezone@npm:0.5.33"
+  dependencies:
+    moment: ">= 2.9.0"
+  checksum: d4e72a3514a2885ab26b1cbc640e2f4785c997f9de28bb48bf3994ef137b0a560ca8f07eb07f11121e1223eef0c3bce4bc647b911111481a6a066bbc61285f99
+  languageName: node
+  linkType: hard
+
+"moment@npm:>= 2.9.0, moment@npm:>=2.14.0":
+  version: 2.29.1
+  resolution: "moment@npm:2.29.1"
+  checksum: 86729013febf7160de5b93da69273dd304d674b0224f9544b3abd09a87671ddd2cdd57598261ce57588910d63747ffd5590965e83c790d8bf327083c0e0a06e0
   languageName: node
   linkType: hard
 

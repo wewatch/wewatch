@@ -25,6 +25,12 @@ export class Member extends BaseSchema {
     default: false,
   })
   online!: boolean;
+
+  @Prop({
+    required: true,
+    default: false,
+  })
+  readyToNext!: boolean;
 }
 
 export type MemberDocument = Member & Document;
