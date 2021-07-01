@@ -1,7 +1,7 @@
 import { AspectRatio, Box, HStack, Image } from "@chakra-ui/react";
 import React from "react";
 
-import type { VideoDTO } from "@wewatch/schemas";
+import type { VideoDTO } from "@wewatch/common/schemas/room";
 import OverflowText from "common/components/OverflowText";
 import { usePlayerState } from "common/hooks/selector";
 

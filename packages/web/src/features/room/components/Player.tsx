@@ -2,8 +2,8 @@ import { AspectRatio, Skeleton } from "@chakra-ui/react";
 import React, { useCallback, useState } from "react";
 import ReactPlayer from "react-player";
 
-import { roomActions } from "@wewatch/actions";
-import { constants } from "@wewatch/schemas";
+import { roomActions } from "@wewatch/common/actions/room";
+import { MemberEventPayload } from "@wewatch/common/schemas/constants";
 import { useSocket } from "common/contexts/Socket";
 import { useAppDispatch } from "common/hooks/redux";
 import { usePlayerState } from "common/hooks/selector";
@@ -27,7 +27,7 @@ const Player = (): JSX.Element => {
   );
 
   const handleEnded = useCallback(
-    () => socketEmit("members", constants.MemberEventPayload.READY_TO_NEXT),
+    () => socketEmit("members", MemberEventPayload.READY_TO_NEXT),
     [socketEmit],
   );
 

@@ -1,4 +1,4 @@
-import { RoomDTO } from "@wewatch/schemas";
+import { RoomDTO } from "@wewatch/common/schemas/room";
 
 import api from "./index";
 

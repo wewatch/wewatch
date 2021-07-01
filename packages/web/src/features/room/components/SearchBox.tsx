@@ -23,7 +23,7 @@ import {
   SearchDTO,
   searchSchema,
   SearchVideoResultDTO,
-} from "@wewatch/schemas";
+} from "@wewatch/common/schemas/search";
 import RequestUtil from "common/api";
 import useNotify from "common/hooks/notification";
 

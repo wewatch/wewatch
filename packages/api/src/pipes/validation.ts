@@ -7,7 +7,7 @@ import {
 import { WsException } from "@nestjs/websockets";
 import { ValidationError } from "yup";
 
-import { TypeWithSchema } from "@wewatch/schemas";
+import { TypeWithSchema } from "@wewatch/common/schemas/utils";
 
 interface _ArgumentMetadata extends ArgumentMetadata {
   readonly metatype?: TypeWithSchema | undefined;

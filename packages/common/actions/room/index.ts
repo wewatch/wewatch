@@ -1,9 +1,6 @@
-import { withSchema } from "@wewatch/schemas";
-
+import { withSchema } from "../../schemas/utils";
+import { createActionSchema } from "../utils";
 import * as roomActions from "./room";
-import { createActionSchema } from "./utils";
-
-export { roomActions };
 
 const roomActionSchema = createActionSchema(roomActions);
 
@@ -14,6 +11,8 @@ export class RoomActionDTO {
 }
 
 export class RoomActionWithUserDTO {
-  userId!: string;
+  userId!: string | null;
   action!: RoomActionDTO;
 }
+
+export { roomActions };

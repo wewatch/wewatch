@@ -14,8 +14,8 @@ import {
 } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 
-import { RoomActionDTO } from "@wewatch/actions";
-import { constants } from "@wewatch/schemas";
+import { RoomActionDTO } from "@wewatch/common/actions/room";
+import { MemberEventPayload } from "@wewatch/common/schemas/constants";
 import { AuthService } from "modules/auth";
 import { WsValidationPipe } from "pipes/validation";
 import { isHttpException } from "utils/types";
@@ -133,7 +133,7 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage("members")
   async onMemberEvent(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() payload: constants.MemberEventPayload,
+    @MessageBody() payload: MemberEventPayload,
   ): Promise<void> {
     const { roomId, userId } = this.socketsInfo[socket.id];
     await this.roomService.handleMemberEvent(roomId, userId, payload);

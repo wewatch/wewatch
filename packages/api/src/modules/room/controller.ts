@@ -1,6 +1,8 @@
 import { Controller, Get, Param, Post } from "@nestjs/common";
 
-import { IdDTO, MemberDTO, RoomDTO } from "@wewatch/schemas";
+import { IdDTO } from "@wewatch/common/schemas/common";
+import { MemberDTO } from "@wewatch/common/schemas/member";
+import { RoomDTO } from "@wewatch/common/schemas/room";
 import { Schema } from "decorators/Schema";
 
 import { RoomService } from "./service";

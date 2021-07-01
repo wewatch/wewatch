@@ -1,5 +1,5 @@
 {
-  "name": "@wewatch/schemas",
+  "name": "@wewatch/common",
   "version": "0.1.0",
   "description": "",
   "author": "Duc-Minh Phan <alephvn@gmail.com>",
@@ -9,7 +9,11 @@
   "types": "dist/index",
   "scripts": {
     "format": "prettier --write \"./**/*.{ts,yaml,md}\"",
-    "lint": "eslint \"src/**/*.ts\" --fix",
+    "lint": "eslint \"./**/*.ts\" --fix",
     "pre-commit": "lint-staged"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.6.0",
+    "redux": "^4.1.0"
   }
 }

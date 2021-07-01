@@ -3,7 +3,7 @@ import { RouteComponentProps } from "@reach/router";
 import { skipToken } from "@reduxjs/toolkit/query";
 import React, { useEffect, useMemo } from "react";
 
-import { RoomActionWithUserDTO } from "@wewatch/actions";
+import { RoomActionWithUserDTO } from "@wewatch/common/actions/room";
 import roomApi from "api/room";
 import { SocketProvider } from "common/contexts/Socket";
 import useNotify from "common/hooks/notification";

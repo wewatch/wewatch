@@ -1,4 +1,4 @@
-import { AccessTokenDTO, UserInfoDTO } from "@wewatch/schemas";
+import { AccessTokenDTO, UserInfoDTO } from "@wewatch/common/schemas/user";
 
 import api from "./index";
 

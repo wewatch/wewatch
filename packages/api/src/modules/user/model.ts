@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 
-import { constants } from "@wewatch/schemas";
+import { UserType } from "@wewatch/common/schemas/constants";
 import { BaseSchema } from "utils/baseSchema";
 
 @Schema({
@@ -12,7 +12,7 @@ export class User extends BaseSchema {
     required: true,
     type: String,
   })
-  type!: constants.UserType;
+  type!: UserType;
 
   @Prop({
     required: true,

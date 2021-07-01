@@ -12,13 +12,11 @@ import { nanoid } from "nanoid";
 import {
   RoomActionDTO as ActionDTO,
   roomActions as actions,
-} from "@wewatch/actions";
-import {
-  constants,
-  MemberDTO,
-  TypeWithSchema,
-  VideoDTO,
-} from "@wewatch/schemas";
+} from "@wewatch/common/actions/room";
+import { MemberEventPayload } from "@wewatch/common/schemas/constants";
+import { MemberDTO } from "@wewatch/common/schemas/member";
+import { VideoDTO } from "@wewatch/common/schemas/room";
+import { TypeWithSchema } from "@wewatch/common/schemas/utils";
 import { UserDocument } from "modules/user";
 
 import { Member, MemberDocument } from "./models/member";
@@ -130,9 +128,9 @@ export class RoomService {
   async handleMemberEvent(
     roomId: string,
     userId: string,
-    payload: constants.MemberEventPayload,
+    payload: MemberEventPayload,
   ): Promise<void> {
-    if (payload === constants.MemberEventPayload.READY_TO_NEXT) {
+    if (payload === MemberEventPayload.READY_TO_NEXT) {
       await this.handleMemberReadyToNext(roomId, userId);
     }
   }

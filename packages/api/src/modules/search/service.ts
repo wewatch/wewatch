@@ -1,7 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import axios from "axios";
 
-import { SearchDTO, SearchVideoResultDTO } from "@wewatch/schemas";
+import {
+  SearchDTO,
+  SearchVideoResultDTO,
+} from "@wewatch/common/schemas/search";
 import { ConfigService } from "modules/config";
 
 @Injectable()
