@@ -14,7 +14,7 @@ import {
   CreateUserDTO,
   UserInfoDTO,
   UserLoginDTO,
-} from "@wewatch/common/schemas/user";
+} from "@/schemas/user";
 import { Schema } from "decorators/Schema";
 import { AuthService, UseAuthGuard } from "modules/auth";
 import { InvalidCredentials } from "utils/exceptions";

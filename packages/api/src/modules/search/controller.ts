@@ -1,9 +1,6 @@
 import { Body, Controller, HttpCode, Post } from "@nestjs/common";
 
-import {
-  SearchDTO,
-  SearchVideoResultDTO,
-} from "@wewatch/common/schemas/search";
+import { SearchDTO, SearchVideoResultDTO } from "@/schemas/search";
 
 import { SearchService } from "./service";
 

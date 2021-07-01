@@ -2,8 +2,8 @@ import { IconButton, VStack } from "@chakra-ui/react";
 import React from "react";
 import { FaPlus } from "react-icons/fa";
 
-import { roomActions } from "@wewatch/common/actions/room";
-import { VideoDTO } from "@wewatch/common/schemas/room";
+import { roomActions } from "@/actions/room";
+import { VideoDTO } from "@/schemas/room";
 import { useSocket } from "common/contexts/Socket";
 
 import { usePlaylist } from "../contexts/Playlist";

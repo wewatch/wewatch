@@ -12,11 +12,11 @@ import { nanoid } from "nanoid";
 import {
   RoomActionDTO as ActionDTO,
   roomActions as actions,
-} from "@wewatch/common/actions/room";
-import { MemberEventPayload } from "@wewatch/common/schemas/constants";
-import { MemberDTO } from "@wewatch/common/schemas/member";
-import { VideoDTO } from "@wewatch/common/schemas/room";
-import { TypeWithSchema } from "@wewatch/common/schemas/utils";
+} from "@/actions/room";
+import { MemberEventPayload } from "@/schemas/constants";
+import { MemberDTO } from "@/schemas/member";
+import { VideoDTO } from "@/schemas/room";
+import { TypeWithSchema } from "@/schemas/utils";
 import { UserDocument } from "modules/user";
 
 import { Member, MemberDocument } from "./models/member";

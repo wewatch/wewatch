@@ -1,5 +1,6 @@
-import { withSchema } from "../../schemas/utils";
-import { createActionSchema } from "../utils";
+import { createActionSchema } from "@/actions/utils";
+import { withSchema } from "@/schemas/utils";
+
 import * as roomActions from "./room";
 
 const roomActionSchema = createActionSchema(roomActions);

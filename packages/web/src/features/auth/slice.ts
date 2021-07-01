@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { UserInfoDTO } from "@wewatch/common/schemas/user";
+import { UserInfoDTO } from "@/schemas/user";
 import authApi from "api/auth";
 
 interface AuthState {

@@ -10,8 +10,8 @@
     "incremental": true,
     "baseUrl": "src",
     "paths": {
-      "@wewatch/*": [
-        "../../*"
+      "@/*": [
+        "../../common/*"
       ]
     }
   }

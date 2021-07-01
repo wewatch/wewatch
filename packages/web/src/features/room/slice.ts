@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { roomActions as actions } from "@wewatch/common/actions/room";
-import type { Room } from "@wewatch/common/schemas/room";
+import { roomActions as actions } from "@/actions/room";
+import type { Room } from "@/schemas/room";
 
 const initialState: Room = {
   id: "",

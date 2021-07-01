@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-import { PlaylistDTO } from "@wewatch/common/schemas/room";
+import { PlaylistDTO } from "@/schemas/room";
 
 const PlaylistContext = React.createContext<PlaylistDTO>({
   id: "",

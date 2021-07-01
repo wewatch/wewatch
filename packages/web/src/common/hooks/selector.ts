@@ -1,4 +1,4 @@
-import { PlayerStateDTO, PlaylistDTO } from "@wewatch/common/schemas/room";
+import { PlayerStateDTO, PlaylistDTO } from "@/schemas/room";
 
 import { useAppSelector } from "./redux";
 

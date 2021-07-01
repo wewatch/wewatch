@@ -2,8 +2,8 @@ import { IconButton, VStack } from "@chakra-ui/react";
 import React from "react";
 import { FaPause, FaPlay, FaTrashAlt } from "react-icons/fa";
 
-import { roomActions } from "@wewatch/common/actions/room";
-import type { VideoDTO } from "@wewatch/common/schemas/room";
+import { roomActions } from "@/actions/room";
+import type { VideoDTO } from "@/schemas/room";
 import { useSocket } from "common/contexts/Socket";
 import { useAppDispatch } from "common/hooks/redux";
 import { usePlayerState } from "common/hooks/selector";

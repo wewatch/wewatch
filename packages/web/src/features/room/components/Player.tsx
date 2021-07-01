@@ -2,8 +2,8 @@ import { AspectRatio, Skeleton } from "@chakra-ui/react";
 import React, { useCallback, useState } from "react";
 import ReactPlayer from "react-player";
 
-import { roomActions } from "@wewatch/common/actions/room";
-import { MemberEventPayload } from "@wewatch/common/schemas/constants";
+import { roomActions } from "@/actions/room";
+import { MemberEventPayload } from "@/schemas/constants";
 import { useSocket } from "common/contexts/Socket";
 import { useAppDispatch } from "common/hooks/redux";
 import { usePlayerState } from "common/hooks/selector";

@@ -14,8 +14,8 @@ import {
 } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 
-import { RoomActionDTO } from "@wewatch/common/actions/room";
-import { MemberEventPayload } from "@wewatch/common/schemas/constants";
+import { RoomActionDTO } from "@/actions/room";
+import { MemberEventPayload } from "@/schemas/constants";
 import { AuthService } from "modules/auth";
 import { WsValidationPipe } from "pipes/validation";
 import { isHttpException } from "utils/types";

@@ -1,6 +1,6 @@
 import { Body, Controller, HttpCode, Post } from "@nestjs/common";
 
-import { AccessTokenDTO, VisitorLoginDTO } from "@wewatch/common/schemas/user";
+import { AccessTokenDTO, VisitorLoginDTO } from "@/schemas/user";
 
 import { AuthService } from "../auth";
 import { UserService } from "./service";
