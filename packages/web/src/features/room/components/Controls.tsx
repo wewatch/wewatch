@@ -3,28 +3,16 @@ import React from "react";
 import { FaPause, FaPlay } from "react-icons/fa";
 
 import { Progress } from "common/components/ProgressBar";
+import { usePlayerState, useProgress } from "common/hooks/selector";
 import { secondsToHHMMSS } from "common/misc";
 
-export interface ProgressInfo {
-  played: number;
-  loaded: number;
-  playedSeconds: number;
-}
-
 interface ControlsProps {
-  playing: boolean;
   setPlaying: (playing: boolean) => void;
-  progress: ProgressInfo;
-  duration: number;
 }
 
-const Controls = ({
-  playing,
-  setPlaying,
-  progress,
-  duration,
-}: ControlsProps): JSX.Element => {
-  const { played, loaded, playedSeconds } = progress;
+const Controls = ({ setPlaying }: ControlsProps): JSX.Element => {
+  const { playing } = usePlayerState();
+  const { played, loaded, playedSeconds, duration } = useProgress();
 
   return (
     <div>

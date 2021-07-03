@@ -12,10 +12,10 @@ import {
   WebSocketServer,
   WsException,
 } from "@nestjs/websockets";
-import { Server, Socket } from "socket.io";
+import { Namespace, Socket } from "socket.io";
 
 import { RoomActionDTO } from "@/actions/room";
-import { MemberEventPayload } from "@/schemas/constants";
+import { MemberEventPayload, SocketEvent } from "@/constants";
 import { AuthService } from "modules/auth";
 import { WsValidationPipe } from "pipes/validation";
 import { isHttpException } from "utils/types";
@@ -44,7 +44,7 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @WebSocketServer()
-  server!: Server;
+  server!: Namespace;
 
   async handleConnection(socket: Socket): Promise<void> {
     try {
@@ -94,7 +94,7 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     delete this.socketsInfo[socket.id];
   }
 
-  @SubscribeMessage("actions")
+  @SubscribeMessage(SocketEvent.Actions)
   async onActionEvent(
     @ConnectedSocket() socket: Socket,
     @MessageBody() action: RoomActionDTO,
@@ -103,7 +103,7 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     try {
       const newAction = await this.roomService.handleAction(roomId, action);
-      this.server.to(roomId).emit("actions", {
+      this.server.to(roomId).emit(SocketEvent.Actions, {
         userId,
         action: newAction,
       });
@@ -124,18 +124,44 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     roomId: string;
     action: RoomActionDTO;
   }): void {
-    this.server.to(roomId).emit("actions", {
+    this.server.to(roomId).emit(SocketEvent.Actions, {
       userId: null,
       action,
     });
   }
 
-  @SubscribeMessage("members")
+  @SubscribeMessage(SocketEvent.Members)
   async onMemberEvent(
     @ConnectedSocket() socket: Socket,
     @MessageBody() payload: MemberEventPayload,
   ): Promise<void> {
     const { roomId, userId } = this.socketsInfo[socket.id];
     await this.roomService.handleMemberEvent(roomId, userId, payload);
+  }
+
+  @SubscribeMessage(SocketEvent.SyncProgress)
+  async onSyncProgress(@ConnectedSocket() socket: Socket): Promise<number> {
+    let progress = 0;
+
+    const peerId = Object.keys(this.socketsInfo).find((id) => id !== socket.id);
+    if (peerId !== undefined) {
+      // Use Promise.race to set a timeout for getting progress from the peer
+      progress = await Promise.race<Promise<number>>([
+        new Promise((resolve) => setTimeout(() => resolve(0), 3000)),
+        new Promise((resolve) => {
+          try {
+            this.server.sockets
+              .get(peerId)
+              ?.emit(SocketEvent.SyncProgress, (playedSeconds: number) =>
+                resolve(playedSeconds),
+              );
+          } catch {
+            resolve(0);
+          }
+        }),
+      ]);
+    }
+
+    return progress;
   }
 }

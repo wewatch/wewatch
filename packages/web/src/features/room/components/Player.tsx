@@ -1,15 +1,21 @@
 import { AspectRatio, Skeleton } from "@chakra-ui/react";
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import ReactPlayer from "react-player";
 
 import { roomActions } from "@/actions/room";
-import { MemberEventPayload } from "@/schemas/constants";
+import { MemberEventPayload, SocketEvent } from "@/constants";
 import { useSocket } from "common/contexts/Socket";
 import { useAppDispatch } from "common/hooks/redux";
 import { usePlayerState } from "common/hooks/selector";
 
-import type { ProgressInfo } from "./Controls";
+import { setDuration, setProgress } from "../slices/progress";
 import Controls from "./Controls";
+
+interface Progress {
+  played: number;
+  loaded: number;
+  playedSeconds: number;
+}
 
 const Player = (): JSX.Element => {
   const { url, playing } = usePlayerState();
@@ -20,26 +26,36 @@ const Player = (): JSX.Element => {
     (newPlaying: boolean) => {
       if (newPlaying !== playing) {
         dispatch(roomActions.setPlaying(newPlaying));
-        socketEmit("actions", roomActions.setPlaying(newPlaying));
+        socketEmit(SocketEvent.Actions, roomActions.setPlaying(newPlaying));
       }
     },
     [dispatch, playing, socketEmit],
   );
 
-  const handleEnded = useCallback(
-    () => socketEmit("members", MemberEventPayload.READY_TO_NEXT),
+  const handleReady = useCallback(
+    (player: ReactPlayer) =>
+      socketEmit(SocketEvent.SyncProgress, (playedSeconds: number) => {
+        if (playedSeconds > 0) {
+          player.seekTo(playedSeconds, "seconds");
+        }
+      }),
     [socketEmit],
   );
 
-  const [progress, setProgress] = useState<ProgressInfo>({
-    played: 0,
-    loaded: 0,
-    playedSeconds: 0,
-  });
-  const handleProgressChange = (p: ProgressInfo) => setProgress(p);
+  const handleEnded = useCallback(
+    () => socketEmit(SocketEvent.Members, MemberEventPayload.ReadyToNext),
+    [socketEmit],
+  );
 
-  const [duration, setDuration] = useState<number>(0);
-  const handleDurationChange = (d: number) => setDuration(d);
+  const handleProgressChange = useCallback(
+    (progress: Progress) => dispatch(setProgress(progress)),
+    [dispatch],
+  );
+
+  const handleDurationChange = useCallback(
+    (duration: number) => dispatch(setDuration(duration)),
+    [dispatch],
+  );
 
   return (
     <Skeleton isLoaded={!!url}>
@@ -49,6 +65,7 @@ const Player = (): JSX.Element => {
           url={url ?? undefined}
           width="100%"
           height="100%"
+          onReady={handleReady}
           onEnded={handleEnded}
           onProgress={handleProgressChange}
           onDuration={handleDurationChange}
@@ -63,12 +80,7 @@ const Player = (): JSX.Element => {
           }}
         />
       </AspectRatio>
-      <Controls
-        playing={playing}
-        setPlaying={setPlaying}
-        progress={progress}
-        duration={duration}
-      />
+      <Controls setPlaying={setPlaying} />
     </Skeleton>
   );
 };

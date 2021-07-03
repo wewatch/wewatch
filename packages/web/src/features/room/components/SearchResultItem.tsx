@@ -3,6 +3,7 @@ import React from "react";
 import { FaPlus } from "react-icons/fa";
 
 import { roomActions } from "@/actions/room";
+import { SocketEvent } from "@/constants";
 import { VideoDTO } from "@/schemas/room";
 import { useSocket } from "common/contexts/Socket";
 
@@ -15,7 +16,7 @@ const SearchResultItemController = (video: VideoDTO): JSX.Element => {
 
   const handleAdd = () => {
     socketEmit(
-      "actions",
+      SocketEvent.Actions,
       roomActions.addVideo({
         playlistId,
         video,

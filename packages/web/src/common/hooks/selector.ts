@@ -1,4 +1,5 @@
 import { PlayerStateDTO, PlaylistDTO } from "@/schemas/room";
+import { Progress } from "features/room/slices/progress";
 
 import { useAppSelector } from "./redux";
 
@@ -16,3 +17,6 @@ export const useActivePlaylist = (): PlaylistDTO | undefined => {
 
   return playlists.find((p) => p.id === activePlaylistId);
 };
+
+export const useProgress = (): Progress =>
+  useAppSelector((state) => state.progress);

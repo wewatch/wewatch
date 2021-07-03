@@ -13,7 +13,7 @@ import {
   RoomActionDTO as ActionDTO,
   roomActions as actions,
 } from "@/actions/room";
-import { MemberEventPayload } from "@/schemas/constants";
+import { MemberEventPayload } from "@/constants";
 import { MemberDTO } from "@/schemas/member";
 import { VideoDTO } from "@/schemas/room";
 import { TypeWithSchema } from "@/schemas/utils";
@@ -130,7 +130,7 @@ export class RoomService {
     userId: string,
     payload: MemberEventPayload,
   ): Promise<void> {
-    if (payload === MemberEventPayload.READY_TO_NEXT) {
+    if (payload === MemberEventPayload.ReadyToNext) {
       await this.handleMemberReadyToNext(roomId, userId);
     }
   }

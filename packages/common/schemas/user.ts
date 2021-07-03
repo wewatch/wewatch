@@ -1,6 +1,7 @@
 import * as yup from "yup";
 
-import { UserType, UserTypes } from "./constants";
+import { UserType, UserTypes } from "@/constants";
+
 import { withSchema } from "./utils";
 
 export const createUserSchema = yup.object({

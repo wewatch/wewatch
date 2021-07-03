@@ -3,6 +3,7 @@ import React from "react";
 import { FaPause, FaPlay, FaTrashAlt } from "react-icons/fa";
 
 import { roomActions } from "@/actions/room";
+import { SocketEvent } from "@/constants";
 import type { VideoDTO } from "@/schemas/room";
 import { useSocket } from "common/contexts/Socket";
 import { useAppDispatch } from "common/hooks/redux";
@@ -22,15 +23,15 @@ const PlaylistItemController = ({ id, url }: VideoDTO): JSX.Element => {
   const handlePlay = () => {
     if (isActiveUrl) {
       dispatch(roomActions.setPlaying(!playing));
-      socketEmit("actions", roomActions.setPlaying(!playing));
+      socketEmit(SocketEvent.Actions, roomActions.setPlaying(!playing));
     } else {
-      socketEmit("actions", roomActions.setActiveURL(url));
+      socketEmit(SocketEvent.Actions, roomActions.setActiveURL(url));
     }
   };
 
   const handleDelete = () => {
     socketEmit(
-      "actions",
+      SocketEvent.Actions,
       roomActions.deleteVideo({
         playlistId,
         videoId: id,
