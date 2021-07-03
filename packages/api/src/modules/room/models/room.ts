@@ -51,12 +51,6 @@ class PlayerState {
     default: false,
   })
   playing!: boolean;
-
-  @Prop({
-    required: true,
-    default: 0,
-  })
-  played!: number;
 }
 
 export type PlayerStateDocument = PlayerState & Document;

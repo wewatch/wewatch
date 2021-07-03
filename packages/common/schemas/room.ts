@@ -40,14 +40,12 @@ export class PlaylistDTO {
 export const playerStateSchema = yup.object({
   url: yup.string().url().required().nullable(),
   playing: yup.boolean().required(),
-  played: yup.number().required().min(0).max(100),
 });
 
 @withSchema(playerStateSchema)
 export class PlayerStateDTO {
   url!: string | null;
   playing!: boolean;
-  played!: number;
 }
 
 export const roomSchema = yup

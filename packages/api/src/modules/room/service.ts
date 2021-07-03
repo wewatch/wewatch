@@ -331,7 +331,6 @@ export class RoomService {
     }
 
     room.playerState.url = activeURL;
-    room.playerState.played = 0;
     await room.save();
   }
 }

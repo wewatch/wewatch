@@ -10,7 +10,6 @@ const initialState: Room = {
   playerState: {
     url: null,
     playing: false,
-    played: 0,
   },
 };
 
@@ -50,7 +49,6 @@ const slice = createSlice({
         }
 
         state.playerState.url = newActiveURL;
-        state.playerState.played = 0;
       }),
 });
 
