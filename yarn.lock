@@ -5856,6 +5856,7 @@ __metadata:
     "@types/cron": ^1.7.2
     "@types/faker": ^5.5.5
     "@types/mongodb": ^3.6.12
+    "@types/node": ^14.14.36
     "@types/passport-jwt": ^3.0.5
     "@types/supertest": ^2.0.10
     "@wewatch/common": "*"
