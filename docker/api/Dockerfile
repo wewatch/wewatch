@@ -18,4 +18,4 @@ RUN yarn workspaces focus
 RUN yarn build
 
 EXPOSE 8080
-CMD ["yarn", "start:prod"]
+ENTRYPOINT ["yarn", "start:prod"]

@@ -45,7 +45,7 @@ async function bootstrap() {
   app.useWebSocketAdapter(new IoAdapter(app));
 
   const configService = app.get(ConfigService);
-  await app.listen(configService.cfg.PORT);
+  await app.listen(configService.cfg.PORT, "0.0.0.0");
 
   logger.log(`Listening on ${await app.getUrl()}`, "NestApplication");
 }

@@ -1,5 +1,6 @@
 services:
   api:
+    image: ghcr.io/wewatch/api:latest
     build:
       context: .
       dockerfile: docker/api/Dockerfile
