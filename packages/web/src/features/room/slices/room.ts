@@ -49,6 +49,7 @@ const slice = createSlice({
         }
 
         state.playerState.url = newActiveURL;
+        state.playerState.playing = true;
       }),
 });
 
