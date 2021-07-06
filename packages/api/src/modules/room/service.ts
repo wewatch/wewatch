@@ -13,6 +13,7 @@ import {
   RoomActionDTO as ActionDTO,
   roomActions as actions,
 } from "@/actions/room";
+import { SetActiveURLPayload } from "@/actions/room/room";
 import { MemberEventPayload } from "@/constants";
 import { MemberDTO } from "@/schemas/member";
 import { VideoDTO } from "@/schemas/room";
@@ -203,9 +204,9 @@ export class RoomService {
       .exec();
   }
 
-  async selectNextVideo(roomId: string): Promise<string | null> {
+  async selectNextVideo(roomId: string): Promise<SetActiveURLPayload | null> {
     const room = await this.getRoom(roomId);
-    const playlist = room.playlists.id(room.activePlaylistId);
+    const playlist = room.playlists.id(room.playerState.activePlaylistId);
     if (playlist === null) {
       return null;
     }
@@ -218,7 +219,10 @@ export class RoomService {
       return null;
     }
 
-    return candidateURL;
+    return {
+      url: candidateURL,
+      playlistId: playlist.id,
+    };
   }
 
   async handleAction(roomId: string, action: ActionDTO): Promise<ActionDTO> {
@@ -324,13 +328,17 @@ export class RoomService {
     await room.save();
   }
 
-  async setActiveURL(roomId: string, activeURL: string): Promise<void> {
+  async setActiveURL(
+    roomId: string,
+    { url, playlistId }: SetActiveURLPayload,
+  ): Promise<void> {
     const room = await this.getRoom(roomId);
-    if (activeURL === room.playerState.url) {
+    if (url === room.playerState.url) {
       return;
     }
 
-    room.playerState.url = activeURL;
+    room.playerState.url = url;
+    room.playerState.activePlaylistId = playlistId;
     room.playerState.playing = true;
     await room.save();
   }

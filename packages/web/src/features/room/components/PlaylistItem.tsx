@@ -25,7 +25,10 @@ const PlaylistItemController = ({ id, url }: VideoDTO): JSX.Element => {
       dispatch(roomActions.setPlaying(!playing));
       socketEmit(SocketEvent.Actions, roomActions.setPlaying(!playing));
     } else {
-      socketEmit(SocketEvent.Actions, roomActions.setActiveURL(url));
+      socketEmit(
+        SocketEvent.Actions,
+        roomActions.setActiveURL({ playlistId, url }),
+      );
     }
   };
 

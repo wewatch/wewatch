@@ -39,19 +39,20 @@ export class PlaylistDTO {
 
 export const playerStateSchema = yup.object({
   url: yup.string().url().required().nullable(),
+  activePlaylistId: yup.string().required().nullable(),
   playing: yup.boolean().required(),
 });
 
 @withSchema(playerStateSchema)
 export class PlayerStateDTO {
   url!: string | null;
+  activePlaylistId!: string | null;
   playing!: boolean;
 }
 
 export const roomSchema = yup
   .object({
     playlists: yup.array().of(playlistSchema),
-    activePlaylistId: yup.string().required().nullable(),
     playerState: playerStateSchema,
   })
   .concat(idSchema);
@@ -60,7 +61,6 @@ export const roomSchema = yup
 export class RoomDTO {
   id!: string;
   playlists!: PlaylistDTO[];
-  activePlaylistId!: string | null;
   playerState!: PlayerStateDTO;
 }
 

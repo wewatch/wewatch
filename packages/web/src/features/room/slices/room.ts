@@ -6,9 +6,9 @@ import type { Room } from "@/schemas/room";
 const initialState: Room = {
   id: "",
   playlists: [],
-  activePlaylistId: null,
   playerState: {
     url: null,
+    activePlaylistId: null,
     playing: false,
   },
 };
@@ -43,12 +43,13 @@ const slice = createSlice({
         state.playerState.playing = action.payload;
       })
       .addCase(actions.setActiveURL, (state, action) => {
-        const newActiveURL = action.payload;
-        if (newActiveURL === state.playerState.url) {
+        const { url, playlistId } = action.payload;
+        if (url === state.playerState.url) {
           return;
         }
 
-        state.playerState.url = newActiveURL;
+        state.playerState.url = url;
+        state.playerState.activePlaylistId = playlistId;
         state.playerState.playing = true;
       }),
 });

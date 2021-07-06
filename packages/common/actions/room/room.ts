@@ -4,6 +4,8 @@ import * as yup from "yup";
 import { VideoDTO, videoSchema } from "@/schemas/room";
 import { withSchema } from "@/schemas/utils";
 
+// addVideo
+
 export const addVideoPayloadSchema = yup.object({
   playlistId: yup.string().required(),
   video: videoSchema,
@@ -16,6 +18,8 @@ export class AddVideoPayload {
 }
 
 export const addVideo = createAction<AddVideoPayload>("room/addVideo");
+
+// deleteVideo
 
 export const deleteVideoPayloadSchema = yup.object({
   playlistId: yup.string().required(),
@@ -30,10 +34,24 @@ export class DeleteVideoPayload {
 
 export const deleteVideo = createAction<DeleteVideoPayload>("room/deleteVideo");
 
+// setPlaying
+
 export const setPlayingPayloadSchema = yup.boolean().required();
 
 export const setPlaying = createAction<boolean>("room/setPlaying");
 
-export const setActiveURLPayloadSchema = yup.string().url().required();
+// setActiveURL
 
-export const setActiveURL = createAction<string>("room/setActiveURL");
+export const setActiveURLPayloadSchema = yup.object({
+  playlistId: yup.string().required(),
+  url: yup.string().url().required(),
+});
+
+@withSchema(setActiveURLPayloadSchema)
+export class SetActiveURLPayload {
+  playlistId!: string;
+  url!: string;
+}
+
+export const setActiveURL =
+  createAction<SetActiveURLPayload>("room/setActiveURL");

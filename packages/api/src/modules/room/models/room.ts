@@ -51,6 +51,12 @@ class PlayerState {
     default: false,
   })
   playing!: boolean;
+
+  @Prop({
+    type: String,
+    default: null,
+  })
+  activePlaylistId!: string | null;
 }
 
 export type PlayerStateDocument = PlayerState & Document;
@@ -65,12 +71,6 @@ export class Room extends BaseSchema {
     type: [PlaylistSchema],
   })
   playlists!: Types.DocumentArray<PlaylistDocument>;
-
-  @Prop({
-    type: String,
-    default: null,
-  })
-  activePlaylistId!: string | null;
 
   @Prop({
     required: true,

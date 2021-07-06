@@ -12,10 +12,10 @@ export const usePlayerState = (): PlayerStateDTO =>
 export const useActivePlaylist = (): PlaylistDTO | undefined => {
   const playlists = useAppSelector((state) => state.room.playlists);
   const activePlaylistId = useAppSelector(
-    (state) => state.room.activePlaylistId,
+    (state) => state.room.playerState.activePlaylistId,
   );
 
-  return playlists.find((p) => p.id === activePlaylistId);
+  return playlists.find((p) => p.id === activePlaylistId) ?? playlists[0];
 };
 
 export const useProgress = (): Progress =>
