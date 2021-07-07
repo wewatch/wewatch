@@ -42,19 +42,7 @@ export class RoomService {
       playlists: [
         {
           name: nanoid(10),
-          videos: [
-            {
-              url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-              title: "Rick Astley - Never Gonna Give You Up (Video)",
-              thumbnailUrl: "https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
-            },
-            {
-              url: "https://www.youtube.com/watch?v=YuBeBjqKSGQ",
-              title:
-                "The Magic Flute – Queen of the Night aria (Mozart; Diana Damrau, The Royal Opera)",
-              thumbnailUrl: "https://i.ytimg.com/vi/YuBeBjqKSGQ/hqdefault.jpg",
-            },
-          ],
+          videos: [],
         },
       ],
     });
