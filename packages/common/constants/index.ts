@@ -10,3 +10,8 @@ export enum SocketEvent {
   Members = "members",
   SyncProgress = "syncProgress",
 }
+
+export enum SupportedProvider {
+  YouTube = "YouTube",
+  SoundCloud = "SoundCloud",
+}

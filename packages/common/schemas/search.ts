@@ -13,3 +13,7 @@ export class SearchDTO {
 }
 
 export type SearchVideoResultDTO = NewVideoDTO[];
+
+export interface SearchVideoErrorDTO {
+  message: string;
+}
