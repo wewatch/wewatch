@@ -19,7 +19,7 @@ export class SearchService {
         this.configService.cfg.SEARCH_SERVICE_URL,
         {
           ...searchVideoDTO,
-          type: SupportedProvider.YouTube,
+          provider: SupportedProvider.YouTube,
         },
         {
           headers: {
