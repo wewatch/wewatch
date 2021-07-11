@@ -3,7 +3,8 @@ import { InjectModel } from "@nestjs/mongoose";
 import * as bcrypt from "bcrypt";
 import { Model } from "mongoose";
 
-import { generateUsername } from "../../utils/misc";
+import { generateUsername } from "utils/misc";
+
 import { User, UserDocument } from "./model";
 
 @Injectable()
@@ -21,7 +22,7 @@ export class UserService {
       type,
       name: generateUsername(type),
     });
-    return user.save();
+    return await user.save();
   }
 
   async createVisitor(visitorId: string): Promise<UserDocument> {
@@ -32,11 +33,11 @@ export class UserService {
       type,
       name: generateUsername(type),
     });
-    return visitor.save();
+    return await visitor.save();
   }
 
   async get(id: string): Promise<UserDocument | null> {
-    return this.userModel.findById(id).exec();
+    return await this.userModel.findById(id).exec();
   }
 
   async findByEmailAndPassword(
@@ -53,6 +54,6 @@ export class UserService {
   }
 
   async findByVisitorId(visitorId: string): Promise<UserDocument | null> {
-    return this.userModel.findOne({ visitorId }).exec();
+    return await this.userModel.findOne({ visitorId }).exec();
   }
 }

@@ -21,6 +21,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: { sub: string }): Promise<UserDocument> {
-    return this.authService.verifyJwtSubject(payload.sub);
+    return await this.authService.verifyJwtSubject(payload.sub);
   }
 }

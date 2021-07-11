@@ -51,7 +51,7 @@ export class RoomService {
   }
 
   async get(id: string): Promise<RoomDocument | null> {
-    return this.roomModel.findById(id).exec();
+    return await this.roomModel.findById(id).exec();
   }
 
   async getRoom(roomId: string): Promise<RoomDocument> {
