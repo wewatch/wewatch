@@ -272,22 +272,40 @@ export class RoomService {
     playlistId: string,
     videoDTO: VideoDTO,
   ): Promise<VideoDocument> {
-    const { room, playlist } = await this.getRoomAndPlaylist(
-      roomId,
-      playlistId,
-    );
+    await this.getRoomAndPlaylist(roomId, playlistId);
 
-    const existingVideo = playlist.videos.find(
-      (video) => video.url === videoDTO.url,
-    );
-    if (existingVideo) {
+    const room = await this.roomModel
+      .findOneAndUpdate(
+        {
+          _id: roomId,
+          "playlists._id": playlistId,
+          // Check if the URL already exists in the playlist
+          "playlists.videos": {
+            $not: {
+              $elemMatch: {
+                url: videoDTO.url,
+              },
+            },
+          },
+        },
+        {
+          $push: {
+            "playlists.$.videos": videoDTO,
+          },
+        },
+        {
+          new: true,
+        },
+      )
+      .exec();
+
+    if (room === null) {
       throw new BadRequestException("This video is already in the playlist");
     }
 
-    const length = playlist.videos.push(videoDTO);
-    await room.save();
-
-    return playlist.videos[length - 1];
+    const playlist = room.playlists.id(playlistId);
+    const videos = playlist?.videos ?? [];
+    return videos[videos.length - 1];
   }
 
   async deleteVideoFromPlaylist(
@@ -295,19 +313,28 @@ export class RoomService {
     playlistId: string,
     videoId: string,
   ): Promise<void> {
-    const { room, playlist } = await this.getRoomAndPlaylist(
-      roomId,
-      playlistId,
-    );
+    await this.getRoomAndPlaylist(roomId, playlistId);
 
-    const existingVideo = playlist.videos.id(videoId);
-    if (existingVideo === null) {
+    const room = await this.roomModel
+      .findOneAndUpdate(
+        {
+          _id: roomId,
+          "playlists._id": playlistId,
+          "playlists.videos._id": videoId,
+        },
+        {
+          $pull: {
+            "playlists.$.videos": {
+              _id: videoId,
+            },
+          },
+        },
+      )
+      .exec();
+
+    if (room === null) {
       throw new NotFoundException("Video not found");
     }
-
-    playlist.videos.remove(videoId);
-
-    await room.save();
   }
 
   async setPlaying(roomId: string, playing: boolean): Promise<void> {
