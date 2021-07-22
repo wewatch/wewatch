@@ -20,6 +20,8 @@ type Config = {
 
   SEARCH_SERVICE_URL: string;
   SEARCH_SERVICE_API_KEY: string;
+
+  SENTRY_DSN: string;
 };
 
 export const configSchema: yup.SchemaOf<Config> = yup.object({
@@ -44,6 +46,8 @@ export const configSchema: yup.SchemaOf<Config> = yup.object({
 
   SEARCH_SERVICE_URL: yup.string().required(),
   SEARCH_SERVICE_API_KEY: yup.string().required(),
+
+  SENTRY_DSN: yup.string().required(),
 });
 
 @Injectable()

@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "declaration": false,
-    "sourceMap": false,
+    "sourceMap": true,
     "incremental": false
   },
   "exclude": [

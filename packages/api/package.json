@@ -29,6 +29,8 @@
     "@nestjs/platform-socket.io": "^8.0.0",
     "@nestjs/schedule": "^1.0.0",
     "@nestjs/websockets": "^8.0.0",
+    "@ntegral/nestjs-sentry": "^3.0.3",
+    "@sentry/node": "^6.10.0",
     "@types/bcrypt": "^5.0.0",
     "@types/cron": "^1.7.3",
     "@types/mongodb": "^3.6.20",

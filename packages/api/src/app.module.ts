@@ -2,6 +2,8 @@ import { Module } from "@nestjs/common";
 import { EventEmitterModule } from "@nestjs/event-emitter";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ScheduleModule } from "@nestjs/schedule";
+import { SentryModule } from "@ntegral/nestjs-sentry";
+import { LogLevel } from "@sentry/types";
 import { LoggerModule } from "nestjs-pino";
 
 import { ConfigModule, ConfigService } from "modules/config";
@@ -32,6 +34,17 @@ import { UserModule } from "modules/user";
         useFindAndModify: false,
         useUnifiedTopology: true,
       }),
+    }),
+    SentryModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        dsn: configService.cfg.SENTRY_DSN,
+        debug: false,
+        environment: configService.cfg.NODE_ENV,
+        logLevel: LogLevel.Error,
+        sampleRate: 1,
+      }),
+      inject: [ConfigService],
     }),
     EventEmitterModule.forRoot(),
     ScheduleModule.forRoot(),

@@ -3,6 +3,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from "@nestjs/platform-fastify";
+import { SentryInterceptor } from "@ntegral/nestjs-sentry";
 import { FastifyInstance } from "fastify";
 import fastifyHelmet from "fastify-helmet";
 import fp from "fastify-plugin";
@@ -40,7 +41,10 @@ async function bootstrap() {
   app.useLogger(logger);
 
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalInterceptors(new SerializerInterceptor(app.get(Reflector)));
+  app.useGlobalInterceptors(
+    new SerializerInterceptor(app.get(Reflector)),
+    new SentryInterceptor(),
+  );
 
   app.useWebSocketAdapter(new IoAdapter(app));
 
