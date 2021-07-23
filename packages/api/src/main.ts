@@ -8,12 +8,12 @@ import fastifyHelmet from "fastify-helmet";
 import fp from "fastify-plugin";
 import { Logger } from "nestjs-pino";
 
+import { COMMON_INTERCEPTORS } from "interceptors";
 import { SerializerInterceptor } from "interceptors/serializer";
+import { AppModule } from "modules/app";
 import { ConfigService } from "modules/config";
 import { ValidationPipe } from "pipes/validation";
 
-import { AppModule } from "./app.module";
-import { COMMON_INTERCEPTORS } from "./interceptors";
 import { IoAdapter } from "./io.adapter";
 
 async function bootstrap() {

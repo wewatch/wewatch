@@ -6,7 +6,7 @@ import { Test } from "@nestjs/testing";
 import * as dotenv from "dotenv";
 import { MongoMemoryServer } from "mongodb-memory-server";
 
-import { AppModule } from "../app.module";
+import { AppModule } from "../modules/app";
 import { ValidationPipe } from "../pipes/validation";
 
 dotenv.config({ path: ".env.test" });
