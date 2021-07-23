@@ -1,9 +1,12 @@
+// noinspection ES6UnusedImports
+
 import { NestFactory, Reflector } from "@nestjs/core";
 import {
   FastifyAdapter,
   NestFastifyApplication,
 } from "@nestjs/platform-fastify";
-import { SentryInterceptor } from "@ntegral/nestjs-sentry";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import * as Tracing from "@sentry/tracing";
 import { FastifyInstance } from "fastify";
 import fastifyHelmet from "fastify-helmet";
 import fp from "fastify-plugin";
@@ -14,6 +17,7 @@ import { ConfigService } from "modules/config";
 import { ValidationPipe } from "pipes/validation";
 
 import { AppModule } from "./app.module";
+import { COMMON_INTERCEPTORS } from "./interceptors";
 import { IoAdapter } from "./io.adapter";
 
 async function bootstrap() {
@@ -43,7 +47,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(
     new SerializerInterceptor(app.get(Reflector)),
-    new SentryInterceptor(),
+    ...COMMON_INTERCEPTORS,
   );
 
   app.useWebSocketAdapter(new IoAdapter(app));

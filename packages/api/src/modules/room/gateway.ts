@@ -1,4 +1,9 @@
-import { UseFilters, UsePipes } from "@nestjs/common";
+import {
+  HttpException,
+  UseFilters,
+  UseInterceptors,
+  UsePipes,
+} from "@nestjs/common";
 import { OnEvent } from "@nestjs/event-emitter";
 import { JwtService } from "@nestjs/jwt";
 import {
@@ -16,9 +21,9 @@ import { Namespace, Socket } from "socket.io";
 
 import { RoomActionDTO } from "@/actions/room";
 import { MemberEventPayload, SocketEvent } from "@/constants";
+import { COMMON_INTERCEPTORS } from "interceptors";
 import { AuthService } from "modules/auth";
 import { WsValidationPipe } from "pipes/validation";
-import { isHttpException } from "utils/types";
 
 import { RoomService } from "./service";
 
@@ -28,6 +33,7 @@ interface SocketInfo {
 }
 
 @UseFilters(new BaseWsExceptionFilter())
+@UseInterceptors(...COMMON_INTERCEPTORS)
 @UsePipes(new WsValidationPipe())
 @WebSocketGateway({
   namespace: "rooms",
@@ -108,7 +114,7 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
         action: newAction,
       });
     } catch (e) {
-      if (isHttpException(e)) {
+      if (e instanceof HttpException) {
         throw new WsException(e.getResponse());
       }
 

@@ -3,6 +3,8 @@ import { EventEmitterModule } from "@nestjs/event-emitter";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ScheduleModule } from "@nestjs/schedule";
 import { SentryModule } from "@ntegral/nestjs-sentry";
+import * as Sentry from "@sentry/node";
+import * as Tracing from "@sentry/tracing";
 import { LogLevel } from "@sentry/types";
 import { LoggerModule } from "nestjs-pino";
 
@@ -43,6 +45,15 @@ import { UserModule } from "modules/user";
         environment: configService.cfg.NODE_ENV,
         logLevel: LogLevel.Error,
         sampleRate: 1,
+        tracesSampleRate: 1,
+        integrations: [
+          new Sentry.Integrations.Http({
+            tracing: true,
+          }),
+          new Tracing.Integrations.Mongo({
+            useMongoose: true,
+          }),
+        ],
       }),
       inject: [ConfigService],
     }),
