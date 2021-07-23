@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 
 import { UserType } from "@/constants";
-import { BaseSchema } from "utils/baseSchema";
+import { BaseSchema } from "utils/base-schema";
 
 @Schema({
   timestamps: true,
@@ -20,10 +20,10 @@ export class User extends BaseSchema {
   name!: string;
 
   @Prop()
-  email!: string;
+  email?: string;
 
   @Prop()
-  hashedPassword!: string;
+  hashedPassword?: string;
 
   @Prop({
     unique: true,

@@ -4,9 +4,11 @@ import { IdDTO } from "@/schemas/common";
 import { MemberDTO } from "@/schemas/member";
 import { RoomDTO } from "@/schemas/room";
 import { Schema } from "decorators/Schema";
+import { UseAuthGuard } from "modules/auth";
 
 import { RoomService } from "./service";
 
+@UseAuthGuard
 @Controller("/rooms")
 export class RoomController {
   constructor(private readonly roomService: RoomService) {}

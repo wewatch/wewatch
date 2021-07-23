@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 
 import { UserDocument } from "modules/user/model";
-import { BaseSchema } from "utils/baseSchema";
+import { BaseSchema } from "utils/base-schema";
 
 @Schema({
   timestamps: false,

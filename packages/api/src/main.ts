@@ -1,12 +1,8 @@
-// noinspection ES6UnusedImports
-
 import { NestFactory, Reflector } from "@nestjs/core";
 import {
   FastifyAdapter,
   NestFastifyApplication,
 } from "@nestjs/platform-fastify";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import * as Tracing from "@sentry/tracing";
 import { FastifyInstance } from "fastify";
 import fastifyHelmet from "fastify-helmet";
 import fp from "fastify-plugin";

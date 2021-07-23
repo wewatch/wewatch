@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
 
-import { BaseSchema } from "utils/baseSchema";
+import { BaseSchema } from "utils/base-schema";
 
 @Schema()
 class Video extends BaseSchema {

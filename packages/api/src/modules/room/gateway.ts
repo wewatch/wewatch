@@ -23,13 +23,18 @@ import { RoomActionDTO } from "@/actions/room";
 import { MemberEventPayload, SocketEvent } from "@/constants";
 import { COMMON_INTERCEPTORS } from "interceptors";
 import { AuthService } from "modules/auth";
+import { User } from "modules/user/model";
 import { WsValidationPipe } from "pipes/validation";
 
 import { RoomService } from "./service";
 
-interface SocketInfo {
+interface SocketData {
   roomId: string;
-  userId: string;
+  user: User;
+}
+
+interface SocketWithData extends Socket {
+  data: SocketData;
 }
 
 @UseFilters(new BaseWsExceptionFilter())
@@ -39,15 +44,11 @@ interface SocketInfo {
   namespace: "rooms",
 })
 export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  private readonly socketsInfo: Record<string, SocketInfo>;
-
   constructor(
     private readonly roomService: RoomService,
     private readonly jwtService: JwtService,
     private readonly authService: AuthService,
-  ) {
-    this.socketsInfo = {};
-  }
+  ) {}
 
   @WebSocketServer()
   server!: Namespace;
@@ -62,9 +63,9 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
       socket.join(roomId);
       await this.roomService.handleUserJoinRoom(roomId, user);
 
-      this.socketsInfo[socket.id] = {
+      socket.data = {
         roomId,
-        userId: sub,
+        user,
       };
     } catch (e) {
       socket.disconnect();
@@ -94,10 +95,9 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return roomId[0];
   }
 
-  async handleDisconnect(socket: Socket): Promise<void> {
-    const { roomId, userId } = this.socketsInfo[socket.id];
-    await this.roomService.handleUserLeaveRoom(roomId, userId);
-    delete this.socketsInfo[socket.id];
+  async handleDisconnect(socket: SocketWithData): Promise<void> {
+    const { roomId, user } = socket.data;
+    await this.roomService.handleUserLeaveRoom(roomId, user.id);
   }
 
   @SubscribeMessage(SocketEvent.Actions)
@@ -105,12 +105,12 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() socket: Socket,
     @MessageBody() action: RoomActionDTO,
   ): Promise<void> {
-    const { roomId, userId } = this.socketsInfo[socket.id];
+    const { roomId, user } = socket.data;
 
     try {
       const newAction = await this.roomService.handleAction(roomId, action);
       this.server.to(roomId).emit(SocketEvent.Actions, {
-        userId,
+        userId: user.id,
         action: newAction,
       });
     } catch (e) {
@@ -141,15 +141,17 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() socket: Socket,
     @MessageBody() payload: MemberEventPayload,
   ): Promise<void> {
-    const { roomId, userId } = this.socketsInfo[socket.id];
-    await this.roomService.handleMemberEvent(roomId, userId, payload);
+    const { roomId, user } = socket.data;
+    await this.roomService.handleMemberEvent(roomId, user.id, payload);
   }
 
   @SubscribeMessage(SocketEvent.SyncProgress)
   async onSyncProgress(@ConnectedSocket() socket: Socket): Promise<number> {
     let progress = 0;
+    const { roomId } = socket.data;
+    const socketsInRoom = await this.server.in(roomId).allSockets();
 
-    const peerId = Object.keys(this.socketsInfo).find((id) => id !== socket.id);
+    const peerId = Array.from(socketsInRoom).find((id) => id !== socket.id);
     if (peerId !== undefined) {
       // Use Promise.race to set a timeout for getting progress from the peer
       progress = await Promise.race<Promise<number>>([

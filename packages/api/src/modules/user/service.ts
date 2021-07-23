@@ -49,7 +49,10 @@ export class UserService {
       return null;
     }
 
-    const passwordIsValid = await bcrypt.compare(password, user.hashedPassword);
+    const passwordIsValid = await bcrypt.compare(
+      password,
+      user?.hashedPassword ?? "",
+    );
     return passwordIsValid ? user : null;
   }
 

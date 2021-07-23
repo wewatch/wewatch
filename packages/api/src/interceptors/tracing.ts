@@ -7,13 +7,16 @@ import {
 } from "@nestjs/common";
 import { HttpArgumentsHost, WsArgumentsHost } from "@nestjs/common/interfaces";
 import * as Sentry from "@sentry/node";
-import { Event, Transaction } from "@sentry/types";
+import { Event, Transaction, User as SentryUser } from "@sentry/types";
 import { FastifyRequest } from "fastify";
 import { FastifyReply } from "fastify/types/reply";
 import { IncomingHttpHeaders } from "http";
 import { Observable, tap } from "rxjs";
+import { Socket } from "socket.io";
 
 import { RoomActionDTO } from "@/actions/room";
+import { User } from "modules/user/model";
+import { RequestWithUser } from "utils/interface";
 
 const SENSITIVE_HEADERS: (keyof IncomingHttpHeaders)[] = [
   "authorization",
@@ -121,6 +124,11 @@ export class TracingInterceptor implements NestInterceptor {
     transaction.setTag("url", request.url);
     transaction.setTag("method", request.method);
     transaction.setHttpStatus(response.statusCode);
+
+    if ("user" in request) {
+      const user = (request as RequestWithUser).user;
+      setSentryUser(user);
+    }
   }
 
   setTransactionAttributesFromWSContext(
@@ -128,9 +136,15 @@ export class TracingInterceptor implements NestInterceptor {
     host: WsArgumentsHost,
   ): void {
     const data = host.getData();
+    const client = host.getClient<Socket>();
 
     transaction.op = "ws";
     transaction.setData("data", data);
+
+    if ("user" in client.data) {
+      const user: User = client.data.user;
+      setSentryUser(user);
+    }
 
     if (transaction.name === "onActionEvent") {
       transaction.setName(
@@ -139,3 +153,16 @@ export class TracingInterceptor implements NestInterceptor {
     }
   }
 }
+
+const setSentryUser = (user: User) => {
+  const sentryUser: SentryUser = {
+    id: user.id,
+    username: user.name,
+  };
+
+  if (user.email !== undefined) {
+    sentryUser.email = user.email;
+  }
+
+  Sentry.setUser(sentryUser);
+};
