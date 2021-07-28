@@ -16,25 +16,23 @@ import {
 } from "@chakra-ui/react";
 import { Field, FieldProps, Form, FormikProps, withFormik } from "formik";
 import { nanoid } from "nanoid";
-import React, { MutableRefObject, useCallback, useState } from "react";
+import React, { MutableRefObject, useEffect } from "react";
 import { FaPlus, FaSearch } from "react-icons/fa";
 
-import {
-  SearchDTO,
-  searchSchema,
-  SearchVideoResultDTO,
-} from "@/schemas/search";
-import RequestUtil from "common/api";
+import { SearchDTO, searchSchema } from "@/schemas/search";
+import roomApi from "api/room";
 import useNotify from "common/hooks/notification";
+import { getErrorMessage } from "common/utils";
 
 import SearchResultItem from "./SearchResultItem";
 
 interface InnerFormProps {
   inputRef: MutableRefObject<null>;
+  isLoading: boolean;
 }
 
 const InnerForm = (props: InnerFormProps & FormikProps<SearchDTO>) => {
-  const { touched, errors, isSubmitting, inputRef } = props;
+  const { touched, errors, inputRef, isLoading } = props;
 
   return (
     <Form>
@@ -47,7 +45,7 @@ const InnerForm = (props: InnerFormProps & FormikProps<SearchDTO>) => {
                 <IconButton
                   icon={<FaSearch />}
                   aria-label="search videos"
-                  isLoading={isSubmitting}
+                  isLoading={isLoading}
                   type="submit"
                   variant="ghost"
                 />
@@ -62,7 +60,7 @@ const InnerForm = (props: InnerFormProps & FormikProps<SearchDTO>) => {
 };
 
 interface SearchFormProps extends InnerFormProps {
-  search: (values: SearchDTO) => Promise<void>;
+  search: (values: SearchDTO) => Promise<unknown>;
 }
 
 const SearchForm = withFormik<SearchFormProps, SearchDTO>({
@@ -79,27 +77,19 @@ const SearchForm = withFormik<SearchFormProps, SearchDTO>({
 
 const SearchBox = (): JSX.Element => {
   const inputRef = React.useRef(null);
-  const [searchResult, setSearchResult] = useState<SearchVideoResultDTO>([]);
+  const [triggerSearchVideo, { data, error, isLoading }] =
+    roomApi.endpoints.searchVideo.useMutation();
   const notify = useNotify();
 
-  const search = useCallback(
-    async (values: SearchDTO) => {
-      try {
-        const result: SearchVideoResultDTO = await RequestUtil.post(
-          "/search",
-          values,
-        );
-        setSearchResult(result);
-      } catch (e) {
-        notify({
-          status: "error",
-          title: "Cannot search at the moment",
-          description: e.message,
-        });
-      }
-    },
-    [notify],
-  );
+  useEffect(() => {
+    if (error) {
+      notify({
+        status: "error",
+        title: "Cannot search at the moment",
+        description: getErrorMessage(error),
+      });
+    }
+  }, [notify, error]);
 
   return (
     <Popover initialFocusRef={inputRef}>
@@ -110,11 +100,15 @@ const SearchBox = (): JSX.Element => {
         <PopoverArrow />
         <PopoverCloseButton />
         <PopoverHeader paddingRight={10}>
-          <SearchForm search={search} inputRef={inputRef} />
+          <SearchForm
+            search={triggerSearchVideo}
+            isLoading={isLoading}
+            inputRef={inputRef}
+          />
         </PopoverHeader>
         <PopoverBody overflow="auto">
           <VStack>
-            {searchResult.map((video) => (
+            {(data ?? []).map((video) => (
               <SearchResultItem {...video} id={nanoid()} key={video.url} />
             ))}
           </VStack>
