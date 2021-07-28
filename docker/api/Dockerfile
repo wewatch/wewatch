@@ -10,8 +10,6 @@ COPY tsconfig* .
 COPY packages/common ./packages/common
 COPY packages/api ./packages/api
 
-RUN yarn set version berry
-
 WORKDIR /usr/wewatch/packages/api
 
 RUN yarn workspaces focus
