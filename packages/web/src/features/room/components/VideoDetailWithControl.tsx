@@ -1,19 +1,19 @@
 import { AspectRatio, Box, HStack, Image } from "@chakra-ui/react";
 import React from "react";
 
-import type { VideoDTO } from "@/schemas/room";
+import type { NewVideoDTO } from "@/schemas/room";
 import OverflowText from "common/components/OverflowText";
 import { usePlayerState } from "common/hooks/selector";
 
-interface VideoDetailWithControlProps {
-  video: VideoDTO;
-  controller: (video: VideoDTO) => React.ReactNode;
+interface VideoDetailWithControlProps<T extends NewVideoDTO> {
+  video: T;
+  controller: (video: T) => React.ReactNode;
 }
 
-const VideoDetailWithControl = ({
+const VideoDetailWithControl = <T extends NewVideoDTO = NewVideoDTO>({
   video,
   controller,
-}: VideoDetailWithControlProps): JSX.Element => {
+}: VideoDetailWithControlProps<T>): JSX.Element => {
   const { url: activeURL } = usePlayerState();
   const isActiveUrl = video.url === activeURL;
 
@@ -22,7 +22,7 @@ const VideoDetailWithControl = ({
       borderWidth="1px"
       borderRadius="lg"
       borderColor={isActiveUrl ? "blue.500" : undefined}
-      backgroundColor={isActiveUrl ? "gray.50" : undefined}
+      backgroundColor={isActiveUrl ? "blue.50" : "white"}
       overflow="hidden"
       paddingInlineEnd={1}
       width="100%"

@@ -1,16 +1,17 @@
 import { IconButton, VStack } from "@chakra-ui/react";
+import { nanoid } from "nanoid";
 import React from "react";
 import { FaPlus } from "react-icons/fa";
 
 import { roomActions } from "@/actions/room";
 import { SocketEvent } from "@/constants";
-import { VideoDTO } from "@/schemas/room";
+import { NewVideoDTO } from "@/schemas/room";
 import { useSocket } from "common/contexts/Socket";
 
 import { usePlaylist } from "../contexts/Playlist";
 import VideoDetailWithControl from "./VideoDetailWithControl";
 
-const SearchResultItemController = (video: VideoDTO): JSX.Element => {
+const SearchResultItemController = (video: NewVideoDTO): JSX.Element => {
   const { id: playlistId } = usePlaylist();
   const { socketEmit, socketConnected } = useSocket();
 
@@ -19,7 +20,10 @@ const SearchResultItemController = (video: VideoDTO): JSX.Element => {
       SocketEvent.Actions,
       roomActions.addVideo({
         playlistId,
-        video,
+        video: {
+          ...video,
+          id: nanoid(),
+        },
       }),
     );
   };
@@ -39,7 +43,11 @@ const SearchResultItemController = (video: VideoDTO): JSX.Element => {
   );
 };
 
-const SearchResultItem = (video: VideoDTO): JSX.Element => (
+interface SearchResultItemProps {
+  video: NewVideoDTO;
+}
+
+const SearchResultItem = ({ video }: SearchResultItemProps): JSX.Element => (
   <VideoDetailWithControl
     video={video}
     controller={SearchResultItemController}

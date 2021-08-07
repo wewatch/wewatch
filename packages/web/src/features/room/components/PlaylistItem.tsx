@@ -64,7 +64,11 @@ const PlaylistItemController = ({ id, url }: VideoDTO): JSX.Element => {
   );
 };
 
-const PlaylistItem = (video: VideoDTO): JSX.Element => (
+interface PlaylistItemProps {
+  video: VideoDTO;
+}
+
+const PlaylistItem = ({ video }: PlaylistItemProps): JSX.Element => (
   <VideoDetailWithControl video={video} controller={PlaylistItemController} />
 );
 

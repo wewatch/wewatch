@@ -15,7 +15,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Field, FieldProps, Form, FormikProps, withFormik } from "formik";
-import { nanoid } from "nanoid";
 import React, { MutableRefObject, useEffect } from "react";
 import { FaPlus, FaSearch } from "react-icons/fa";
 
@@ -109,7 +108,7 @@ const SearchBox = (): JSX.Element => {
         <PopoverBody overflow="auto">
           <VStack>
             {(data ?? []).map((video) => (
-              <SearchResultItem {...video} id={nanoid()} key={video.url} />
+              <SearchResultItem video={video} key={video.url} />
             ))}
           </VStack>
         </PopoverBody>

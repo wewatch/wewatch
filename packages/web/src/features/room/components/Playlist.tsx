@@ -15,7 +15,7 @@ const Playlist = (): JSX.Element | null => {
   }
 
   const items = playlist.videos.map((video) => (
-    <PlaylistItem {...video} key={video.url} />
+    <PlaylistItem video={video} key={video.id} />
   ));
 
   return (
