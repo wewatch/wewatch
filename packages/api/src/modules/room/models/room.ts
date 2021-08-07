@@ -13,6 +13,9 @@ class Video extends BaseSchema {
 
   @Prop({ required: true })
   thumbnailUrl!: string;
+
+  @Prop({ required: true })
+  rank!: string;
 }
 
 export type VideoDocument = Video & Document;

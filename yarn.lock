@@ -6203,9 +6203,17 @@ __metadata:
   resolution: "@wewatch/common@workspace:packages/common"
   dependencies:
     "@reduxjs/toolkit": ^1.6.0
+    "@wewatch/lexorank": ^1.0.3
     redux: ^4.1.0
   languageName: unknown
   linkType: soft
+
+"@wewatch/lexorank@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@wewatch/lexorank@npm:1.0.3"
+  checksum: 473336d4dbdc2e61baa37480e7eb3ff97f19463223922bab19bf551919ec18880b7b5a90cff1d81c11a700290bb7cdc83b1c3cd9a35aaf0154eae23c8901cf6b
+  languageName: node
+  linkType: hard
 
 "@wewatch/web@workspace:packages/web":
   version: 0.0.0-use.local

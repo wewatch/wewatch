@@ -21,7 +21,8 @@ export const convert = (obj: Json, fn: (s: string) => string): Json => {
     const n: { [key: string]: Json } = {};
 
     Object.keys(obj).forEach((k) => {
-      n[fn(k)] = convert(obj[k], fn);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      n[fn(k)] = convert(obj[k]!, fn);
     });
 
     return n;

@@ -16,11 +16,16 @@ export class NewVideoDTO {
   thumbnailUrl!: string;
 }
 
-export const videoSchema = newVideoSchema.concat(idSchema);
+const rankSchema = yup.object({
+  rank: yup.string().required().trim(),
+});
+
+export const videoSchema = newVideoSchema.concat(idSchema).concat(rankSchema);
 
 @withSchema(videoSchema)
 export class VideoDTO extends NewVideoDTO {
   id!: string;
+  rank!: string;
 }
 
 export const playlistSchema = yup
