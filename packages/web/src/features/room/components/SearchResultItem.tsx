@@ -4,8 +4,9 @@ import React from "react";
 import { FaPlus } from "react-icons/fa";
 
 import { roomActions } from "@/actions/room";
-import { LexoRank, SocketEvent } from "@/constants";
+import { SocketEvent } from "@/constants";
 import { NewVideoDTO } from "@/schemas/room";
+import { LexoRank } from "@/utils/rank";
 import { useSocket } from "common/contexts/Socket";
 import { findMinMax } from "common/utils";
 

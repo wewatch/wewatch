@@ -4,7 +4,7 @@ import { FaPause, FaPlay } from "react-icons/fa";
 
 import { Progress } from "common/components/ProgressBar";
 import { usePlayerState, useProgress } from "common/hooks/selector";
-import { secondsToHHMMSS } from "common/misc";
+import { secondsToHHMMSS } from "common/utils";
 
 interface ControlsProps {
   setPlaying: (playing: boolean) => void;
