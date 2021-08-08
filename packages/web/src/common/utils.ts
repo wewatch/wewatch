@@ -1,6 +1,8 @@
 import { SerializedError } from "@reduxjs/toolkit";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
+import { VideoDTO } from "@/schemas/room";
+
 export const getErrorMessage = (
   error: FetchBaseQueryError | SerializedError,
 ): string | undefined => {
@@ -31,3 +33,19 @@ export const findMinMax = <T>(array: T[]): MinMax<T> =>
     },
     { min: null, max: null } as MinMax<T>,
   );
+
+export const compareVideo = (a: VideoDTO, b: VideoDTO): number => {
+  if (a.rank < b.rank) {
+    return -1;
+  }
+  if (a.rank > b.rank) {
+    return 1;
+  }
+  if (a.id < b.id) {
+    return -1;
+  }
+  if (a.id > b.id) {
+    return -1;
+  }
+  return 0;
+};

@@ -223,6 +223,9 @@ export class RoomService {
     } else if (actions.deleteVideo.match(action)) {
       const { playlistId, videoId } = action.payload;
       await this.deleteVideoFromPlaylist(roomId, playlistId, videoId);
+    } else if (actions.updateVideo.match(action)) {
+      const { playlistId, videoId, ...payload } = action.payload;
+      await this.updateVideo(roomId, playlistId, videoId, payload);
     } else if (actions.setPlaying.match(action)) {
       await this.setPlaying(roomId, action.payload);
     } else if (actions.setActiveURL.match(action)) {
@@ -328,6 +331,49 @@ export class RoomService {
               _id: videoId,
             },
           },
+        },
+      )
+      .exec();
+
+    if (room === null) {
+      throw new NotFoundException("Video not found");
+    }
+  }
+
+  async updateVideo(
+    roomId: string,
+    playlistId: string,
+    videoId: string,
+    payload: Partial<VideoDTO>,
+  ): Promise<void> {
+    await this.getRoomAndPlaylist(roomId, playlistId);
+
+    const update = {
+      $set: Object.fromEntries(
+        Object.entries(payload).map(([k, v]) => [
+          `playlists.$[p].videos.$[v].${k}`,
+          v,
+        ]),
+      ),
+    };
+
+    const room = await this.roomModel
+      .findOneAndUpdate(
+        {
+          _id: roomId,
+          "playlists._id": playlistId,
+          "playlists.videos._id": videoId,
+        },
+        update,
+        {
+          arrayFilters: [
+            {
+              "p._id": playlistId,
+            },
+            {
+              "v._id": videoId,
+            },
+          ],
         },
       )
       .exec();

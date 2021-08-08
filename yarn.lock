@@ -5471,6 +5471,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-beautiful-dnd@npm:^13.1.0":
+  version: 13.1.1
+  resolution: "@types/react-beautiful-dnd@npm:13.1.1"
+  dependencies:
+    "@types/react": "*"
+  checksum: 1e6b48340cdc86e77983100c1e34c5ffc1c987513b8826021efb6a62948fb521e14964bc036e1f8abc70724c91b446cb9a48f457c9e2c5a1a5d2607df3441dbe
+  languageName: node
+  linkType: hard
+
 "@types/react-dom@npm:^17.0.0":
   version: 17.0.5
   resolution: "@types/react-dom@npm:17.0.5"
@@ -6231,6 +6240,7 @@ __metadata:
     "@testing-library/user-event": ^12.1.10
     "@types/reach__router": ^1.3.7
     "@types/react": ^17.0.0
+    "@types/react-beautiful-dnd": ^13.1.0
     "@types/react-dom": ^17.0.0
     "@types/react-redux": ^7.1.16
     "@typescript-eslint/eslint-plugin": ^4.22.1
@@ -6250,6 +6260,7 @@ __metadata:
     nanoid: ^3.1.23
     react: ^17.0.2
     react-app-rewired: ^2.1.8
+    react-beautiful-dnd: ^13.1.0
     react-dom: ^17.0.2
     react-icons: ^4.2.0
     react-player: ^2.9.0
@@ -9038,7 +9049,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"css-box-model@npm:1.2.1":
+"css-box-model@npm:1.2.1, css-box-model@npm:^1.2.0":
   version: 1.2.1
   resolution: "css-box-model@npm:1.2.1"
   dependencies:
@@ -18655,6 +18666,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"raf-schd@npm:^4.0.2":
+  version: 4.0.3
+  resolution: "raf-schd@npm:4.0.3"
+  checksum: b5e28f9ee7f7803ccb067f75f8e93b78d995c16b0b606468e2bd46631e37cea6d8daa6dcede7640dd068413f8a3b85578ec393b59037a98548ba9c73e732624d
+  languageName: node
+  linkType: hard
+
 "raf@npm:^3.4.1":
   version: 3.4.1
   resolution: "raf@npm:3.4.1"
@@ -18726,6 +18744,24 @@ fsevents@^1.2.7:
   bin:
     react-app-rewired: bin/index.js
   checksum: 26b4127f8f8f0cb6f2ba07084fbc46d651a7d327ba9b22014b766bde66797d17a7cdad15eb3fbddaa03d8896684036a984a2b8975b6430de2fefe28cb634624e
+  languageName: node
+  linkType: hard
+
+"react-beautiful-dnd@npm:^13.1.0":
+  version: 13.1.0
+  resolution: "react-beautiful-dnd@npm:13.1.0"
+  dependencies:
+    "@babel/runtime": ^7.9.2
+    css-box-model: ^1.2.0
+    memoize-one: ^5.1.1
+    raf-schd: ^4.0.2
+    react-redux: ^7.2.0
+    redux: ^4.0.4
+    use-memo-one: ^1.1.1
+  peerDependencies:
+    react: ^16.8.5 || ^17.0.0
+    react-dom: ^16.8.5 || ^17.0.0
+  checksum: d380b698278000fe39e48f1a257ada3afa4b039ed93a52fa9a476d46a0b5f2ad833b7fee4e5914360172ae45899ca084ef37a1a012fcfb467a7920217cc8a994
   languageName: node
   linkType: hard
 
@@ -18867,7 +18903,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-redux@npm:^7.2.4":
+"react-redux@npm:^7.2.0, react-redux@npm:^7.2.4":
   version: 7.2.4
   resolution: "react-redux@npm:7.2.4"
   dependencies:
@@ -19288,6 +19324,15 @@ fsevents@^1.2.7:
   dependencies:
     "@babel/runtime": ^7.9.2
   checksum: d939d0df1e12982c66c0ea767c8ec98276ee981ce0381222239b7f823c6ad02ea3e3c622859bcb4934446b3f86d735db35d7bd8b1697d359070e5fbef1f4ad49
+  languageName: node
+  linkType: hard
+
+"redux@npm:^4.0.4":
+  version: 4.1.1
+  resolution: "redux@npm:4.1.1"
+  dependencies:
+    "@babel/runtime": ^7.9.2
+  checksum: 063e1d52588d62d438bb392975e57c0091c79f9abdbb8594c44c1680a73415280f6133c3d9cb3b116fe1ceb7e1aefb44775d6136b8bb6b9eb6a2c1a23e32a840
   languageName: node
   linkType: hard
 
@@ -22413,6 +22458,15 @@ resolve@^2.0.0-next.3:
     "@types/react":
       optional: true
   checksum: 0d5fcb3fb8cea49425ba3240f00f932a70446669d3b863cfd6f0dc4f602c73135ff868f7b28f3489fba3befbe9ae9f5dbe1dc4985fff7499b65dfee9dd0827f0
+  languageName: node
+  linkType: hard
+
+"use-memo-one@npm:^1.1.1":
+  version: 1.1.2
+  resolution: "use-memo-one@npm:1.1.2"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0
+  checksum: 3796487ae7a76828c467c5cdb54eff0bb16dd2135da17ee610870646779ce0f75cb70300b8ff27adf603395cab16b6edcb1236c6287ee3051e7fe2cbdbc11743
   languageName: node
   linkType: hard
 

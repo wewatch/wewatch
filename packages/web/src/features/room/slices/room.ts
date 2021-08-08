@@ -39,6 +39,16 @@ const slice = createSlice({
           playlist.videos = playlist.videos.filter((v) => v.id !== videoId);
         }
       })
+      .addCase(actions.updateVideo, (state, action) => {
+        const { playlistId, videoId, rank } = action.payload;
+        const playlist = state.playlists.find((p) => p.id === playlistId);
+        if (playlist !== undefined) {
+          const video = playlist.videos.find((v) => v.id === videoId);
+          if (video) {
+            video.rank = rank;
+          }
+        }
+      })
       .addCase(actions.setPlaying, (state, action) => {
         state.playerState.playing = action.payload;
       })

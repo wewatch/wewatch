@@ -1,7 +1,8 @@
 import { createAction } from "@reduxjs/toolkit";
 import * as yup from "yup";
 
-import { VideoDTO, videoSchema } from "@/schemas/room";
+import { idSchema } from "@/schemas/common";
+import { rankSchema, VideoDTO, videoSchema } from "@/schemas/room";
 import { withSchema } from "@/schemas/utils";
 
 // addVideo
@@ -33,6 +34,20 @@ export class DeleteVideoPayload {
 }
 
 export const deleteVideo = createAction<DeleteVideoPayload>("room/deleteVideo");
+
+// updateVideo
+
+export const updateVideoPayloadSchema =
+  deleteVideoPayloadSchema.concat(rankSchema);
+
+@withSchema(updateVideoPayloadSchema)
+export class UpdateVideoPayload {
+  playlistId!: string;
+  videoId!: string;
+  rank!: string;
+}
+
+export const updateVideo = createAction<UpdateVideoPayload>("room/updateVideo");
 
 // setPlaying
 

@@ -16,7 +16,7 @@ export class NewVideoDTO {
   thumbnailUrl!: string;
 }
 
-const rankSchema = yup.object({
+export const rankSchema = yup.object({
   rank: yup.string().required().trim(),
 });
 

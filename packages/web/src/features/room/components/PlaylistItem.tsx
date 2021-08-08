@@ -1,5 +1,6 @@
-import { IconButton, VStack } from "@chakra-ui/react";
+import { Box, IconButton, VStack } from "@chakra-ui/react";
 import React from "react";
+import { Draggable } from "react-beautiful-dnd";
 import { FaPause, FaPlay, FaTrashAlt } from "react-icons/fa";
 
 import { roomActions } from "@/actions/room";
@@ -66,10 +67,24 @@ const PlaylistItemController = ({ id, url }: VideoDTO): JSX.Element => {
 
 interface PlaylistItemProps {
   video: VideoDTO;
+  index: number;
 }
 
-const PlaylistItem = ({ video }: PlaylistItemProps): JSX.Element => (
-  <VideoDetailWithControl video={video} controller={PlaylistItemController} />
+const PlaylistItem = ({ video, index }: PlaylistItemProps): JSX.Element => (
+  <Draggable draggableId={video.id} index={index}>
+    {(provided) => (
+      <Box
+        {...provided.draggableProps}
+        {...provided.dragHandleProps}
+        ref={provided.innerRef}
+      >
+        <VideoDetailWithControl
+          video={video}
+          controller={PlaylistItemController}
+        />
+      </Box>
+    )}
+  </Draggable>
 );
 
 export default PlaylistItem;
