@@ -18,6 +18,7 @@ import { MemberEventPayload } from "@/constants";
 import { MemberDTO } from "@/schemas/member";
 import { VideoDTO } from "@/schemas/room";
 import { TypeWithSchema } from "@/schemas/utils";
+import { compareVideo } from "@/utils/room";
 import { UserDocument } from "modules/user";
 
 import { Member, MemberDocument } from "./models/member";
@@ -200,7 +201,7 @@ export class RoomService {
     }
 
     const currentURL = room.playerState.url ?? "";
-    const videoURLs = playlist.videos.map((v) => v.url);
+    const videoURLs = [...playlist.videos].sort(compareVideo).map((v) => v.url);
     const index = videoURLs.indexOf(currentURL);
     const candidateURL = videoURLs[(index + 1) % videoURLs.length];
     if (candidateURL === undefined || candidateURL === currentURL) {
