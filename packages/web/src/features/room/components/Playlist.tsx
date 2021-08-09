@@ -19,19 +19,30 @@ import PlaylistContext from "../contexts/Playlist";
 import PlaylistItem from "./PlaylistItem";
 import SearchBox from "./SearchBox";
 
-const findNewRank = (videos: VideoDTO[], index: number): string => {
-  const getRank = (idx: number): string => videos[idx]?.rank ?? "";
+const findNewRank = (
+  videos: VideoDTO[],
+  sourceIndex: number,
+  destinationIndex: number,
+): string => {
+  const ranks = videos.map((v) => v.rank);
 
-  if (index === 0) {
-    return LexoRank.parse(getRank(index)).genPrev().toString();
+  if (destinationIndex === 0) {
+    return LexoRank.parse(ranks[destinationIndex] ?? "")
+      .genPrev()
+      .toString();
   }
 
-  if (index === videos.length - 1) {
-    return LexoRank.parse(getRank(index)).genNext().toString();
+  if (destinationIndex === videos.length - 1) {
+    return LexoRank.parse(ranks[destinationIndex] ?? "")
+      .genNext()
+      .toString();
   }
 
-  const prevRank = LexoRank.parse(getRank(index - 1));
-  const nextRank = LexoRank.parse(getRank(index));
+  ranks.splice(sourceIndex, 1);
+  ranks.splice(destinationIndex, 0, ranks[sourceIndex] ?? "");
+
+  const prevRank = LexoRank.parse(ranks[destinationIndex - 1] ?? "");
+  const nextRank = LexoRank.parse(ranks[destinationIndex + 1] ?? "");
 
   return prevRank.between(nextRank).toString();
 };
@@ -70,7 +81,7 @@ const Playlist = (): JSX.Element | null => {
     const action = roomActions.updateVideo({
       playlistId: playlist.id,
       videoId: draggableId,
-      rank: findNewRank(sortedVideos, destination.index),
+      rank: findNewRank(sortedVideos, source.index, destination.index),
     });
 
     dispatch(action);
