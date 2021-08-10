@@ -143,15 +143,16 @@ export class RoomService {
 
     const timeoutName = `selectAndPlayNextVideo:${roomId}`;
 
-    const members = await this.getMembers(roomId, false);
-    if (members.every((m) => m.readyToNext)) {
+    const onlineMembers = await this.getMembers(roomId, false, {
+      online: true,
+    });
+    if (onlineMembers.every((m) => m.readyToNext)) {
       this.deleteTimeout(timeoutName);
       return await this.selectAndPlayNextVideo(roomId);
     }
 
     const isFirstReadyMember =
-      members.filter((m) => m.readyToNext).length === 1;
-
+      onlineMembers.filter((m) => m.readyToNext).length === 1;
     if (isFirstReadyMember) {
       const timeout = setTimeout(
         this.selectAndPlayNextVideo.bind(this),
