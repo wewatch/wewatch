@@ -1,5 +1,5 @@
 import { AspectRatio, Skeleton } from "@chakra-ui/react";
-import React, { useCallback } from "react";
+import React, { useCallback, useRef } from "react";
 import ReactPlayer from "react-player";
 
 import { roomActions } from "@/actions/room";
@@ -21,6 +21,7 @@ const Player = (): JSX.Element => {
   const { url, playing } = usePlayerState();
   const { socketEmit } = useSocket();
   const dispatch = useAppDispatch();
+  const progressSynced = useRef(false);
 
   const setPlaying = useCallback(
     (newPlaying: boolean) => {
@@ -33,12 +34,19 @@ const Player = (): JSX.Element => {
   );
 
   const handleReady = useCallback(
-    (player: ReactPlayer) =>
+    (player: ReactPlayer) => {
+      if (progressSynced.current) {
+        return;
+      }
+
       socketEmit(SocketEvent.SyncProgress, (playedSeconds: number) => {
+        progressSynced.current = true;
+
         if (playedSeconds > 0) {
           player.seekTo(playedSeconds, "seconds");
         }
-      }),
+      });
+    },
     [socketEmit],
   );
 
