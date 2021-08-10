@@ -145,21 +145,21 @@ export class RoomService {
 
     const members = await this.getMembers(roomId, false);
     if (members.every((m) => m.readyToNext)) {
-      if (this.schedulerRegistry.doesExists("timeout", timeoutName)) {
-        this.schedulerRegistry.deleteTimeout(timeoutName);
-      }
-
+      this.deleteTimeout(timeoutName);
       return await this.selectAndPlayNextVideo(roomId);
     }
 
     const isFirstReadyMember =
       members.filter((m) => m.readyToNext).length === 1;
+
     if (isFirstReadyMember) {
       const timeout = setTimeout(
         this.selectAndPlayNextVideo.bind(this),
         5000,
         roomId,
       );
+
+      this.deleteTimeout(timeoutName);
       this.schedulerRegistry.addTimeout(timeoutName, timeout);
     }
   }
@@ -191,6 +191,12 @@ export class RoomService {
         },
       )
       .exec();
+  }
+
+  private deleteTimeout(timeoutName: string): void {
+    if (this.schedulerRegistry.doesExists("timeout", timeoutName)) {
+      this.schedulerRegistry.deleteTimeout(timeoutName);
+    }
   }
 
   async selectNextVideo(roomId: string): Promise<SetActiveURLPayload | null> {
