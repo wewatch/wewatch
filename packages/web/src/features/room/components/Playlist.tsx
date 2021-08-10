@@ -38,8 +38,8 @@ const findNewRank = (
       .toString();
   }
 
-  ranks.splice(sourceIndex, 1);
-  ranks.splice(destinationIndex, 0, ranks[sourceIndex] ?? "");
+  const [removed] = ranks.splice(sourceIndex, 1);
+  ranks.splice(destinationIndex, 0, removed ?? "");
 
   const prevRank = LexoRank.parse(ranks[destinationIndex - 1] ?? "");
   const nextRank = LexoRank.parse(ranks[destinationIndex + 1] ?? "");
