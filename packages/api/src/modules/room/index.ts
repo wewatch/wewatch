@@ -5,9 +5,10 @@ import { UserModule } from "modules/user";
 
 import { RoomController } from "./controller";
 import { RoomGateway } from "./gateway";
-import { Member, MemberSchema } from "./models/member";
-import { Room, RoomSchema } from "./models/room";
-import { RoomService } from "./service";
+import { Member, MemberSchema } from "./member.model";
+import { MemberService } from "./member.service";
+import { Room, RoomSchema } from "./room.model";
+import { RoomService } from "./room.service";
 
 @Module({
   imports: [
@@ -24,8 +25,8 @@ import { RoomService } from "./service";
     UserModule,
   ],
   controllers: [RoomController],
-  providers: [RoomService, RoomGateway],
-  exports: [RoomService],
+  providers: [RoomService, MemberService, RoomGateway],
+  exports: [RoomService, MemberService],
 })
 export class RoomModule {}
 

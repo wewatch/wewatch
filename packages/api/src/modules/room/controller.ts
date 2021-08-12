@@ -6,12 +6,16 @@ import { RoomDTO } from "@/schemas/room";
 import { Schema } from "decorators/Schema";
 import { UseAuthGuard } from "modules/auth";
 
-import { RoomService } from "./service";
+import { MemberService } from "./member.service";
+import { RoomService } from "./room.service";
 
 @UseAuthGuard
 @Controller("/rooms")
 export class RoomController {
-  constructor(private readonly roomService: RoomService) {}
+  constructor(
+    private readonly roomService: RoomService,
+    private readonly memberService: MemberService,
+  ) {}
 
   @Post()
   @Schema(IdDTO)
@@ -28,6 +32,6 @@ export class RoomController {
   @Get("/:id/members")
   @Schema(MemberDTO)
   async getRoomMembers(@Param("id") roomId: string): Promise<MemberDTO[]> {
-    return await this.roomService.getMembers(roomId, true);
+    return await this.memberService.getMembers(roomId, true);
   }
 }

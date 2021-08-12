@@ -26,7 +26,8 @@ import { AuthService } from "modules/auth";
 import { User } from "modules/user/model";
 import { WsValidationPipe } from "pipes/validation";
 
-import { RoomService } from "./service";
+import { MemberService } from "./member.service";
+import { RoomService } from "./room.service";
 
 interface SocketData {
   roomId: string;
@@ -46,6 +47,7 @@ interface SocketWithData extends Socket {
 export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private readonly roomService: RoomService,
+    private readonly memberService: MemberService,
     private readonly jwtService: JwtService,
     private readonly authService: AuthService,
   ) {}
@@ -61,7 +63,7 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       const roomId = this.getRoomId(socket);
       socket.join(roomId);
-      await this.roomService.handleUserJoinRoom(roomId, user);
+      await this.memberService.handleUserJoinRoom(roomId, user);
 
       socket.data = {
         roomId,
@@ -97,7 +99,7 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleDisconnect(socket: SocketWithData): Promise<void> {
     const { roomId, user } = socket.data;
-    await this.roomService.handleUserLeaveRoom(roomId, user.id);
+    await this.memberService.handleUserLeaveRoom(roomId, user.id);
   }
 
   @SubscribeMessage(SocketEvent.Actions)
@@ -142,7 +144,7 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() payload: MemberEventPayload,
   ): Promise<void> {
     const { roomId, user } = socket.data;
-    await this.roomService.handleMemberEvent(roomId, user.id, payload);
+    await this.memberService.handleMemberEvent(roomId, user.id, payload);
   }
 
   @SubscribeMessage(SocketEvent.SyncProgress)
