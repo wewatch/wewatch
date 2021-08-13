@@ -61,7 +61,14 @@ export class MemberService {
     return action;
   }
 
-  wrapAction(action: ActionDTO, user: UserDocument): WrappedMemberActionDTO {
+  wrapAction(
+    action: ActionDTO,
+    user: UserDocument,
+  ): WrappedMemberActionDTO | null {
+    if (actions.readyToNext.match(action)) {
+      return null;
+    }
+
     return wrappedMemberActionSchema.cast(
       {
         user,

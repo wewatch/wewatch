@@ -144,7 +144,9 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     try {
       await this.memberService.handleAction(roomId, user, action);
       const wrappedAction = this.memberService.wrapAction(action, user);
-      this.server.to(roomId).emit(SocketEvent.MemberAction, wrappedAction);
+      if (wrappedAction) {
+        this.server.to(roomId).emit(SocketEvent.MemberAction, wrappedAction);
+      }
     } catch (e) {
       if (e instanceof HttpException) {
         throw new WsException(e.getResponse());
@@ -161,7 +163,9 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     action,
   }: MemberActionEventData): Promise<void> {
     const wrappedAction = this.memberService.wrapAction(action, user);
-    this.server.to(roomId).emit(SocketEvent.MemberAction, wrappedAction);
+    if (wrappedAction) {
+      this.server.to(roomId).emit(SocketEvent.MemberAction, wrappedAction);
+    }
   }
 
   @SubscribeMessage(SocketEvent.SyncProgress)
