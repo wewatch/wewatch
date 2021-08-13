@@ -2,8 +2,9 @@ import { AspectRatio, Skeleton } from "@chakra-ui/react";
 import React, { useCallback, useRef } from "react";
 import ReactPlayer from "react-player";
 
+import { memberActions } from "@/actions/member";
 import { roomActions } from "@/actions/room";
-import { MemberEventPayload, SocketEvent } from "@/constants";
+import { SocketEvent } from "@/constants";
 import { useSocket } from "common/contexts/Socket";
 import { useAppDispatch } from "common/hooks/redux";
 import { usePlayerState } from "common/hooks/selector";
@@ -27,7 +28,7 @@ const Player = (): JSX.Element => {
     (newPlaying: boolean) => {
       if (newPlaying !== playing) {
         dispatch(roomActions.setPlaying(newPlaying));
-        socketEmit(SocketEvent.Actions, roomActions.setPlaying(newPlaying));
+        socketEmit(SocketEvent.RoomAction, roomActions.setPlaying(newPlaying));
       }
     },
     [dispatch, playing, socketEmit],
@@ -51,7 +52,7 @@ const Player = (): JSX.Element => {
   );
 
   const handleEnded = useCallback(
-    () => socketEmit(SocketEvent.Members, MemberEventPayload.ReadyToNext),
+    () => socketEmit(SocketEvent.MemberAction, memberActions.readyToNext()),
     [socketEmit],
   );
 

@@ -1,3 +1,5 @@
+import * as yup from "yup";
+
 import { createActionSchema } from "@/actions/utils";
 import { withSchema } from "@/schemas/utils";
 
@@ -8,10 +10,16 @@ const roomActionSchema = createActionSchema(roomActions);
 @withSchema(roomActionSchema)
 export class RoomActionDTO {
   type!: string;
-  payload!: any;
+  payload?: any;
 }
 
-export class RoomActionWithUserDTO {
+export const wrappedRoomActionSchema = yup.object({
+  userId: yup.string().required().nullable(true),
+  action: roomActionSchema.required(),
+});
+
+@withSchema(wrappedRoomActionSchema)
+export class WrappedRoomActionDTO {
   userId!: string | null;
   action!: RoomActionDTO;
 }

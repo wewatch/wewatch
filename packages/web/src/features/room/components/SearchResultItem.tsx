@@ -29,7 +29,7 @@ const SearchResultItemController = (video: NewVideoDTO): JSX.Element => {
     }
 
     socketEmit(
-      SocketEvent.Actions,
+      SocketEvent.RoomAction,
       roomActions.addVideo({
         playlistId,
         video: {

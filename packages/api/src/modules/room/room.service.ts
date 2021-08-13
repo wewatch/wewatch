@@ -11,12 +11,16 @@ import { nanoid } from "nanoid";
 import {
   RoomActionDTO as ActionDTO,
   roomActions as actions,
+  WrappedRoomActionDTO,
+  wrappedRoomActionSchema,
 } from "@/actions/room";
 import { SetActiveURLPayload } from "@/actions/room/room";
 import { VideoDTO } from "@/schemas/room";
 import { TypeWithSchema } from "@/schemas/utils";
 import { compareVideo } from "@/utils/room";
+import { InternalEvent, RoomActionEventData } from "utils/types";
 
+import { UserDocument } from "../user";
 import { Member, MemberDocument } from "./member.model";
 import {
   PlaylistDocument,
@@ -71,10 +75,11 @@ export class RoomService {
 
     await this.handleAction(roomId, action);
 
-    this.eventEmitter.emit("room.actions", {
+    const eventData: RoomActionEventData = {
       roomId,
       action,
-    });
+    };
+    this.eventEmitter.emit(InternalEvent.RoomAction, eventData);
 
     await this.memberModel
       .updateMany(
@@ -147,6 +152,19 @@ export class RoomService {
     }
 
     return action;
+  }
+
+  wrapAction(
+    action: ActionDTO,
+    user: UserDocument | null,
+  ): WrappedRoomActionDTO {
+    return wrappedRoomActionSchema.cast(
+      {
+        userId: user?.id ?? null,
+        action,
+      },
+      { stripUnknown: true },
+    ) as WrappedRoomActionDTO;
   }
 
   async getRoomAndPlaylist(

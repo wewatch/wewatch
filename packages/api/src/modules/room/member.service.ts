@@ -1,12 +1,19 @@
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 import { InjectModel } from "@nestjs/mongoose";
 import { SchedulerRegistry } from "@nestjs/schedule";
 import { FilterQuery, Model } from "mongoose";
 
-import { MemberEventPayload } from "@/constants";
+import {
+  MemberActionDTO as ActionDTO,
+  memberActions as actions,
+  WrappedMemberActionDTO,
+  wrappedMemberActionSchema,
+} from "@/actions/member";
 import { MemberDTO } from "@/schemas/member";
-import { UserDocument } from "modules/user";
+import { InternalEvent, MemberActionEventData } from "utils/types";
 
+import { UserDocument } from "../user";
 import { Member, MemberDocument } from "./member.model";
 import { RoomService } from "./room.service";
 
@@ -16,6 +23,7 @@ export class MemberService {
     @InjectModel(Member.name) private memberModel: Model<MemberDocument>,
     @Inject(forwardRef(() => RoomService)) private roomService: RoomService,
     private schedulerRegistry: SchedulerRegistry,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   async getMembers<B extends boolean>(
@@ -37,7 +45,33 @@ export class MemberService {
     return (await query.exec()) as never;
   }
 
-  async handleUserJoinRoom(roomId: string, user: UserDocument): Promise<void> {
+  async handleAction(
+    roomId: string,
+    user: UserDocument,
+    action: ActionDTO,
+  ): Promise<ActionDTO> {
+    if (actions.joinRoom.match(action)) {
+      await this.handleJoinRoom(roomId, user);
+    } else if (actions.leaveRoom.match(action)) {
+      await this.handleLeaveRoom(roomId, user);
+    } else if (actions.readyToNext.match(action)) {
+      await this.handleReadyToNext(roomId, user);
+    }
+
+    return action;
+  }
+
+  wrapAction(action: ActionDTO, user: UserDocument): WrappedMemberActionDTO {
+    return wrappedMemberActionSchema.cast(
+      {
+        user,
+        action,
+      },
+      { stripUnknown: true },
+    ) as WrappedMemberActionDTO;
+  }
+
+  async handleJoinRoom(roomId: string, user: UserDocument): Promise<void> {
     const room = await this.roomService.getRoom(roomId);
     await this.memberModel
       .findOneAndUpdate(
@@ -53,38 +87,42 @@ export class MemberService {
         },
       )
       .exec();
+
+    const eventData: MemberActionEventData = {
+      roomId,
+      user,
+      action: actions.joinRoom(),
+    };
+    this.eventEmitter.emit(InternalEvent.MemberAction, eventData);
   }
 
-  async handleUserLeaveRoom(roomId: string, userId: string): Promise<void> {
+  async handleLeaveRoom(roomId: string, user: UserDocument): Promise<void> {
     await this.memberModel
       .findOneAndUpdate(
         {
           room: roomId,
-          user: userId,
+          user: user.id,
         },
         {
           online: false,
         },
       )
       .exec();
+
+    const eventData: MemberActionEventData = {
+      roomId,
+      user,
+      action: actions.leaveRoom(),
+    };
+    this.eventEmitter.emit(InternalEvent.MemberAction, eventData);
   }
 
-  async handleMemberEvent(
-    roomId: string,
-    userId: string,
-    payload: MemberEventPayload,
-  ): Promise<void> {
-    if (payload === MemberEventPayload.ReadyToNext) {
-      await this.handleMemberReadyToNext(roomId, userId);
-    }
-  }
-
-  async handleMemberReadyToNext(roomId: string, userId: string): Promise<void> {
+  async handleReadyToNext(roomId: string, user: UserDocument): Promise<void> {
     const member = await this.memberModel
       .findOneAndUpdate(
         {
           room: roomId,
-          user: userId,
+          user: user.id,
         },
         {
           readyToNext: true,

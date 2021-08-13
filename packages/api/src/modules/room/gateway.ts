@@ -19,19 +19,25 @@ import {
 } from "@nestjs/websockets";
 import { Namespace, Socket } from "socket.io";
 
+import { MemberActionDTO } from "@/actions/member";
 import { RoomActionDTO } from "@/actions/room";
-import { MemberEventPayload, SocketEvent } from "@/constants";
+import { SocketEvent } from "@/constants";
 import { COMMON_INTERCEPTORS } from "interceptors";
 import { AuthService } from "modules/auth";
-import { User } from "modules/user/model";
+import { UserDocument } from "modules/user/model";
 import { WsValidationPipe } from "pipes/validation";
+import {
+  InternalEvent,
+  MemberActionEventData,
+  RoomActionEventData,
+} from "utils/types";
 
 import { MemberService } from "./member.service";
 import { RoomService } from "./room.service";
 
 interface SocketData {
   roomId: string;
-  user: User;
+  user: UserDocument;
 }
 
 interface SocketWithData extends Socket {
@@ -63,7 +69,7 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       const roomId = this.getRoomId(socket);
       socket.join(roomId);
-      await this.memberService.handleUserJoinRoom(roomId, user);
+      await this.memberService.handleJoinRoom(roomId, user);
 
       socket.data = {
         roomId,
@@ -99,22 +105,20 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleDisconnect(socket: SocketWithData): Promise<void> {
     const { roomId, user } = socket.data;
-    await this.memberService.handleUserLeaveRoom(roomId, user.id);
+    await this.memberService.handleLeaveRoom(roomId, user);
   }
 
-  @SubscribeMessage(SocketEvent.Actions)
-  async onActionEvent(
-    @ConnectedSocket() socket: Socket,
+  @SubscribeMessage(SocketEvent.RoomAction)
+  async handleRoomActionEvent(
+    @ConnectedSocket() socket: SocketWithData,
     @MessageBody() action: RoomActionDTO,
   ): Promise<void> {
     const { roomId, user } = socket.data;
 
     try {
       const newAction = await this.roomService.handleAction(roomId, action);
-      this.server.to(roomId).emit(SocketEvent.Actions, {
-        userId: user.id,
-        action: newAction,
-      });
+      const wrappedAction = this.roomService.wrapAction(newAction, user);
+      this.server.to(roomId).emit(SocketEvent.RoomAction, wrappedAction);
     } catch (e) {
       if (e instanceof HttpException) {
         throw new WsException(e.getResponse());
@@ -124,31 +128,46 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  @OnEvent("room.actions")
-  onBackendActionEvent({
-    roomId,
-    action,
-  }: {
-    roomId: string;
-    action: RoomActionDTO;
-  }): void {
-    this.server.to(roomId).emit(SocketEvent.Actions, {
-      userId: null,
-      action,
-    });
+  @OnEvent(InternalEvent.RoomAction)
+  handleInternalRoomActionEvent({ roomId, action }: RoomActionEventData): void {
+    const wrappedAction = this.roomService.wrapAction(action, null);
+    this.server.to(roomId).emit(SocketEvent.RoomAction, wrappedAction);
   }
 
-  @SubscribeMessage(SocketEvent.Members)
-  async onMemberEvent(
-    @ConnectedSocket() socket: Socket,
-    @MessageBody() payload: MemberEventPayload,
+  @SubscribeMessage(SocketEvent.MemberAction)
+  async handleMemberActionEvent(
+    @ConnectedSocket() socket: SocketWithData,
+    @MessageBody() action: MemberActionDTO,
   ): Promise<void> {
     const { roomId, user } = socket.data;
-    await this.memberService.handleMemberEvent(roomId, user.id, payload);
+
+    try {
+      await this.memberService.handleAction(roomId, user, action);
+      const wrappedAction = this.memberService.wrapAction(action, user);
+      this.server.to(roomId).emit(SocketEvent.MemberAction, wrappedAction);
+    } catch (e) {
+      if (e instanceof HttpException) {
+        throw new WsException(e.getResponse());
+      }
+
+      throw e;
+    }
+  }
+
+  @OnEvent(InternalEvent.MemberAction)
+  async handleInternalMemberActionEvent({
+    roomId,
+    user,
+    action,
+  }: MemberActionEventData): Promise<void> {
+    const wrappedAction = this.memberService.wrapAction(action, user);
+    this.server.to(roomId).emit(SocketEvent.MemberAction, wrappedAction);
   }
 
   @SubscribeMessage(SocketEvent.SyncProgress)
-  async onSyncProgress(@ConnectedSocket() socket: Socket): Promise<number> {
+  async handleSyncProgress(
+    @ConnectedSocket() socket: SocketWithData,
+  ): Promise<number> {
     let progress = 0;
     const { roomId } = socket.data;
     const socketsInRoom = await this.server.in(roomId).allSockets();

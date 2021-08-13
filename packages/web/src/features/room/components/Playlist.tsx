@@ -85,7 +85,7 @@ const Playlist = (): JSX.Element | null => {
     });
 
     dispatch(action);
-    socketEmit(SocketEvent.Actions, action);
+    socketEmit(SocketEvent.RoomAction, action);
   };
 
   return (

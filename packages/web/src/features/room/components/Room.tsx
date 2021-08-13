@@ -3,7 +3,7 @@ import { RouteComponentProps } from "@reach/router";
 import { skipToken } from "@reduxjs/toolkit/query";
 import React, { useEffect, useMemo } from "react";
 
-import { RoomActionWithUserDTO } from "@/actions/room";
+import { WrappedRoomActionDTO } from "@/actions/room";
 import { SocketEvent } from "@/constants";
 import roomApi from "api/room";
 import { SocketProvider } from "common/contexts/Socket";
@@ -54,7 +54,7 @@ const Room = ({ roomId }: RoomProps): JSX.Element | null => {
 
   const socketEventHandlers = useMemo(
     () => ({
-      [SocketEvent.Actions]: ({ action }: RoomActionWithUserDTO) =>
+      [SocketEvent.RoomAction]: ({ action }: WrappedRoomActionDTO) =>
         dispatch(action),
       [SocketEvent.SyncProgress]: (callback: (p: number) => void) =>
         callback(store.getState().progress.playedSeconds),

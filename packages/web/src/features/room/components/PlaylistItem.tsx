@@ -24,10 +24,10 @@ const PlaylistItemController = ({ id, url }: VideoDTO): JSX.Element => {
   const handlePlay = () => {
     if (isActiveUrl) {
       dispatch(roomActions.setPlaying(!playing));
-      socketEmit(SocketEvent.Actions, roomActions.setPlaying(!playing));
+      socketEmit(SocketEvent.RoomAction, roomActions.setPlaying(!playing));
     } else {
       socketEmit(
-        SocketEvent.Actions,
+        SocketEvent.RoomAction,
         roomActions.setActiveURL({ playlistId, url }),
       );
     }
@@ -35,7 +35,7 @@ const PlaylistItemController = ({ id, url }: VideoDTO): JSX.Element => {
 
   const handleDelete = () => {
     socketEmit(
-      SocketEvent.Actions,
+      SocketEvent.RoomAction,
       roomActions.deleteVideo({
         playlistId,
         videoId: id,

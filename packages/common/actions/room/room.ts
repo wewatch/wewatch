@@ -1,7 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 import * as yup from "yup";
 
-import { idSchema } from "@/schemas/common";
 import { rankSchema, VideoDTO, videoSchema } from "@/schemas/room";
 import { withSchema } from "@/schemas/utils";
 

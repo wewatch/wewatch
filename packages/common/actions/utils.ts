@@ -29,14 +29,17 @@ export const createActionSchema = (
 
   let payloadSchema = yup.mixed();
   for (const [key, action] of Object.entries<Action>(actions)) {
-    payloadSchema = payloadSchema.when("type", {
-      is: action.type,
-      then: schemas[`${key}PayloadSchema`],
-    });
+    const schema = schemas[`${key}PayloadSchema`];
+    if (schema) {
+      payloadSchema = payloadSchema.when("type", {
+        is: action.type,
+        then: schemas[`${key}PayloadSchema`],
+      });
+    }
   }
 
   return yup.object({
     type: yup.string().required(),
-    payload: payloadSchema.required(),
+    payload: payloadSchema,
   });
 };

@@ -4,7 +4,7 @@ import { UserInfoDTO, userInfoSchema } from "./user";
 import { withSchema } from "./utils";
 
 export const memberSchema = yup.object({
-  user: userInfoSchema,
+  user: userInfoSchema.required(),
   online: yup.boolean().required(),
 });
 

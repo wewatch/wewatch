@@ -6,8 +6,8 @@ export enum MemberEventPayload {
 }
 
 export enum SocketEvent {
-  Actions = "actions",
-  Members = "members",
+  RoomAction = "roomAction",
+  MemberAction = "memberAction",
   SyncProgress = "syncProgress",
 }
 
