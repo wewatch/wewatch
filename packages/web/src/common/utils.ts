@@ -1,6 +1,8 @@
 import { SerializedError } from "@reduxjs/toolkit";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
+export const isBrowser = typeof window !== "undefined";
+
 export const getErrorMessage = (
   error: FetchBaseQueryError | SerializedError,
 ): string | undefined => {

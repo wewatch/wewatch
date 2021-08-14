@@ -15,7 +15,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Field, FieldProps, Form, FormikProps, withFormik } from "formik";
-import React, { MutableRefObject, useEffect } from "react";
+import React, { MutableRefObject, useEffect, useRef } from "react";
 import { FaPlus, FaSearch } from "react-icons/fa";
 
 import { SearchDTO, searchSchema } from "@/schemas/search";
@@ -75,7 +75,7 @@ const SearchForm = withFormik<SearchFormProps, SearchDTO>({
 })(InnerForm);
 
 const SearchBox = (): JSX.Element => {
-  const inputRef = React.useRef(null);
+  const inputRef = useRef(null);
   const [triggerSearchVideo, { data, error, isLoading }] =
     roomApi.endpoints.searchVideo.useMutation();
   const notify = useNotify();

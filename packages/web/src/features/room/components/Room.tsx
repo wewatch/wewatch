@@ -1,6 +1,4 @@
 import { Box, Grid, GridItem } from "@chakra-ui/react";
-import { RouteComponentProps } from "@reach/router";
-import { skipToken } from "@reduxjs/toolkit/query";
 import React, { useEffect, useMemo } from "react";
 
 import { WrappedRoomActionDTO } from "@/actions/room";
@@ -14,8 +12,8 @@ import { setRoom } from "../slices/room";
 import Player from "./Player";
 import Playlist from "./Playlist";
 
-interface RoomProps extends RouteComponentProps {
-  roomId?: string;
+interface RoomProps {
+  roomId: string;
 }
 
 const Room = ({ roomId }: RoomProps): JSX.Element | null => {
@@ -26,7 +24,7 @@ const Room = ({ roomId }: RoomProps): JSX.Element | null => {
     data: room,
     isError,
     isSuccess,
-  } = roomApi.endpoints.getRoom.useQuery(roomId ?? skipToken);
+  } = roomApi.endpoints.getRoom.useQuery(roomId);
 
   useEffect(() => {
     if (isError) {

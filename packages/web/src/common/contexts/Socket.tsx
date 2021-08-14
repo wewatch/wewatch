@@ -1,5 +1,11 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import io, { Socket } from "socket.io-client";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { io, Socket } from "socket.io-client";
 import {
   EventNames,
   EventParams,
@@ -31,7 +37,7 @@ const defaultContext: SocketContextValue = {
   socketEmit: () => {},
 };
 
-const SocketContext = React.createContext<SocketContextValue>(defaultContext);
+const SocketContext = createContext<SocketContextValue>(defaultContext);
 
 type Handler = ReservedOrUserListener<EventsMap, EventsMap, string>;
 
@@ -63,7 +69,7 @@ export const SocketProvider = ({
 
   useEffect(() => {
     if (accessToken !== undefined) {
-      const newSocket = io(`${process.env.REACT_APP_API_URL}/${namespace}`, {
+      const newSocket = io(`${process.env.NEXT_PUBLIC_API_URL}/${namespace}`, {
         ...socketOpts,
         auth: {
           accessToken,

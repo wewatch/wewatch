@@ -12,7 +12,9 @@ class RequestUtil {
   ): Promise<Response> => {
     let url: URL;
     if (urlOrEndpoint.startsWith("/")) {
-      url = new URL(process.env.REACT_APP_API_URL.concat(urlOrEndpoint));
+      url = new URL(
+        (process.env.NEXT_PUBLIC_API_URL ?? "").concat(urlOrEndpoint),
+      );
     } else {
       url = new URL(urlOrEndpoint);
     }

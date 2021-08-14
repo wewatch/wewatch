@@ -1,11 +1,12 @@
 import { Button, Center } from "@chakra-ui/react";
-import { navigate, RouteComponentProps } from "@reach/router";
+import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 
 import roomApi from "api/room";
 import useNotify from "common/hooks/notification";
 
-const Home = (_: RouteComponentProps): JSX.Element => {
+const Home = (): JSX.Element => {
+  const router = useRouter();
   const notify = useNotify();
   const [createRoom, { data, isError, isSuccess }] =
     roomApi.endpoints.createRoom.useMutation();
@@ -21,7 +22,7 @@ const Home = (_: RouteComponentProps): JSX.Element => {
 
   useEffect(() => {
     if (isSuccess && data?.id) {
-      navigate(`/rooms/${data.id}`);
+      router.push(`/rooms/${data.id}`);
     }
   });
 

@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
+import { createContext, useContext } from "react";
 
 import { PlaylistDTO } from "@/schemas/room";
 
-const PlaylistContext = React.createContext<PlaylistDTO>({
+const PlaylistContext = createContext<PlaylistDTO>({
   id: "",
   name: "",
   videos: [],

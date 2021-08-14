@@ -23,4 +23,4 @@ class Storage {
   removeToken = (): void => this.removeItem(tokenKey);
 }
 
-export default new Storage(process.env.REACT_APP_LOCAL_STORAGE_PREFIX);
+export default new Storage(process.env.NEXT_PUBLIC_LOCAL_STORAGE_PREFIX ?? "");
