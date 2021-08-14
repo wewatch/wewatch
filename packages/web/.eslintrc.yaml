@@ -7,16 +7,19 @@ parserOptions:
 plugins:
   - "@typescript-eslint"
   - "jsx-a11y"
+  - "react"
   - "react-hooks"
   - "simple-import-sort"
   - "import"
 extends:
   - "next/core-web-vitals"
+  - "airbnb-typescript"
   - "eslint:recommended"
   - "plugin:import/errors"
   - "plugin:import/warnings"
   - "plugin:@typescript-eslint/eslint-recommended"
   - "plugin:@typescript-eslint/recommended"
+  - "plugin:react/recommended"
   - "plugin:react-hooks/recommended"
   - "prettier"
 rules:
@@ -33,7 +36,8 @@ rules:
   "@typescript-eslint/no-unused-vars":
     - "warn"
     - argsIgnorePattern: "^_"
-  "@typescript-eslint/no-empty-function": "off"
+  react/react-in-jsx-scope: "off"
+  react/jsx-uses-react: "off"
   react/jsx-props-no-spreading: "off"
   import/prefer-default-export: "off"
   no-param-reassign:

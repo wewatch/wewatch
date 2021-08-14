@@ -4,9 +4,7 @@ import Room from "features/room/components/Room";
 
 const isValidRoomId = (
   roomId: ReturnType<typeof useRouter>["query"][string],
-): roomId is string => {
-  return typeof roomId === "string";
-};
+): roomId is string => typeof roomId === "string";
 
 const RoomPage = (): JSX.Element | null => {
   const router = useRouter();

@@ -54,9 +54,9 @@ export class LocalStorageChanged<TValue> extends CustomEvent<
  * @param {*} evt the object you wish to assert as a LocalStorageChanged event.
  * @returns {evt is LocalStorageChanged<TValue>} if true, evt is asserted to be LocalStorageChanged.
  */
-export function isTypeOfLocalStorageChanged<TValue>(
-  evt: any,
-): evt is LocalStorageChanged<TValue> {
+export function isTypeOfLocalStorageChanged<TValue>(evt: {
+  type: string;
+}): evt is LocalStorageChanged<TValue> {
   return !!evt && evt.type === LocalStorageChanged.eventName;
 }
 

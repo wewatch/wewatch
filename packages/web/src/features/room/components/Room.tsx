@@ -80,8 +80,4 @@ const Room = ({ roomId }: RoomProps): JSX.Element | null => {
   ) : null;
 };
 
-Room.defaultProps = {
-  roomId: undefined,
-};
-
 export default Room;

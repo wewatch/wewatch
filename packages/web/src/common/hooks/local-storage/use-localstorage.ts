@@ -24,13 +24,13 @@ function tryParse(value: string) {
 
 export type LocalStorageNullableReturnValue<TValue> = [
   TValue | null,
-  (newValue: TValue | null) => void,
+  (newValue: TValue) => void,
   () => void,
 ];
 
 export type LocalStorageReturnValue<TValue> = [
   TValue,
-  (newValue: TValue | null) => void,
+  (newValue: TValue) => void,
   () => void,
 ];
 
@@ -68,7 +68,7 @@ export function useLocalStorage<TValue = string>(
 export function useLocalStorage<TValue = string>(
   key: string,
   defaultValue: TValue | null = null,
-) {
+): LocalStorageNullableReturnValue<TValue> | LocalStorageReturnValue<TValue> {
   const [localState, updateLocalState] = useState<TValue | null>(
     storage.getItem(key) === null
       ? defaultValue
@@ -84,12 +84,10 @@ export function useLocalStorage<TValue = string>(
       if (event.detail.key === key) {
         updateLocalState(event.detail.value);
       }
-    } else {
-      if (event.key === key) {
-        updateLocalState(
-          event.newValue === null ? null : tryParse(event.newValue),
-        );
-      }
+    } else if (event.key === key) {
+      updateLocalState(
+        event.newValue === null ? null : tryParse(event.newValue),
+      );
     }
   };
 

@@ -1,3 +1,5 @@
+/* eslint-disable max-classes-per-file,class-methods-use-this */
+
 /**
  * Test if localStorage API is available
  * From https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API#Feature-detecting_localStorage
@@ -5,7 +7,7 @@
  */
 export function localStorageAvailable(): boolean {
   try {
-    const x = "@rehooks/local-storage:" + new Date().toISOString();
+    const x = `@rehooks/local-storage:${new Date().toISOString()}`;
     localStorage.setItem(x, x);
     localStorage.removeItem(x);
     return true;
@@ -50,18 +52,18 @@ export class LocalStorageProxy implements IProxyStorage {
 }
 
 export class MemoryStorageProxy implements IProxyStorage {
-  private _memoryStorage = new Map<string, string>();
+  private memoryStorage = new Map<string, string>();
 
   getItem(key: string): string | null {
-    return this._memoryStorage.get(key) ?? null;
+    return this.memoryStorage.get(key) ?? null;
   }
 
   setItem(key: string, value: string): void {
-    this._memoryStorage.set(key, value);
+    this.memoryStorage.set(key, value);
   }
 
   removeItem(key: string): void {
-    this._memoryStorage.delete(key);
+    this.memoryStorage.delete(key);
   }
 }
 
