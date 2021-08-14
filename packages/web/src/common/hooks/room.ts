@@ -3,9 +3,6 @@ import { Progress } from "features/room/slices/progress";
 
 import { useAppSelector } from "./redux";
 
-export const useAccessToken = (): string | undefined =>
-  useAppSelector((state) => state.auth.accessToken);
-
 export const usePlayerState = (): PlayerStateDTO =>
   useAppSelector((state) => state.room.playerState);
 

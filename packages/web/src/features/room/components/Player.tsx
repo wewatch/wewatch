@@ -7,7 +7,7 @@ import { roomActions } from "@/actions/room";
 import { SocketEvent } from "@/constants";
 import { useSocket } from "common/contexts/Socket";
 import { useAppDispatch } from "common/hooks/redux";
-import { usePlayerState } from "common/hooks/selector";
+import { usePlayerState } from "common/hooks/room";
 
 import { setDuration, setProgress } from "../slices/progress";
 import Controls from "./Controls";

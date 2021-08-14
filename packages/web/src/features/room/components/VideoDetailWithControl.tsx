@@ -3,7 +3,7 @@ import React from "react";
 
 import type { NewVideoDTO } from "@/schemas/room";
 import OverflowText from "common/components/OverflowText";
-import { usePlayerState } from "common/hooks/selector";
+import { usePlayerState } from "common/hooks/room";
 
 interface VideoDetailWithControlProps<T extends NewVideoDTO> {
   video: T;

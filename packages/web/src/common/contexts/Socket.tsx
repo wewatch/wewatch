@@ -14,7 +14,8 @@ import {
 } from "socket.io-client/build/typed-events";
 
 import useNotify from "common/hooks/notification";
-import { useAccessToken } from "common/hooks/selector";
+
+import { useAuth } from "./Auth";
 
 type SocketStatus = "connecting" | "connected" | "disconnected";
 
@@ -64,11 +65,11 @@ export const SocketProvider = ({
 
   const socketConnected = socketStatus === "connected";
 
-  const accessToken = useAccessToken();
+  const { accessToken } = useAuth();
   const notify = useNotify();
 
   useEffect(() => {
-    if (accessToken !== undefined) {
+    if (accessToken) {
       const newSocket = io(`${process.env.NEXT_PUBLIC_API_URL}/${namespace}`, {
         ...socketOpts,
         auth: {

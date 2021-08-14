@@ -1,4 +1,5 @@
-import storage from "./storage";
+import { StorageKey } from "./enums";
+import { storage } from "./utils";
 
 type Method = "get" | "post" | "put" | "delete";
 type ParamsType = Record<string, string>;
@@ -22,7 +23,7 @@ class RequestUtil {
       url.search = new URLSearchParams(params).toString();
     }
 
-    const token = storage.getToken();
+    const token = storage.getItem(StorageKey.AccessToken);
     const headers: HeadersInit = {
       Accept: "application/json",
     };

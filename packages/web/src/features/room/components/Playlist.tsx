@@ -13,7 +13,7 @@ import { LexoRank } from "@/utils/rank";
 import { compareVideo } from "@/utils/room";
 import { useSocket } from "common/contexts/Socket";
 import { useAppDispatch } from "common/hooks/redux";
-import { useActivePlaylist } from "common/hooks/selector";
+import { useActivePlaylist } from "common/hooks/room";
 
 import PlaylistContext from "../contexts/Playlist";
 import PlaylistItem from "./PlaylistItem";

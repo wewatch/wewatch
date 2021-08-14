@@ -18,7 +18,7 @@ const Home = (): JSX.Element => {
         title: "Cannot create Room",
       });
     }
-  });
+  }, [isError, notify]);
 
   useEffect(() => {
     if (isSuccess && data?.id) {

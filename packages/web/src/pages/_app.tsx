@@ -3,8 +3,7 @@ import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 
 import store from "app/store";
-import { isBrowser } from "common/utils";
-import Auth from "features/auth";
+import { AuthProvider } from "common/contexts/Auth";
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   return (
@@ -19,8 +18,9 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => {
           ]}
           h="100vh"
         >
-          {isBrowser && <Auth />}
-          <Component {...pageProps} />
+          <AuthProvider>
+            <Component {...pageProps} />
+          </AuthProvider>
         </Container>
       </ChakraProvider>
     </Provider>

@@ -8,7 +8,7 @@ import { SocketEvent } from "@/constants";
 import type { VideoDTO } from "@/schemas/room";
 import { useSocket } from "common/contexts/Socket";
 import { useAppDispatch } from "common/hooks/redux";
-import { usePlayerState } from "common/hooks/selector";
+import { usePlayerState } from "common/hooks/room";
 
 import { usePlaylist } from "../contexts/Playlist";
 import VideoDetailWithControl from "./VideoDetailWithControl";

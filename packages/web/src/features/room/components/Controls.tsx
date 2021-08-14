@@ -3,7 +3,7 @@ import React from "react";
 import { FaPause, FaPlay } from "react-icons/fa";
 
 import { Progress } from "common/components/ProgressBar";
-import { usePlayerState, useProgress } from "common/hooks/selector";
+import { usePlayerState, useProgress } from "common/hooks/room";
 import { secondsToHHMMSS } from "common/utils";
 
 interface ControlsProps {

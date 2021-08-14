@@ -4,7 +4,7 @@ import api from "./index";
 
 const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getUserInfo: builder.query<UserInfoDTO, null>({
+    getUserInfo: builder.query<UserInfoDTO, void>({
       query: () => "/users/me",
     }),
 
