@@ -36,6 +36,7 @@ const mongooseModule = MongooseModule.forRootAsync({
 const sentryModule = SentryModule.forRootAsync({
   inject: [ConfigService],
   useFactory: async (configService: ConfigService) => ({
+    enabled: configService.cfg.SENTRY_ENABLED,
     dsn: configService.cfg.SENTRY_DSN,
     debug: false,
     environment: configService.cfg.NODE_ENV,
