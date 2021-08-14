@@ -1,5 +1,5 @@
 import { Box, Grid, GridItem } from "@chakra-ui/react";
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import { WrappedRoomActionDTO } from "@/actions/room";
 import { SocketEvent } from "@/constants";

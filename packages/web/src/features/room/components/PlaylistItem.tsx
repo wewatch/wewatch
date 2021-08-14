@@ -1,5 +1,4 @@
 import { Box, IconButton, VStack } from "@chakra-ui/react";
-import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { FaPause, FaPlay, FaTrashAlt } from "react-icons/fa";
 

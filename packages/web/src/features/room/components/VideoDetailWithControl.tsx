@@ -1,5 +1,5 @@
 import { AspectRatio, Box, HStack, Image } from "@chakra-ui/react";
-import React from "react";
+import { ReactNode } from "react";
 
 import type { NewVideoDTO } from "@/schemas/room";
 import OverflowText from "components/OverflowText";
@@ -7,7 +7,7 @@ import { usePlayerState } from "hooks/room";
 
 interface VideoDetailWithControlProps<T extends NewVideoDTO> {
   video: T;
-  controller: (video: T) => React.ReactNode;
+  controller: (video: T) => ReactNode;
 }
 
 const VideoDetailWithControl = <T extends NewVideoDTO = NewVideoDTO>({

@@ -10,7 +10,6 @@ import {
   useMultiStyleConfig,
   useStyles,
 } from "@chakra-ui/system";
-import React from "react";
 
 import {
   getProgressProps,

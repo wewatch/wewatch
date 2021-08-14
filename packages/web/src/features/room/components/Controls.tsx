@@ -1,5 +1,4 @@
 import { HStack, IconButton, Text } from "@chakra-ui/react";
-import React from "react";
 import { FaPause, FaPlay } from "react-icons/fa";
 
 import { secondsToHHMMSS } from "common/utils";

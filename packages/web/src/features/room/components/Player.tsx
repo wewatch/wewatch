@@ -1,5 +1,5 @@
 import { AspectRatio, Skeleton } from "@chakra-ui/react";
-import React, { useCallback, useRef } from "react";
+import { useCallback, useRef } from "react";
 import ReactPlayer from "react-player";
 
 import { memberActions } from "@/actions/member";

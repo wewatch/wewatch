@@ -15,7 +15,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Field, FieldProps, Form, FormikProps, withFormik } from "formik";
-import React, { MutableRefObject, useEffect, useRef } from "react";
+import { MutableRefObject, useEffect, useRef } from "react";
 import { FaPlus, FaSearch } from "react-icons/fa";
 
 import { SearchDTO, searchSchema } from "@/schemas/search";

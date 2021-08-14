@@ -1,5 +1,11 @@
 import { nanoid } from "nanoid";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 import { UserInfoDTO } from "@/schemas/user";
 import authApi from "api/auth";
@@ -22,7 +28,7 @@ const defaultContext: AuthContextValue = {
 const AuthContext = createContext<AuthContextValue>(defaultContext);
 
 interface AuthProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {

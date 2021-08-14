@@ -1,6 +1,5 @@
 import { IconButton, VStack } from "@chakra-ui/react";
 import { nanoid } from "nanoid";
-import React from "react";
 import { FaPlus } from "react-icons/fa";
 
 import { roomActions } from "@/actions/room";

@@ -1,5 +1,6 @@
-import React, {
+import {
   createContext,
+  ReactNode,
   useCallback,
   useContext,
   useEffect,
@@ -44,7 +45,7 @@ type Handler = ReservedOrUserListener<EventsMap, EventsMap, string>;
 
 interface SocketProviderProps {
   namespace: string;
-  children: React.ReactNode;
+  children: ReactNode;
   socketOpts: Parameters<typeof io>[1];
   eventHandlers: Record<string, Handler>;
 }
