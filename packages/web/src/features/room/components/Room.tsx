@@ -4,9 +4,9 @@ import React, { useEffect, useMemo } from "react";
 import { WrappedRoomActionDTO } from "@/actions/room";
 import { SocketEvent } from "@/constants";
 import roomApi from "api/room";
-import { SocketProvider } from "common/contexts/Socket";
-import useNotify from "common/hooks/notification";
-import { useAppDispatch, useAppStore } from "common/hooks/redux";
+import { SocketProvider } from "contexts/Socket";
+import useNotify from "hooks/notification";
+import { useAppDispatch, useAppStore } from "hooks/redux";
 
 import { setRoom } from "../slices/room";
 import Player from "./Player";

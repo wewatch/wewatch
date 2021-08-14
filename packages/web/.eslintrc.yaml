@@ -31,7 +31,9 @@ rules:
         # Since we are using absolute imports, the directories inside src
         # must be specified here until there is a solution
         # https://github.com/lydell/eslint-plugin-simple-import-sort/issues/31
-        - ["^(@|api|app|assets|common|features)(/.*|$)"]
+        - [
+            "^(@|api|app|common|components|contexts|features|hooks|pages)(/.*|$)",
+          ]
         - ["^\\."]
   "@typescript-eslint/no-unused-vars":
     - "warn"

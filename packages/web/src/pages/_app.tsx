@@ -3,7 +3,7 @@ import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 
 import store from "app/store";
-import { AuthProvider } from "common/contexts/Auth";
+import { AuthProvider } from "contexts/Auth";
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => (
   <Provider store={store}>

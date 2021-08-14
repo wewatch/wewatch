@@ -13,7 +13,7 @@ import {
   ReservedOrUserListener,
 } from "socket.io-client/build/typed-events";
 
-import useNotify from "common/hooks/notification";
+import useNotify from "hooks/notification";
 
 import { useAuth } from "./Auth";
 

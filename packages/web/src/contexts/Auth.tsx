@@ -3,9 +3,9 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 import { UserInfoDTO } from "@/schemas/user";
 import authApi from "api/auth";
-import LoadingScreen from "common/components/LoadingScreen";
 import { StorageKey } from "common/enums";
-import { useLocalStorage } from "common/hooks/local-storage";
+import LoadingScreen from "components/LoadingScreen";
+import { useLocalStorage } from "hooks/local-storage";
 
 interface AuthContextValue {
   accessToken: string | null;

@@ -20,8 +20,8 @@ import { FaPlus, FaSearch } from "react-icons/fa";
 
 import { SearchDTO, searchSchema } from "@/schemas/search";
 import roomApi from "api/room";
-import useNotify from "common/hooks/notification";
 import { getErrorMessage } from "common/utils";
+import useNotify from "hooks/notification";
 
 import SearchResultItem from "./SearchResultItem";
 

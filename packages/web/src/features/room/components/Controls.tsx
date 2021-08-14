@@ -2,9 +2,9 @@ import { HStack, IconButton, Text } from "@chakra-ui/react";
 import React from "react";
 import { FaPause, FaPlay } from "react-icons/fa";
 
-import { Progress } from "common/components/ProgressBar";
-import { usePlayerState, useProgress } from "common/hooks/room";
 import { secondsToHHMMSS } from "common/utils";
+import { Progress } from "components/ProgressBar";
+import { usePlayerState, useProgress } from "hooks/room";
 
 interface ControlsProps {
   setPlaying: (playing: boolean) => void;

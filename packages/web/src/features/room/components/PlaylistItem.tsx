@@ -6,9 +6,9 @@ import { FaPause, FaPlay, FaTrashAlt } from "react-icons/fa";
 import { roomActions } from "@/actions/room";
 import { SocketEvent } from "@/constants";
 import type { VideoDTO } from "@/schemas/room";
-import { useSocket } from "common/contexts/Socket";
-import { useAppDispatch } from "common/hooks/redux";
-import { usePlayerState } from "common/hooks/room";
+import { useSocket } from "contexts/Socket";
+import { useAppDispatch } from "hooks/redux";
+import { usePlayerState } from "hooks/room";
 
 import { usePlaylist } from "../contexts/Playlist";
 import VideoDetailWithControl from "./VideoDetailWithControl";

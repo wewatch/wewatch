@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 
 import roomApi from "api/room";
-import useNotify from "common/hooks/notification";
+import useNotify from "hooks/notification";
 
 const Home = (): JSX.Element => {
   const router = useRouter();

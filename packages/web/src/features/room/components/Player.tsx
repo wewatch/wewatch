@@ -5,9 +5,9 @@ import ReactPlayer from "react-player";
 import { memberActions } from "@/actions/member";
 import { roomActions } from "@/actions/room";
 import { SocketEvent } from "@/constants";
-import { useSocket } from "common/contexts/Socket";
-import { useAppDispatch } from "common/hooks/redux";
-import { usePlayerState } from "common/hooks/room";
+import { useSocket } from "contexts/Socket";
+import { useAppDispatch } from "hooks/redux";
+import { usePlayerState } from "hooks/room";
 
 import { setDuration, setProgress } from "../slices/progress";
 import Controls from "./Controls";

@@ -2,8 +2,8 @@ import { AspectRatio, Box, HStack, Image } from "@chakra-ui/react";
 import React from "react";
 
 import type { NewVideoDTO } from "@/schemas/room";
-import OverflowText from "common/components/OverflowText";
-import { usePlayerState } from "common/hooks/room";
+import OverflowText from "components/OverflowText";
+import { usePlayerState } from "hooks/room";
 
 interface VideoDetailWithControlProps<T extends NewVideoDTO> {
   video: T;

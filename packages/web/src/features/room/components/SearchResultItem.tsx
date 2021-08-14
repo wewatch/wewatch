@@ -7,8 +7,8 @@ import { roomActions } from "@/actions/room";
 import { SocketEvent } from "@/constants";
 import { NewVideoDTO } from "@/schemas/room";
 import { LexoRank } from "@/utils/rank";
-import { useSocket } from "common/contexts/Socket";
 import { findMinMax } from "common/utils";
+import { useSocket } from "contexts/Socket";
 
 import { usePlaylist } from "../contexts/Playlist";
 import VideoDetailWithControl from "./VideoDetailWithControl";

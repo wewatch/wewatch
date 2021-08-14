@@ -1,7 +1,7 @@
 import { SerializedError } from "@reduxjs/toolkit";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
-export { storage } from "common/hooks/local-storage/storage";
+export { storage } from "hooks/local-storage/storage";
 
 export const isBrowser = typeof window !== "undefined";
 
