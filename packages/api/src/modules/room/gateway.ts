@@ -44,6 +44,14 @@ interface SocketWithData extends Socket {
   data: SocketData;
 }
 
+const hasData = (socket: Socket): socket is SocketWithData => {
+  return (
+    typeof socket.data === "object" &&
+    "roomId" in socket.data &&
+    "user" in socket.data
+  );
+};
+
 @UseFilters(new BaseWsExceptionFilter())
 @UseInterceptors(...COMMON_INTERCEPTORS)
 @UsePipes(new WsValidationPipe())
@@ -103,16 +111,23 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return roomId[0];
   }
 
-  async handleDisconnect(socket: SocketWithData): Promise<void> {
+  async handleDisconnect(socket: Socket): Promise<void> {
+    if (!hasData(socket)) return;
+
     const { roomId, user } = socket.data;
     await this.memberService.handleLeaveRoom(roomId, user);
   }
 
   @SubscribeMessage(SocketEvent.RoomAction)
   async handleRoomActionEvent(
-    @ConnectedSocket() socket: SocketWithData,
+    @ConnectedSocket() socket: Socket,
     @MessageBody() action: RoomActionDTO,
   ): Promise<void> {
+    if (!hasData(socket)) {
+      socket.disconnect();
+      return;
+    }
+
     const { roomId, user } = socket.data;
 
     try {
@@ -136,9 +151,14 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage(SocketEvent.MemberAction)
   async handleMemberActionEvent(
-    @ConnectedSocket() socket: SocketWithData,
+    @ConnectedSocket() socket: Socket,
     @MessageBody() action: MemberActionDTO,
   ): Promise<void> {
+    if (!hasData(socket)) {
+      socket.disconnect();
+      return;
+    }
+
     const { roomId, user } = socket.data;
 
     try {
@@ -169,9 +189,12 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage(SocketEvent.SyncProgress)
-  async handleSyncProgress(
-    @ConnectedSocket() socket: SocketWithData,
-  ): Promise<number> {
+  async handleSyncProgress(@ConnectedSocket() socket: Socket): Promise<number> {
+    if (!hasData(socket)) {
+      socket.disconnect();
+      return 0;
+    }
+
     let progress = 0;
     const { roomId } = socket.data;
     const socketsInRoom = await this.server.in(roomId).allSockets();
