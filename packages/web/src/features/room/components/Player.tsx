@@ -1,5 +1,5 @@
-import { AspectRatio, Skeleton } from "@chakra-ui/react";
-import { useCallback, useRef } from "react";
+import { AspectRatio, Skeleton, useBoolean } from "@chakra-ui/react";
+import { useCallback, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 
 import { memberActions } from "@/actions/member";
@@ -23,6 +23,8 @@ const Player = (): JSX.Element => {
   const { socketEmit } = useSocket();
   const dispatch = useAppDispatch();
   const progressSynced = useRef(false);
+  const [volume, setVolume] = useState(1);
+  const [muted, setMuted] = useBoolean(false);
 
   const setPlaying = useCallback(
     (newPlaying: boolean) => {
@@ -72,6 +74,8 @@ const Player = (): JSX.Element => {
         <ReactPlayer
           playing={playing}
           url={url ?? undefined}
+          volume={volume}
+          muted={muted}
           width="100%"
           height="100%"
           onReady={handleReady}
@@ -89,7 +93,13 @@ const Player = (): JSX.Element => {
           }}
         />
       </AspectRatio>
-      <Controls setPlaying={setPlaying} />
+      <Controls
+        setPlaying={setPlaying}
+        volume={volume}
+        setVolume={setVolume}
+        muted={muted}
+        setMuted={setMuted}
+      />
     </Skeleton>
   );
 };
