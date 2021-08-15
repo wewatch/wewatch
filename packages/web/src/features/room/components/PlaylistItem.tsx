@@ -76,6 +76,7 @@ const PlaylistItem = ({ video, index }: PlaylistItemProps): JSX.Element => (
         {...provided.draggableProps}
         {...provided.dragHandleProps}
         ref={provided.innerRef}
+        width="100%"
       >
         <VideoDetailWithControl
           video={video}

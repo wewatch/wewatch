@@ -27,7 +27,7 @@ const Home = (): JSX.Element => {
   });
 
   return (
-    <Center minH="100vh">
+    <Center height="100%">
       <Button
         variant="solid"
         colorScheme="blue"

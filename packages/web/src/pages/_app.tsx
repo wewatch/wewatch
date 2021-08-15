@@ -1,21 +1,19 @@
-import { ChakraProvider, Container } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 
 import store from "app/store";
+import { Layout } from "components/Layout";
 import { AuthProvider } from "contexts/Auth";
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => (
   <Provider store={store}>
     <ChakraProvider>
-      <Container
-        maxW={["container.sm", "container.md", "container.lg", "container.xl"]}
-        h="100vh"
-      >
-        <AuthProvider>
+      <AuthProvider>
+        <Layout>
           <Component {...pageProps} />
-        </AuthProvider>
-      </Container>
+        </Layout>
+      </AuthProvider>
     </ChakraProvider>
   </Provider>
 );
