@@ -14,7 +14,7 @@ import { useSocket } from "contexts/Socket";
 import { useAppDispatch } from "hooks/redux";
 import { useActivePlaylist } from "hooks/room";
 
-import PlaylistContext from "../contexts/Playlist";
+import PlaylistContext from "../../contexts/Playlist";
 import PlaylistItem from "./PlaylistItem";
 import SearchBox from "./SearchBox";
 

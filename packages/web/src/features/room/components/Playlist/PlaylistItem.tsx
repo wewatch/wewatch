@@ -9,7 +9,7 @@ import { useSocket } from "contexts/Socket";
 import { useAppDispatch } from "hooks/redux";
 import { usePlayerState } from "hooks/room";
 
-import { usePlaylist } from "../contexts/Playlist";
+import { usePlaylist } from "../../contexts/Playlist";
 import VideoDetailWithControl from "./VideoDetailWithControl";
 
 const PlaylistItemController = ({ id, url }: VideoDTO): JSX.Element => {

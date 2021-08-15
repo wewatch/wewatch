@@ -9,7 +9,7 @@ import { useSocket } from "contexts/Socket";
 import { useAppDispatch } from "hooks/redux";
 import { usePlayerState } from "hooks/room";
 
-import { setDuration, setProgress } from "../slices/progress";
+import { setDuration, setProgress } from "../../slices/progress";
 import Controls from "./Controls";
 
 interface Progress {
