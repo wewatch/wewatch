@@ -9,9 +9,9 @@ export const Header = (): JSX.Element => {
   const { user } = useAuth();
 
   return (
-    <Box as="header" width="100%" backgroundColor="cyan.500">
+    <Box as="header" width="100%" backgroundColor="blue.500">
       <Container maxW="container.xl">
-        <Flex paddingY={2} width="100%">
+        <Flex paddingY={2} width="100%" align="center">
           <Link as={NextLink} href="/">
             WeWatch
           </Link>
