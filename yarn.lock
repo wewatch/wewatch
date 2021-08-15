@@ -4828,6 +4828,7 @@ __metadata:
     framer-motion: 4
     nanoid: ^3.1.23
     next: ^11.1.0
+    next-seo: ^4.26.0
     react: ^17.0.2
     react-beautiful-dnd: ^13.1.0
     react-dom: ^17.0.2
@@ -12414,6 +12415,17 @@ __metadata:
     debug: ^4.3.2
     tslib: ^2.3.0
   checksum: 02f0f1e4369353a766bff3472e720b7bf71c07fd7e1523f09934cd5d938aa30fb2b876d7393853f7553b1ab7da44a6b1ebe808ed50a039100ba72a26dcb02923
+  languageName: node
+  linkType: hard
+
+"next-seo@npm:^4.26.0":
+  version: 4.26.0
+  resolution: "next-seo@npm:4.26.0"
+  peerDependencies:
+    next: ^8.1.1-canary.54 || >=9.0.0
+    react: ">=16.0.0"
+    react-dom: ">=16.0.0"
+  checksum: 5276a4a69ecc85c4ead7436d4df25b01380dfa23185f7e32c82f88b2d69191f4753eec0114bc9d7e2a97b1c724abc0501190c2d90213b8b79bc4884e550d41af
   languageName: node
   linkType: hard
 
