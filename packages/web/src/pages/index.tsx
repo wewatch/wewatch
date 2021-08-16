@@ -3,11 +3,14 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 import roomApi from "api/room";
+import { useAuth } from "contexts/Auth";
 import useNotify from "hooks/notification";
 
 const Home = (): JSX.Element => {
   const router = useRouter();
   const notify = useNotify();
+  const { user } = useAuth();
+
   const [createRoom, { data, isError, isSuccess }] =
     roomApi.endpoints.createRoom.useMutation();
 
@@ -24,7 +27,7 @@ const Home = (): JSX.Element => {
     if (isSuccess && data?.id) {
       router.push(`/rooms/${data.id}`);
     }
-  });
+  }, [isSuccess, data, router]);
 
   return (
     <Center height="100%">
@@ -32,6 +35,7 @@ const Home = (): JSX.Element => {
         variant="solid"
         colorScheme="blue"
         onClick={() => createRoom(null)}
+        isDisabled={user === null}
       >
         Create a new room
       </Button>

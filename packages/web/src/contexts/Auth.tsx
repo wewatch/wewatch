@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import { useRouter } from "next/router";
 import {
   createContext,
   ReactNode,
@@ -32,6 +33,7 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
+  const router = useRouter();
   const [accessToken, setAccessToken] = useLocalStorage(StorageKey.AccessToken);
   const [visitorId, setVisitorId] = useLocalStorage(StorageKey.VisitorId, "");
   const [user, setUser] = useState<UserInfoDTO | null>(null);
@@ -77,7 +79,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
         user,
       }}
     >
-      {user === null ? <LoadingScreen /> : children}
+      {user === null && router.route !== "/" ? <LoadingScreen /> : children}
     </AuthContext.Provider>
   );
 };

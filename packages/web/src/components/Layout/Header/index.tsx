@@ -11,7 +11,7 @@ export const Header = (): JSX.Element => {
   return (
     <Box as="header" width="100%" backgroundColor="blue.500">
       <Container maxW="container.xl">
-        <Flex paddingY={2} width="100%" align="center">
+        <Flex paddingY={2} minHeight="48px" width="100%" align="center">
           <Link as={NextLink} href="/">
             WeWatch
           </Link>

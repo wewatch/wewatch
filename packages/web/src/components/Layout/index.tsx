@@ -10,7 +10,7 @@ interface LayoutProps {
 export const Layout = ({ children }: LayoutProps): JSX.Element => (
   <VStack height="100vh" spacing="0">
     <Header />
-    <Container maxW="container.xl" height="100%">
+    <Container maxW="container.xl" height="100%" as="main">
       {children}
     </Container>
   </VStack>
