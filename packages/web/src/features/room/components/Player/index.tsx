@@ -1,11 +1,13 @@
 import { AspectRatio, Skeleton, useBoolean } from "@chakra-ui/react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 import ReactPlayer from "react-player";
 
 import { memberActions } from "@/actions/member";
 import { roomActions } from "@/actions/room";
 import { SocketEvent } from "@/constants";
+import { StorageKey } from "common/enums";
 import { useSocket } from "contexts/Socket";
+import { useLocalStorage } from "hooks/local-storage";
 import { useAppDispatch } from "hooks/redux";
 import { usePlayerState } from "hooks/room";
 
@@ -23,7 +25,7 @@ const Player = (): JSX.Element => {
   const { socketEmit } = useSocket();
   const dispatch = useAppDispatch();
   const progressSynced = useRef(false);
-  const [volume, setVolume] = useState(1);
+  const [volume, setVolume] = useLocalStorage(StorageKey.Volume, 1);
   const [muted, setMuted] = useBoolean(false);
 
   const setPlaying = useCallback(
