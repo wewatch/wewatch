@@ -15,6 +15,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.6.0",
     "@wewatch/lexorank": "^1.0.3",
+    "nanoid": "^3.1.23",
     "redux": "^4.1.0"
   }
 }

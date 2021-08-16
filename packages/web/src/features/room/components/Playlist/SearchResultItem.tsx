@@ -5,7 +5,7 @@ import { FaPlus } from "react-icons/fa";
 import { roomActions } from "@/actions/room";
 import { SocketEvent } from "@/constants";
 import { NewVideoDTO } from "@/schemas/room";
-import { LexoRank } from "@/utils/rank";
+import { generateRankSuffix, LexoRank } from "@/utils/rank";
 import { findMinMax } from "common/utils";
 import { useSocket } from "contexts/Socket";
 
@@ -34,7 +34,7 @@ const SearchResultItemController = (video: NewVideoDTO): JSX.Element => {
         video: {
           ...video,
           id: nanoid(),
-          rank: rankObj.toString(),
+          rank: rankObj.toString() + generateRankSuffix(),
         },
       }),
     );
