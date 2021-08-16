@@ -2,7 +2,6 @@ import { HttpException } from "@nestjs/common";
 
 import { MemberActionDTO } from "@/actions/member";
 import { RoomActionDTO } from "@/actions/room";
-import { UserDocument } from "modules/user";
 
 export const isHttpException = (e: Error): e is HttpException => {
   return (
@@ -23,6 +22,6 @@ export interface RoomActionEventData {
 
 export interface MemberActionEventData {
   roomId: string;
-  user: UserDocument;
+  userId: string;
   action: MemberActionDTO;
 }

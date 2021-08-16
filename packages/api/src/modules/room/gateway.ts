@@ -163,7 +163,7 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     try {
       await this.memberService.handleAction(roomId, user, action);
-      const wrappedAction = this.memberService.wrapAction(action, user);
+      const wrappedAction = this.memberService.wrapAction(action, user.id);
       if (wrappedAction) {
         this.server.to(roomId).emit(SocketEvent.MemberAction, wrappedAction);
       }
@@ -179,10 +179,10 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @OnEvent(InternalEvent.MemberAction)
   async handleInternalMemberActionEvent({
     roomId,
-    user,
+    userId,
     action,
   }: MemberActionEventData): Promise<void> {
-    const wrappedAction = this.memberService.wrapAction(action, user);
+    const wrappedAction = this.memberService.wrapAction(action, userId);
     if (wrappedAction) {
       this.server.to(roomId).emit(SocketEvent.MemberAction, wrappedAction);
     }

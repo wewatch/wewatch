@@ -61,17 +61,14 @@ export class MemberService {
     return action;
   }
 
-  wrapAction(
-    action: ActionDTO,
-    user: UserDocument,
-  ): WrappedMemberActionDTO | null {
+  wrapAction(action: ActionDTO, userId: string): WrappedMemberActionDTO | null {
     if (actions.readyToNext.match(action)) {
       return null;
     }
 
     return wrappedMemberActionSchema.cast(
       {
-        user,
+        userId,
         action,
       },
       { stripUnknown: true },
@@ -97,8 +94,8 @@ export class MemberService {
 
     const eventData: MemberActionEventData = {
       roomId,
-      user,
-      action: actions.joinRoom(),
+      userId: user.id,
+      action: actions.joinRoom(user),
     };
     this.eventEmitter.emit(InternalEvent.MemberAction, eventData);
   }
@@ -118,7 +115,7 @@ export class MemberService {
 
     const eventData: MemberActionEventData = {
       roomId,
-      user,
+      userId: user.id,
       action: actions.leaveRoom(),
     };
     this.eventEmitter.emit(InternalEvent.MemberAction, eventData);

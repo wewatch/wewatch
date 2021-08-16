@@ -1,7 +1,6 @@
 import * as yup from "yup";
 
 import { createActionSchema } from "@/actions/utils";
-import { UserInfoDTO, userInfoSchema } from "@/schemas/user";
 import { withSchema } from "@/schemas/utils";
 
 import * as memberActions from "./member";
@@ -15,13 +14,13 @@ export class MemberActionDTO {
 }
 
 export const wrappedMemberActionSchema = yup.object({
-  user: userInfoSchema.required(),
+  userId: yup.string().required(),
   action: memberActionSchema.required(),
 });
 
 @withSchema(wrappedMemberActionSchema)
 export class WrappedMemberActionDTO {
-  user!: UserInfoDTO;
+  userId!: string;
   action!: MemberActionDTO;
 }
 
