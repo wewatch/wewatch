@@ -1,7 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 import { roomActions as actions } from "@/actions/room";
 import type { Room } from "@/schemas/room";
+import roomApi from "api/room";
 
 const initialState: Room = {
   id: "",
@@ -17,11 +18,7 @@ const slice = createSlice({
   name: "room",
   initialState,
 
-  reducers: {
-    setRoom(state, action: PayloadAction<Room>) {
-      return action.payload;
-    },
-  },
+  reducers: {},
 
   extraReducers: (builder) =>
     builder
@@ -61,8 +58,11 @@ const slice = createSlice({
         state.playerState.url = url;
         state.playerState.activePlaylistId = playlistId;
         state.playerState.playing = true;
-      }),
+      })
+      .addMatcher(
+        roomApi.endpoints.getRoom.matchFulfilled,
+        (state, action) => action.payload,
+      ),
 });
 
-export const { setRoom } = slice.actions;
 export default slice.reducer;

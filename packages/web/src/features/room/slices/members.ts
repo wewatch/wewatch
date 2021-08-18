@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import { memberActions as actions } from "@/actions/member";
 import { MemberDTO } from "@/schemas/member";
+import roomApi from "api/room";
 
 // Map userId => member
 export type MembersState = Record<string, MemberDTO>;
@@ -29,7 +30,15 @@ const slice = createSlice({
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           state[userId]!.online = false;
         }
-      }),
+      })
+      .addMatcher(
+        roomApi.endpoints.getRoomMembers.matchFulfilled,
+        (state, action) => {
+          action.payload.forEach((member) => {
+            state[member.user.id] = member;
+          });
+        },
+      ),
 });
 
 export default slice.reducer;

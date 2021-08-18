@@ -1,3 +1,4 @@
+import { MemberDTO } from "@/schemas/member";
 import { RoomDTO } from "@/schemas/room";
 import { SearchDTO, SearchVideoResultDTO } from "@/schemas/search";
 
@@ -14,6 +15,10 @@ const roomApi = api.injectEndpoints({
 
     getRoom: builder.query<RoomDTO, string>({
       query: (roomId) => `/rooms/${roomId}`,
+    }),
+
+    getRoomMembers: builder.query<MemberDTO[], string>({
+      query: (roomId) => `/rooms/${roomId}/members`,
     }),
 
     searchVideo: builder.mutation<SearchVideoResultDTO, SearchDTO>({

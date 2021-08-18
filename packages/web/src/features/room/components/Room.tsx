@@ -9,7 +9,6 @@ import { SocketProvider } from "contexts/Socket";
 import useNotify from "hooks/notification";
 import { useAppDispatch, useAppStore } from "hooks/redux";
 
-import { setRoom } from "../slices/room";
 import Player from "./Player";
 import Playlist from "./Playlist";
 
@@ -21,26 +20,24 @@ const Room = ({ roomId }: RoomProps): JSX.Element | null => {
   const notify = useNotify();
   const store = useAppStore();
   const dispatch = useAppDispatch();
-  const {
-    data: room,
-    isError,
-    isSuccess,
-  } = roomApi.endpoints.getRoom.useQuery(roomId);
+
+  const { isError: isGetRoomError, isSuccess: isGetRoomSuccess } =
+    roomApi.endpoints.getRoom.useQuery(roomId);
+
+  const { isError: isGetMembersError, isSuccess: isGetMembersSuccess } =
+    roomApi.endpoints.getRoomMembers.useQuery(roomId);
+
+  const getDataError = isGetRoomError || isGetMembersError;
+  const getDataSuccess = isGetRoomSuccess && isGetMembersSuccess;
 
   useEffect(() => {
-    if (isError) {
+    if (getDataError) {
       notify({
         status: "error",
         title: `Cannot get Room "${roomId}"`,
       });
     }
-  }, [roomId, notify, isError]);
-
-  useEffect(() => {
-    if (isSuccess && room) {
-      dispatch(setRoom(room));
-    }
-  }, [dispatch, isSuccess, room]);
+  }, [roomId, notify, getDataError]);
 
   const socketOpts = useMemo(
     () => ({
@@ -72,7 +69,7 @@ const Room = ({ roomId }: RoomProps): JSX.Element | null => {
     [dispatch, store],
   );
 
-  return isSuccess ? (
+  return getDataSuccess ? (
     <SocketProvider
       namespace="rooms"
       socketOpts={socketOpts}
