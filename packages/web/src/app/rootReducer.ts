@@ -1,12 +1,10 @@
 import { combineReducers } from "@reduxjs/toolkit";
 
 import api from "api";
-import progress from "features/room/slices/progress";
-import room from "features/room/slices/room";
+import roomSlices from "features/room/slices";
 
 const rootReducer = combineReducers({
-  room,
-  progress,
+  ...roomSlices,
   [api.reducerPath]: api.reducer,
 });
 

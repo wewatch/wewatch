@@ -1,6 +1,7 @@
 import { Box, Grid, GridItem } from "@chakra-ui/react";
 import { useEffect, useMemo } from "react";
 
+import { WrappedMemberActionDTO } from "@/actions/member";
 import { WrappedRoomActionDTO } from "@/actions/room";
 import { SocketEvent } from "@/constants";
 import roomApi from "api/room";
@@ -54,6 +55,17 @@ const Room = ({ roomId }: RoomProps): JSX.Element | null => {
     () => ({
       [SocketEvent.RoomAction]: ({ action }: WrappedRoomActionDTO) =>
         dispatch(action),
+
+      [SocketEvent.MemberAction]: ({
+        userId,
+        action: { type, payload },
+      }: WrappedMemberActionDTO) => {
+        dispatch({
+          type,
+          payload: { userId, ...payload },
+        });
+      },
+
       [SocketEvent.SyncProgress]: (callback: (p: number) => void) =>
         callback(store.getState().progress.playedSeconds),
     }),
