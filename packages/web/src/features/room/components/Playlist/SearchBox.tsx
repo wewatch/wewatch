@@ -95,7 +95,7 @@ const SearchBox = (): JSX.Element => {
       <PopoverTrigger>
         <IconButton aria-label="add to playlist" icon={<FaPlus />} />
       </PopoverTrigger>
-      <PopoverContent maxHeight="50vh">
+      <PopoverContent maxHeight="50vh" boxShadow="dark-lg">
         <PopoverArrow />
         <PopoverCloseButton />
         <PopoverHeader paddingRight={10}>

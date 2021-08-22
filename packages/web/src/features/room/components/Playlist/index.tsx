@@ -1,4 +1,4 @@
-import { VStack } from "@chakra-ui/react";
+import { Box, VStack } from "@chakra-ui/react";
 import {
   DragDropContext,
   DragDropContextProps,
@@ -89,18 +89,25 @@ const Playlist = (): JSX.Element | null => {
 
   return (
     <PlaylistContext.Provider value={playlist}>
-      <VStack>
+      <VStack maxHeight="calc(100vh - 64px)">
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId={playlist.id}>
             {(provided) => (
-              <VStack ref={provided.innerRef} {...provided.droppableProps}>
+              <VStack
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                flexShrink={1}
+                overflowY="auto"
+              >
                 {items}
                 {provided.placeholder}
               </VStack>
             )}
           </Droppable>
         </DragDropContext>
-        <SearchBox />
+        <Box>
+          <SearchBox />
+        </Box>
       </VStack>
     </PlaylistContext.Provider>
   );

@@ -71,7 +71,7 @@ const Player = (): JSX.Element => {
   );
 
   return (
-    <Skeleton isLoaded={!!url}>
+    <Skeleton isLoaded={!!url} width="100%">
       <AspectRatio ratio={16 / 9}>
         <ReactPlayer
           playing={playing}

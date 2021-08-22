@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem } from "@chakra-ui/react";
 import { useEffect, useMemo } from "react";
 
 import { WrappedMemberActionDTO } from "@/actions/member";
@@ -75,16 +75,14 @@ const Room = ({ roomId }: RoomProps): JSX.Element | null => {
       socketOpts={socketOpts}
       eventHandlers={socketEventHandlers}
     >
-      <Box paddingY={2}>
-        <Grid templateColumns="2.5fr 1fr" gap={2}>
-          <GridItem>
-            <Player />
-          </GridItem>
-          <GridItem>
-            <Playlist />
-          </GridItem>
-        </Grid>
-      </Box>
+      <Grid templateColumns="2.5fr 1fr" gap={2}>
+        <GridItem>
+          <Player />
+        </GridItem>
+        <GridItem>
+          <Playlist />
+        </GridItem>
+      </Grid>
     </SocketProvider>
   ) : null;
 };
