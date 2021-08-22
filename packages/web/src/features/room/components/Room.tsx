@@ -1,4 +1,4 @@
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem, VStack } from "@chakra-ui/react";
 import { useEffect, useMemo } from "react";
 
 import { WrappedMemberActionDTO } from "@/actions/member";
@@ -11,6 +11,7 @@ import { useAppDispatch, useAppStore } from "hooks/redux";
 
 import Player from "./Player";
 import Playlist from "./Playlist";
+import RoomInfo from "./RoomInfo";
 
 interface RoomProps {
   roomId: string;
@@ -77,7 +78,10 @@ const Room = ({ roomId }: RoomProps): JSX.Element | null => {
     >
       <Grid templateColumns="2.5fr 1fr" gap={2}>
         <GridItem>
-          <Player />
+          <VStack maxHeight="calc(100vh - 64px)" overflowY="auto">
+            <Player />
+            <RoomInfo />
+          </VStack>
         </GridItem>
         <GridItem>
           <Playlist />

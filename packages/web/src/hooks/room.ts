@@ -1,4 +1,5 @@
 import { PlayerStateDTO, PlaylistDTO } from "@/schemas/room";
+import { MembersState } from "features/room/slices/members";
 import { Progress } from "features/room/slices/progress";
 
 import { useAppSelector } from "./redux";
@@ -17,3 +18,6 @@ export const useActivePlaylist = (): PlaylistDTO | undefined => {
 
 export const useProgress = (): Progress =>
   useAppSelector((state) => state.progress);
+
+export const useMembers = (): MembersState =>
+  useAppSelector((state) => state.members);
