@@ -16,12 +16,14 @@ export class MemberActionDTO {
 export const wrappedMemberActionSchema = yup.object({
   userId: yup.string().required(),
   action: memberActionSchema.required(),
+  timestamp: yup.number().required(),
 });
 
 @withSchema(wrappedMemberActionSchema)
 export class WrappedMemberActionDTO {
   userId!: string;
   action!: MemberActionDTO;
+  timestamp!: number;
 }
 
 export { memberActions };

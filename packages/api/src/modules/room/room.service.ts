@@ -162,6 +162,7 @@ export class RoomService {
       {
         userId: user?.id ?? null,
         action,
+        timestamp: Date.now(),
       },
       { stripUnknown: true },
     ) as WrappedRoomActionDTO;

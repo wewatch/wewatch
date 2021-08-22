@@ -70,6 +70,7 @@ export class MemberService {
       {
         userId,
         action,
+        timestamp: Date.now(),
       },
       { stripUnknown: true },
     ) as WrappedMemberActionDTO;

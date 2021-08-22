@@ -16,12 +16,14 @@ export class RoomActionDTO {
 export const wrappedRoomActionSchema = yup.object({
   userId: yup.string().required().nullable(true),
   action: roomActionSchema.required(),
+  timestamp: yup.number().required(),
 });
 
 @withSchema(wrappedRoomActionSchema)
 export class WrappedRoomActionDTO {
   userId!: string | null;
   action!: RoomActionDTO;
+  timestamp!: number;
 }
 
 export { roomActions };
