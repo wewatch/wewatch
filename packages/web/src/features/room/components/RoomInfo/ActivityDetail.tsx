@@ -114,7 +114,7 @@ const getDescription = ({
         <Text as="span" fontWeight="bold">
           {name}
         </Text>
-        {" starts playing "}
+        {name ? " starts playing " : "Start playing "}
         <Text as="span" fontWeight="bold">
           {title}
         </Text>
@@ -130,12 +130,24 @@ const ActivityDetail = (activity: Activity): JSX.Element => {
   const members = useMembers();
   const user = userId === null ? null : members[userId]?.user;
 
-  const avatar = user ? <UserAvatar {...user} /> : <Avatar />;
+  const avatar = user ? (
+    <UserAvatar {...user} />
+  ) : (
+    <Avatar size="sm" showBorder />
+  );
 
   return (
-    <HStack>
+    <HStack align="flex-start">
       {avatar}
-      <Box>{getDescription({ user, activity })}</Box>
+      <Box
+        borderWidth="1px"
+        borderRadius="lg"
+        paddingX={2}
+        paddingY={1}
+        borderColor="gray.500"
+      >
+        {getDescription({ user, activity })}
+      </Box>
     </HStack>
   );
 };

@@ -1,4 +1,4 @@
-import { Container, Flex } from "@chakra-ui/react";
+import { Container, VStack } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
 import { Header } from "./Header";
@@ -8,10 +8,10 @@ interface LayoutProps {
 }
 
 export const Layout = ({ children }: LayoutProps): JSX.Element => (
-  <Flex direction="column" height="100vh">
+  <VStack height="100vh" spacing={0}>
     <Header />
-    <Container as="main" maxW="container.xl" flexGrow={1} paddingY={2}>
+    <Container as="main" maxW="container.xl" flexGrow={1}>
       {children}
     </Container>
-  </Flex>
+  </VStack>
 );

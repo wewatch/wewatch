@@ -28,14 +28,7 @@ const MembersInfo = (): JSX.Element => {
       <Heading as="h2" size="md" paddingX={3}>
         Members
       </Heading>
-      <Box
-        width="100%"
-        height="100%"
-        borderWidth="1px"
-        borderRadius="lg"
-        padding={2}
-        overflow="auto"
-      >
+      <Box width="100%" height="100%" padding={2} overflow="auto">
         {isLoading ? (
           <ItemsSkeleton height="36px" />
         ) : (

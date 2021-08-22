@@ -85,7 +85,7 @@ const Room = ({ roomId }: RoomProps): JSX.Element | null => {
     >
       <Grid templateColumns="2.5fr 1fr" gap={2}>
         <GridItem>
-          <VStack maxHeight="calc(100vh - 64px)" overflowY="auto">
+          <VStack marginTop={2} height="calc(100vh - 56px)" overflowY="auto">
             <Player />
             <RoomInfo />
           </VStack>
