@@ -4,6 +4,20 @@ import * as yup from "yup";
 import { rankSchema, VideoDTO, videoSchema } from "@/schemas/room";
 import { withSchema } from "@/schemas/utils";
 
+// common
+
+const videoIdSchema = yup.object({
+  playlistId: yup.string().required(),
+  videoId: yup.string().required(),
+  title: yup.string().required(),
+});
+
+class VideoId {
+  playlistId!: string;
+  videoId!: string;
+  title!: string;
+}
+
 // addVideo
 
 export const addVideoPayloadSchema = yup.object({
@@ -21,28 +35,19 @@ export const addVideo = createAction<AddVideoPayload>("room/addVideo");
 
 // deleteVideo
 
-export const deleteVideoPayloadSchema = yup.object({
-  playlistId: yup.string().required(),
-  videoId: yup.string().required(),
-});
+export const deleteVideoPayloadSchema = videoIdSchema;
 
 @withSchema(deleteVideoPayloadSchema)
-export class DeleteVideoPayload {
-  playlistId!: string;
-  videoId!: string;
-}
+export class DeleteVideoPayload extends VideoId {}
 
 export const deleteVideo = createAction<DeleteVideoPayload>("room/deleteVideo");
 
 // updateVideo
 
-export const updateVideoPayloadSchema =
-  deleteVideoPayloadSchema.concat(rankSchema);
+export const updateVideoPayloadSchema = videoIdSchema.concat(rankSchema);
 
 @withSchema(updateVideoPayloadSchema)
-export class UpdateVideoPayload {
-  playlistId!: string;
-  videoId!: string;
+export class UpdateVideoPayload extends VideoId {
   rank!: string;
 }
 
@@ -59,12 +64,14 @@ export const setPlaying = createAction<boolean>("room/setPlaying");
 export const setActiveURLPayloadSchema = yup.object({
   playlistId: yup.string().required(),
   url: yup.string().url().required(),
+  title: yup.string().required(),
 });
 
 @withSchema(setActiveURLPayloadSchema)
 export class SetActiveURLPayload {
   playlistId!: string;
   url!: string;
+  title!: string;
 }
 
 export const setActiveURL =

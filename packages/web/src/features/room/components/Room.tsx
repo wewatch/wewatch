@@ -9,6 +9,7 @@ import { SocketProvider } from "contexts/Socket";
 import useNotify from "hooks/notification";
 import { useAppDispatch, useAppStore } from "hooks/redux";
 
+import { addActivity } from "../slices/activities";
 import Player from "./Player";
 import Playlist from "./Playlist";
 import RoomInfo from "./RoomInfo";
@@ -50,17 +51,24 @@ const Room = ({ roomId }: RoomProps): JSX.Element | null => {
 
   const socketEventHandlers = useMemo(
     () => ({
-      [SocketEvent.RoomAction]: ({ action }: WrappedRoomActionDTO) =>
-        dispatch(action),
+      [SocketEvent.RoomAction]: (wrappedAction: WrappedRoomActionDTO) => {
+        const { action } = wrappedAction;
 
-      [SocketEvent.MemberAction]: ({
-        userId,
-        action: { type, payload },
-      }: WrappedMemberActionDTO) => {
+        dispatch(action);
+        dispatch(addActivity(wrappedAction));
+      },
+
+      [SocketEvent.MemberAction]: (wrappedAction: WrappedMemberActionDTO) => {
+        const {
+          userId,
+          action: { type, payload },
+        } = wrappedAction;
+
         dispatch({
           type,
           payload: { userId, ...payload },
         });
+        dispatch(addActivity(wrappedAction));
       },
 
       [SocketEvent.SyncProgress]: (callback: (p: number) => void) =>

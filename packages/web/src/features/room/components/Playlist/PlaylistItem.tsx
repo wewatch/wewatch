@@ -12,7 +12,7 @@ import { usePlayerState } from "hooks/room";
 import { usePlaylist } from "../../contexts/Playlist";
 import VideoDetailWithControl from "./VideoDetailWithControl";
 
-const PlaylistItemController = ({ id, url }: VideoDTO): JSX.Element => {
+const PlaylistItemController = ({ id, url, title }: VideoDTO): JSX.Element => {
   const { url: activeURL, playing } = usePlayerState();
   const { id: playlistId } = usePlaylist();
   const { socketEmit } = useSocket();
@@ -27,7 +27,11 @@ const PlaylistItemController = ({ id, url }: VideoDTO): JSX.Element => {
     } else {
       socketEmit(
         SocketEvent.RoomAction,
-        roomActions.setActiveURL({ playlistId, url }),
+        roomActions.setActiveURL({
+          playlistId,
+          url,
+          title,
+        }),
       );
     }
   };
@@ -38,6 +42,7 @@ const PlaylistItemController = ({ id, url }: VideoDTO): JSX.Element => {
       roomActions.deleteVideo({
         playlistId,
         videoId: id,
+        title,
       }),
     );
   };

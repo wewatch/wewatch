@@ -78,10 +78,16 @@ const Playlist = (): JSX.Element | null => {
       return;
     }
 
+    const video = sortedVideos.find((v) => v.id === draggableId);
+    if (!video) {
+      return;
+    }
+
     const action = roomActions.updateVideo({
       playlistId: playlist.id,
       videoId: draggableId,
       rank: findNewRank(sortedVideos, source.index, destination.index),
+      title: video.title,
     });
 
     dispatch(action);

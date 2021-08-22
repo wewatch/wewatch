@@ -100,16 +100,24 @@ export class RoomService {
       return null;
     }
 
-    const currentURL = room.playerState.url ?? "";
-    const videoURLs = [...playlist.videos].sort(compareVideo).map((v) => v.url);
-    const index = videoURLs.indexOf(currentURL);
-    const candidateURL = videoURLs[(index + 1) % videoURLs.length];
-    if (candidateURL === undefined || candidateURL === currentURL) {
+    const videos = [...playlist.videos].sort(compareVideo);
+    const currentVideo = videos.find((v) => v.url === room.playerState.url);
+    if (!currentVideo) {
+      return null;
+    }
+
+    const index = videos.indexOf(currentVideo);
+    const candidateVideo = videos[(index + 1) % videos.length];
+    if (
+      candidateVideo === undefined ||
+      candidateVideo.id === currentVideo?.id
+    ) {
       return null;
     }
 
     return {
-      url: candidateURL,
+      title: candidateVideo.title,
+      url: candidateVideo.url,
       playlistId: playlist.id,
     };
   }

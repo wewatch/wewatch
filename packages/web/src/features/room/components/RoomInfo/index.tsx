@@ -1,12 +1,12 @@
 import { AspectRatio, HStack } from "@chakra-ui/react";
 
-import ActionsLog from "./ActionsLog";
+import Activities from "./Activities";
 import MembersInfo from "./MembersInfo";
 
 const RoomInfo = (): JSX.Element => (
   <AspectRatio ratio={2.8284} width="100%">
     <HStack>
-      <ActionsLog />
+      <Activities />
       <MembersInfo />
     </HStack>
   </AspectRatio>
