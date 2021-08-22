@@ -35,7 +35,10 @@ const slice = createSlice({
         roomApi.endpoints.getRoomMembers.matchFulfilled,
         (state, action) => {
           action.payload.forEach((member) => {
-            state[member.user.id] = member;
+            const userId = member.user.id;
+            if (!(userId in state)) {
+              state[userId] = member;
+            }
           });
         },
       ),

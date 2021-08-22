@@ -1,8 +1,12 @@
-import { AvatarBadge, Box, Heading, HStack, VStack } from "@chakra-ui/react";
+import { Box, Heading, VStack } from "@chakra-ui/react";
+import { skipToken } from "@reduxjs/toolkit/query";
 
-import UserAvatar from "components/UserAvatar";
+import roomApi from "api/room";
+import ItemsSkeleton from "components/ItemsSkeleton";
 import { useAuth } from "contexts/Auth";
-import { useMembers } from "hooks/room";
+import { useMembers, useRoomId } from "hooks/room";
+
+import MembersList from "./MembersList";
 
 const MembersInfo = (): JSX.Element => {
   const { user } = useAuth();
@@ -13,6 +17,11 @@ const MembersInfo = (): JSX.Element => {
   const orderedMembersList = membersList
     .filter((m) => m.user.id === user?.id)
     .concat(membersList.filter((m) => m.user.id !== user?.id));
+
+  const roomId = useRoomId();
+  const { isLoading } = roomApi.endpoints.getRoomMembers.useQuery(
+    roomId ?? skipToken,
+  );
 
   return (
     <VStack width="100%" height="100%" align="start">
@@ -27,24 +36,11 @@ const MembersInfo = (): JSX.Element => {
         padding={2}
         overflow="auto"
       >
-        <VStack align="start">
-          {orderedMembersList.map((m) => (
-            <HStack key={m.user.id}>
-              <UserAvatar
-                {...m.user}
-                badge={
-                  <AvatarBadge
-                    boxSize="1em"
-                    backgroundColor={m.online ? "green.500" : "gray.300"}
-                  />
-                }
-              />
-              <Box>
-                {m.user.id === user?.id ? `${m.user.name} (You)` : m.user.name}
-              </Box>
-            </HStack>
-          ))}
-        </VStack>
+        {isLoading ? (
+          <ItemsSkeleton height="36px" />
+        ) : (
+          <MembersList members={orderedMembersList} />
+        )}
       </Box>
     </VStack>
   );

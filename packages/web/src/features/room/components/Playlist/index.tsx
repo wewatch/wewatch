@@ -10,6 +10,7 @@ import { SocketEvent } from "@/constants";
 import { VideoDTO } from "@/schemas/room";
 import { LexoRank } from "@/utils/rank";
 import { compareVideo } from "@/utils/room";
+import ItemsSkeleton from "components/ItemsSkeleton";
 import { useSocket } from "contexts/Socket";
 import { useAppDispatch } from "hooks/redux";
 import { useActivePlaylist } from "hooks/room";
@@ -52,7 +53,7 @@ const Playlist = (): JSX.Element | null => {
   const dispatch = useAppDispatch();
 
   if (playlist === undefined) {
-    return null;
+    return <ItemsSkeleton height="54px" count={5} />;
   }
 
   const sortedVideos = [...playlist.videos].sort(compareVideo);

@@ -22,14 +22,13 @@ const Room = ({ roomId }: RoomProps): JSX.Element | null => {
   const store = useAppStore();
   const dispatch = useAppDispatch();
 
-  const { isError: isGetRoomError, isSuccess: isGetRoomSuccess } =
+  const { isError: isGetRoomError } =
     roomApi.endpoints.getRoom.useQuery(roomId);
 
-  const { isError: isGetMembersError, isSuccess: isGetMembersSuccess } =
+  const { isError: isGetMembersError } =
     roomApi.endpoints.getRoomMembers.useQuery(roomId);
 
   const getDataError = isGetRoomError || isGetMembersError;
-  const getDataSuccess = isGetRoomSuccess && isGetMembersSuccess;
 
   useEffect(() => {
     if (getDataError) {
@@ -70,7 +69,7 @@ const Room = ({ roomId }: RoomProps): JSX.Element | null => {
     [dispatch, store],
   );
 
-  return getDataSuccess ? (
+  return (
     <SocketProvider
       namespace="rooms"
       socketOpts={socketOpts}
@@ -88,7 +87,7 @@ const Room = ({ roomId }: RoomProps): JSX.Element | null => {
         </GridItem>
       </Grid>
     </SocketProvider>
-  ) : null;
+  );
 };
 
 export default Room;

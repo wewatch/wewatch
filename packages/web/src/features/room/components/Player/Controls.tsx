@@ -28,7 +28,7 @@ const Controls = ({
   return (
     <Box>
       <Progress size="xs" value={played * 100} buffer={loaded * 100} />
-      <HStack align="center" spacing={1}>
+      <HStack align="center" spacing={1} paddingX={1}>
         <IconButton
           onClick={() => setPlaying(!playing)}
           variant="ghost"

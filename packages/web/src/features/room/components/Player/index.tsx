@@ -1,15 +1,17 @@
 import { AspectRatio, Skeleton, useBoolean } from "@chakra-ui/react";
+import { skipToken } from "@reduxjs/toolkit/query";
 import { useCallback, useRef } from "react";
 import ReactPlayer from "react-player";
 
 import { memberActions } from "@/actions/member";
 import { roomActions } from "@/actions/room";
 import { SocketEvent } from "@/constants";
+import roomApi from "api/room";
 import { StorageKey } from "common/enums";
 import { useSocket } from "contexts/Socket";
 import { useLocalStorage } from "hooks/local-storage";
 import { useAppDispatch } from "hooks/redux";
-import { usePlayerState } from "hooks/room";
+import { usePlayerState, useRoomId } from "hooks/room";
 
 import { setDuration, setProgress } from "../../slices/progress";
 import Controls from "./Controls";
@@ -21,12 +23,17 @@ interface Progress {
 }
 
 const Player = (): JSX.Element => {
+  const roomId = useRoomId();
   const { url, playing } = usePlayerState();
   const { socketEmit } = useSocket();
   const dispatch = useAppDispatch();
   const progressSynced = useRef(false);
   const [volume, setVolume] = useLocalStorage(StorageKey.Volume, 1);
   const [muted, setMuted] = useBoolean(false);
+
+  const { isLoading: isGetRoomLoading } = roomApi.endpoints.getRoom.useQuery(
+    roomId ?? skipToken,
+  );
 
   const setPlaying = useCallback(
     (newPlaying: boolean) => {
@@ -71,7 +78,7 @@ const Player = (): JSX.Element => {
   );
 
   return (
-    <Skeleton isLoaded={!!url} width="100%">
+    <Skeleton isLoaded={!isGetRoomLoading} width="100%">
       <AspectRatio ratio={16 / 9}>
         <ReactPlayer
           playing={playing}
