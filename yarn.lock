@@ -4819,6 +4819,7 @@ __metadata:
     "@types/react-dom": ^17.0.0
     "@types/react-redux": ^7.1.16
     "@wewatch/common": "*"
+    dayjs: ^1.10.6
     eslint-config-airbnb-typescript: ^12.3.1
     eslint-config-next: ^11.1.0
     eslint-config-react-app: ^6.0.0
@@ -7075,6 +7076,13 @@ __metadata:
   version: 3.0.3
   resolution: "dateformat@npm:3.0.3"
   checksum: 8e6b36c4d3d057b6b43a2d9eceb1373aae6a63050153449e26c71b84ecefb1bafc54ff3f7f1e2b8bee3851a2425c1052aaa7c1ed3307b8ff062f38a816d40933
+  languageName: node
+  linkType: hard
+
+"dayjs@npm:^1.10.6":
+  version: 1.10.6
+  resolution: "dayjs@npm:1.10.6"
+  checksum: 474d21162c12d269d40e90cb3ce049bb2d987b8038c173224c8eb5805d6f38f07d11875779a81e282d8f889d3803c4bbb91d09b6ee08a1a44ae60ec26afd8f45
   languageName: node
   linkType: hard
 

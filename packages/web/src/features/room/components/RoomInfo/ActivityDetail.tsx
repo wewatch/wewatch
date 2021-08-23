@@ -1,4 +1,5 @@
-import { Avatar, Box, HStack, Text } from "@chakra-ui/react";
+import { Avatar, Box, HStack, Text, VStack } from "@chakra-ui/react";
+import dayjs from "dayjs";
 
 import { memberActions } from "@/actions/member";
 import { roomActions } from "@/actions/room";
@@ -126,7 +127,7 @@ const getDescription = ({
 };
 
 const ActivityDetail = (activity: Activity): JSX.Element => {
-  const { userId } = activity;
+  const { userId, timestamp } = activity;
   const members = useMembers();
   const user = userId === null ? null : members[userId]?.user;
 
@@ -139,15 +140,20 @@ const ActivityDetail = (activity: Activity): JSX.Element => {
   return (
     <HStack align="flex-start">
       {avatar}
-      <Box
-        borderWidth="1px"
-        borderRadius="lg"
-        paddingX={2}
-        paddingY={1}
-        borderColor="gray.500"
-      >
-        {getDescription({ user, activity })}
-      </Box>
+      <VStack align="flex-start" spacing={0}>
+        <Box
+          borderWidth="1px"
+          borderRadius="lg"
+          paddingX={2}
+          paddingY={1}
+          borderColor="gray.500"
+        >
+          {getDescription({ user, activity })}
+        </Box>
+        <Text fontSize="xs" color="gray.500">
+          {dayjs(timestamp).format("HH:mm:ss")}
+        </Text>
+      </VStack>
     </HStack>
   );
 };

@@ -27,6 +27,7 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-redux": "^7.1.16",
     "@wewatch/common": "*",
+    "dayjs": "^1.10.6",
     "formik": "^2.2.9",
     "framer-motion": "4",
     "nanoid": "^3.1.23",
