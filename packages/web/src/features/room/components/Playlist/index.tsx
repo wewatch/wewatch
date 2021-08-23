@@ -97,7 +97,7 @@ const Playlist = (): JSX.Element | null => {
   return (
     <PlaylistContext.Provider value={playlist}>
       <VStack paddingY={2} maxHeight="calc(100vh - 48px)">
-        <Heading as="h2" size="md" paddingX={3}>
+        <Heading as="h2" size="md">
           Playlist
         </Heading>
         <DragDropContext onDragEnd={onDragEnd}>
