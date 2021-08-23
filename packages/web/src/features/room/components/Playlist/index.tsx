@@ -1,4 +1,4 @@
-import { Box, VStack } from "@chakra-ui/react";
+import { Box, Heading, VStack } from "@chakra-ui/react";
 import {
   DragDropContext,
   DragDropContextProps,
@@ -97,6 +97,9 @@ const Playlist = (): JSX.Element | null => {
   return (
     <PlaylistContext.Provider value={playlist}>
       <VStack paddingY={2} maxHeight="calc(100vh - 48px)">
+        <Heading as="h2" size="md" paddingX={3}>
+          Playlist
+        </Heading>
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId={playlist.id}>
             {(provided) => (

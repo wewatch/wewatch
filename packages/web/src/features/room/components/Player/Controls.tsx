@@ -22,7 +22,7 @@ const Controls = ({
   muted,
   setMuted,
 }: ControlsProps): JSX.Element => {
-  const { playing } = usePlayerState();
+  const { url, playing } = usePlayerState();
   const { played, loaded, playedSeconds, duration } = useProgress();
 
   return (
@@ -30,6 +30,7 @@ const Controls = ({
       <Progress size="xs" value={played * 100} buffer={loaded * 100} />
       <HStack align="center" spacing={1} paddingX={1}>
         <IconButton
+          disabled={url === null}
           onClick={() => setPlaying(!playing)}
           variant="ghost"
           icon={playing ? <FaPause /> : <FaPlay />}

@@ -1,6 +1,15 @@
-import { AspectRatio, Skeleton, useBoolean } from "@chakra-ui/react";
+import {
+  AspectRatio,
+  Box,
+  Center,
+  IconButton,
+  Skeleton,
+  Text,
+  useBoolean,
+} from "@chakra-ui/react";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { useCallback, useRef } from "react";
+import { FaPlus } from "react-icons/fa";
 import ReactPlayer from "react-player";
 
 import { memberActions } from "@/actions/member";
@@ -80,27 +89,41 @@ const Player = (): JSX.Element => {
   return (
     <Skeleton isLoaded={!isGetRoomLoading} width="100%">
       <AspectRatio ratio={16 / 9}>
-        <ReactPlayer
-          playing={playing}
-          url={url ?? undefined}
-          volume={volume}
-          muted={muted}
-          width="100%"
-          height="100%"
-          onReady={handleReady}
-          onEnded={handleEnded}
-          onProgress={handleProgressChange}
-          onDuration={handleDurationChange}
-          onPlay={() => setPlaying(true)}
-          onPause={() => setPlaying(false)}
-          config={{
-            youtube: {
-              playerVars: {
-                disablekb: 1,
+        {url === null ? (
+          <Center>
+            <Box width="50%">
+              {"No video selected. Click "}
+              <IconButton icon={<FaPlus />} aria-label="example add button" />
+              {" button below "}
+              <Text as="span" fontWeight="bold">
+                Playlist
+              </Text>
+              {" to add videos and start playing."}
+            </Box>
+          </Center>
+        ) : (
+          <ReactPlayer
+            playing={playing}
+            url={url ?? undefined}
+            volume={volume}
+            muted={muted}
+            width="100%"
+            height="100%"
+            onReady={handleReady}
+            onEnded={handleEnded}
+            onProgress={handleProgressChange}
+            onDuration={handleDurationChange}
+            onPlay={() => setPlaying(true)}
+            onPause={() => setPlaying(false)}
+            config={{
+              youtube: {
+                playerVars: {
+                  disablekb: 1,
+                },
               },
-            },
-          }}
-        />
+            }}
+          />
+        )}
       </AspectRatio>
       <Controls
         setPlaying={setPlaying}
