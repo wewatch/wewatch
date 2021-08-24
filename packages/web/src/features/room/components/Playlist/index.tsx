@@ -53,7 +53,14 @@ const Playlist = (): JSX.Element | null => {
   const dispatch = useAppDispatch();
 
   if (playlist === undefined) {
-    return <ItemsSkeleton height="54px" count={5} />;
+    return (
+      <VStack paddingY={2} maxHeight="calc(100vh - 48px)">
+        <Heading as="h2" size="md">
+          Playlist
+        </Heading>
+        <ItemsSkeleton height="54px" count={5} />
+      </VStack>
+    );
   }
 
   const sortedVideos = [...playlist.videos].sort(compareVideo);

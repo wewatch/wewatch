@@ -1,4 +1,5 @@
 import { Skeleton, VStack } from "@chakra-ui/react";
+import { nanoid } from "nanoid";
 
 interface ItemsSkeletonProps {
   height: string;
@@ -10,7 +11,10 @@ const ItemsSkeleton = ({
   count = 3,
 }: ItemsSkeletonProps): JSX.Element => (
   <VStack width="100%">
-    {new Array(count).fill(<Skeleton height={height} width="100%" />)}
+    {new Array(count).fill(0).map(() => {
+      const key = nanoid();
+      return <Skeleton height={height} width="100%" key={key} />;
+    })}
   </VStack>
 );
 
