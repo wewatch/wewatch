@@ -78,7 +78,7 @@ const Room = ({ roomId }: RoomProps): JSX.Element | null => {
         if (type === SyncType.Progress) {
           callback(store.getState().progress.playedSeconds);
         } else if (type === SyncType.Activities) {
-          callback(store.getState().activities);
+          callback(store.getState().activities.slice(0, 100));
         }
       },
     }),
