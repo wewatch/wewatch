@@ -21,7 +21,12 @@ import { Namespace, Socket } from "socket.io";
 
 import { MemberActionDTO } from "@/actions/member";
 import { RoomActionDTO } from "@/actions/room";
-import { SocketEvent } from "@/constants";
+import {
+  DEFAULT_SYNC_VALUE,
+  SocketEvent,
+  SyncType,
+  SyncValue,
+} from "@/constants";
 import { COMMON_INTERCEPTORS } from "interceptors";
 import { AuthService } from "modules/auth";
 import { UserDocument } from "modules/user/model";
@@ -188,36 +193,43 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  @SubscribeMessage(SocketEvent.SyncProgress)
-  async handleSyncProgress(@ConnectedSocket() socket: Socket): Promise<number> {
+  @SubscribeMessage(SocketEvent.Sync)
+  async handleSync(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() type: SyncType,
+  ): Promise<SyncValue> {
+    const defaultSyncedValue: SyncValue = DEFAULT_SYNC_VALUE[type];
+
     if (!hasData(socket)) {
       socket.disconnect();
-      return 0;
+      return defaultSyncedValue;
     }
 
-    let progress = 0;
+    let syncedValue = defaultSyncedValue;
     const { roomId } = socket.data;
     const socketsInRoom = await this.server.in(roomId).allSockets();
 
     const peerId = Array.from(socketsInRoom).find((id) => id !== socket.id);
     if (peerId !== undefined) {
       // Use Promise.race to set a timeout for getting progress from the peer
-      progress = await Promise.race<Promise<number>>([
-        new Promise((resolve) => setTimeout(() => resolve(0), 3000)),
+      syncedValue = await Promise.race<Promise<SyncValue>>([
+        new Promise((resolve) =>
+          setTimeout(() => resolve(defaultSyncedValue), 3000),
+        ),
         new Promise((resolve) => {
           try {
             this.server.sockets
               .get(peerId)
-              ?.emit(SocketEvent.SyncProgress, (playedSeconds: number) =>
-                resolve(playedSeconds),
+              ?.emit(SocketEvent.Sync, type, (syncValue: SyncValue) =>
+                resolve(syncValue),
               );
           } catch {
-            resolve(0);
+            resolve(defaultSyncedValue);
           }
         }),
       ]);
     }
 
-    return progress;
+    return syncedValue;
   }
 }

@@ -3,7 +3,7 @@ import { useEffect, useMemo } from "react";
 
 import { WrappedMemberActionDTO } from "@/actions/member";
 import { WrappedRoomActionDTO } from "@/actions/room";
-import { SocketEvent } from "@/constants";
+import { SocketEvent, SyncType, SyncValue } from "@/constants";
 import roomApi from "api/room";
 import { SocketProvider } from "contexts/Socket";
 import useNotify from "hooks/notification";
@@ -71,8 +71,16 @@ const Room = ({ roomId }: RoomProps): JSX.Element | null => {
         dispatch(addActivity(wrappedAction));
       },
 
-      [SocketEvent.SyncProgress]: (callback: (p: number) => void) =>
-        callback(store.getState().progress.playedSeconds),
+      [SocketEvent.Sync]: (
+        type: SyncType,
+        callback: (syncValue: SyncValue) => void,
+      ) => {
+        if (type === SyncType.Progress) {
+          callback(store.getState().progress.playedSeconds);
+        } else if (type === SyncType.Activities) {
+          callback(store.getState().activities);
+        }
+      },
     }),
     [dispatch, store],
   );

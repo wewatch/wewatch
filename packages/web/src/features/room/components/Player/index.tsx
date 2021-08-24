@@ -14,7 +14,7 @@ import ReactPlayer from "react-player";
 
 import { memberActions } from "@/actions/member";
 import { roomActions } from "@/actions/room";
-import { SocketEvent } from "@/constants";
+import { SocketEvent, SyncType, SyncValues } from "@/constants";
 import roomApi from "api/room";
 import { StorageKey } from "common/enums";
 import { useSocket } from "contexts/Socket";
@@ -60,13 +60,17 @@ const Player = (): JSX.Element => {
         return;
       }
 
-      socketEmit(SocketEvent.SyncProgress, (playedSeconds: number) => {
-        progressSynced.current = true;
+      socketEmit(
+        SocketEvent.Sync,
+        SyncType.Progress,
+        (playedSeconds: SyncValues[SyncType.Progress]) => {
+          progressSynced.current = true;
 
-        if (playedSeconds > 0) {
-          player.seekTo(playedSeconds, "seconds");
-        }
-      });
+          if (playedSeconds > 0) {
+            player.seekTo(playedSeconds, "seconds");
+          }
+        },
+      );
     },
     [socketEmit],
   );

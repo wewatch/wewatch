@@ -4076,6 +4076,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash-es@npm:^4.17.4":
+  version: 4.17.4
+  resolution: "@types/lodash-es@npm:4.17.4"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 5a56261030df09302229a6bbabfcb5a0a63a290bdcc0ca9ee6a96a4fbf7a34101fae4b772fedf5dc4a2b49212ddaf9019b3f014b8c7c84adfea500ece157ec1b
+  languageName: node
+  linkType: hard
+
 "@types/lodash.mergewith@npm:4.6.6":
   version: 4.6.6
   resolution: "@types/lodash.mergewith@npm:4.6.6"
@@ -4814,6 +4823,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.11.4
     "@testing-library/react": ^11.1.0
     "@testing-library/user-event": ^12.1.10
+    "@types/lodash-es": ^4.17.4
     "@types/react": ^17.0.0
     "@types/react-beautiful-dnd": ^13.1.0
     "@types/react-dom": ^17.0.0
@@ -4828,6 +4838,7 @@ __metadata:
     eslint-plugin-testing-library: ^4.2.0
     formik: ^2.2.9
     framer-motion: 4
+    lodash-es: ^4.17.21
     nanoid: ^3.1.23
     next: ^11.1.0
     next-seo: ^4.26.0

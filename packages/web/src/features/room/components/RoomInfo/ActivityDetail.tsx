@@ -1,13 +1,12 @@
 import { Avatar, Box, HStack, Text, VStack } from "@chakra-ui/react";
 import dayjs from "dayjs";
 
+import type { Activity } from "@/actions";
 import { memberActions } from "@/actions/member";
 import { roomActions } from "@/actions/room";
 import { UserInfoDTO } from "@/schemas/user";
 import UserAvatar from "components/UserAvatar";
 import { useMembers } from "hooks/room";
-
-import type { Activity } from "../../slices/activities";
 
 const getDescription = ({
   user,

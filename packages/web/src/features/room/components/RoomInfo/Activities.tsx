@@ -1,8 +1,12 @@
 import { Box, Heading, VStack } from "@chakra-ui/react";
 import { AnimateSharedLayout, motion } from "framer-motion";
+import { useEffect } from "react";
 
-import { useAppSelector } from "hooks/redux";
+import { SocketEvent, SyncType, SyncValues } from "@/constants";
+import { useSocket } from "contexts/Socket";
+import { useAppDispatch, useAppSelector } from "hooks/redux";
 
+import { addActivities } from "../../slices/activities";
 import ActivityDetail from "./ActivityDetail";
 
 const variants = {
@@ -11,6 +15,21 @@ const variants = {
 };
 
 const Activities = (): JSX.Element => {
+  const dispatch = useAppDispatch();
+  const { socketEmit, socketStatus } = useSocket();
+
+  useEffect(() => {
+    if (socketStatus === "connected") {
+      socketEmit(
+        SocketEvent.Sync,
+        SyncType.Activities,
+        (activities: SyncValues[SyncType.Activities]) => {
+          dispatch(addActivities(activities));
+        },
+      );
+    }
+  }, [dispatch, socketEmit, socketStatus]);
+
   const activities = useAppSelector((state) => state.activities);
 
   return (
