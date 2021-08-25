@@ -17,6 +17,7 @@ import {
   WebSocketServer,
   WsException,
 } from "@nestjs/websockets";
+import _ from "lodash";
 import { Namespace, Socket } from "socket.io";
 
 import { MemberActionDTO } from "@/actions/member";
@@ -209,7 +210,8 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const { roomId } = socket.data;
     const socketsInRoom = await this.server.in(roomId).allSockets();
 
-    const peerId = Array.from(socketsInRoom).find((id) => id !== socket.id);
+    const peerIds = Array.from(socketsInRoom).filter((id) => id !== socket.id);
+    const peerId = _.sample(peerIds);
     if (peerId !== undefined) {
       // Use Promise.race to set a timeout for getting progress from the peer
       syncedValue = await Promise.race<Promise<SyncValue>>([
