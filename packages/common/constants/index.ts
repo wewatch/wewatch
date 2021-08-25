@@ -9,6 +9,7 @@ export enum MemberEventPayload {
 
 export enum SocketEvent {
   Ready = "ready",
+  Ping = "ping",
   RoomAction = "roomAction",
   MemberAction = "memberAction",
   Sync = "sync",

@@ -6,9 +6,9 @@ import ItemsSkeleton from "components/ItemsSkeleton";
 import { useAuth } from "contexts/Auth";
 import { useMembers, useRoomId } from "hooks/room";
 
-import MembersList from "./MembersList";
+import MemberDetail from "./MemberDetail";
 
-const MembersInfo = (): JSX.Element => {
+const Members = (): JSX.Element => {
   const { user } = useAuth();
   const members = useMembers();
   const membersList = Object.values(members);
@@ -32,11 +32,19 @@ const MembersInfo = (): JSX.Element => {
         {isLoading ? (
           <ItemsSkeleton height="36px" />
         ) : (
-          <MembersList members={orderedMembersList} />
+          <VStack align="start">
+            {orderedMembersList.map((member) => (
+              <MemberDetail
+                key={member.user.id}
+                member={member}
+                isSelf={member.user.id === user?.id}
+              />
+            ))}
+          </VStack>
         )}
       </Box>
     </VStack>
   );
 };
 
-export default MembersInfo;
+export default Members;

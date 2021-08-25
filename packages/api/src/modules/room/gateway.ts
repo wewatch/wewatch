@@ -126,6 +126,11 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     await this.memberService.handleLeaveRoom(roomId, user);
   }
 
+  @SubscribeMessage(SocketEvent.Ping)
+  async handlePing(): Promise<number> {
+    return 0;
+  }
+
   @SubscribeMessage(SocketEvent.RoomAction)
   async handleRoomActionEvent(
     @ConnectedSocket() socket: Socket,
