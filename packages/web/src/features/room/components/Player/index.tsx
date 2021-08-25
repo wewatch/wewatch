@@ -34,7 +34,7 @@ interface Progress {
 const Player = (): JSX.Element => {
   const roomId = useRoomId();
   const { url, playing } = usePlayerState();
-  const { socketEmit } = useSocket();
+  const { socketEmit, socketReady } = useSocket();
   const dispatch = useAppDispatch();
   const progressSynced = useRef(false);
   const [volume, setVolume] = useLocalStorage(StorageKey.Volume, 1);
@@ -60,19 +60,21 @@ const Player = (): JSX.Element => {
         return;
       }
 
-      socketEmit(
-        SocketEvent.Sync,
-        SyncType.Progress,
-        (playedSeconds: SyncValues[SyncType.Progress]) => {
-          progressSynced.current = true;
+      if (socketReady) {
+        socketEmit(
+          SocketEvent.Sync,
+          SyncType.Progress,
+          (playedSeconds: SyncValues[SyncType.Progress]) => {
+            progressSynced.current = true;
 
-          if (playedSeconds > 0) {
-            player.seekTo(playedSeconds, "seconds");
-          }
-        },
-      );
+            if (playedSeconds > 0) {
+              player.seekTo(playedSeconds, "seconds");
+            }
+          },
+        );
+      }
     },
-    [socketEmit],
+    [socketEmit, socketReady],
   );
 
   const handleEnded = useCallback(

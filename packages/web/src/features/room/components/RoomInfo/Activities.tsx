@@ -16,10 +16,10 @@ const variants = {
 
 const Activities = (): JSX.Element => {
   const dispatch = useAppDispatch();
-  const { socketEmit, socketStatus } = useSocket();
+  const { socketEmit, socketReady } = useSocket();
 
   useEffect(() => {
-    if (socketStatus === "connected") {
+    if (socketReady) {
       socketEmit(
         SocketEvent.Sync,
         SyncType.Activities,
@@ -28,7 +28,7 @@ const Activities = (): JSX.Element => {
         },
       );
     }
-  }, [dispatch, socketEmit, socketStatus]);
+  }, [dispatch, socketEmit, socketReady]);
 
   const activities = useAppSelector((state) => state.activities);
 

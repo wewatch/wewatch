@@ -89,6 +89,8 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
         roomId,
         user,
       };
+
+      socket.emit(SocketEvent.Ready);
     } catch (e) {
       socket.disconnect();
     }

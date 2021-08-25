@@ -14,7 +14,7 @@ import VideoDetailWithControl from "./VideoDetailWithControl";
 
 const SearchResultItemController = (video: NewVideoDTO): JSX.Element => {
   const { id: playlistId, videos } = usePlaylist();
-  const { socketEmit, socketConnected } = useSocket();
+  const { socketEmit, socketReady } = useSocket();
 
   const handleAdd = () => {
     const { max: maxRank } = findMinMax(videos.map((v) => v.rank));
@@ -49,7 +49,7 @@ const SearchResultItemController = (video: NewVideoDTO): JSX.Element => {
         variant="ghost"
         isRound
         onClick={handleAdd}
-        disabled={!socketConnected}
+        disabled={!socketReady}
       />
     </VStack>
   );

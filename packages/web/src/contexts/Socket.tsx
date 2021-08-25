@@ -14,11 +14,12 @@ import {
   ReservedOrUserListener,
 } from "socket.io-client/build/typed-events";
 
+import { SocketEvent } from "@/constants";
 import useNotify from "hooks/notification";
 
 import { useAuth } from "./Auth";
 
-type SocketStatus = "connecting" | "connected" | "disconnected";
+type SocketStatus = "connecting" | "connected" | "disconnected" | "ready";
 
 type SocketEmit = (
   event: string,
@@ -28,14 +29,14 @@ type SocketEmit = (
 interface SocketContextValue {
   socket: Socket | null;
   socketStatus: SocketStatus;
-  socketConnected: boolean;
+  socketReady: boolean;
   socketEmit: SocketEmit;
 }
 
 const defaultContext: SocketContextValue = {
   socket: null,
   socketStatus: "connecting",
-  socketConnected: false,
+  socketReady: false,
   socketEmit: () => {},
 };
 
@@ -64,7 +65,7 @@ export const SocketProvider = ({
     SocketContextValue["socketStatus"]
   >(defaultContext.socketStatus);
 
-  const socketConnected = socketStatus === "connected";
+  const socketReady = socketStatus === "ready";
 
   const { accessToken } = useAuth();
   const notify = useNotify();
@@ -83,6 +84,7 @@ export const SocketProvider = ({
       newSocket.on("connect", () => setSocketStatus("connected"));
       newSocket.on("disconnect", () => setSocketStatus("connecting"));
       newSocket.on("connect_error", () => setSocketStatus("disconnected"));
+      newSocket.on(SocketEvent.Ready, () => setSocketStatus("ready"));
       newSocket.on("exception", (response) =>
         notify({
           status: "error",
@@ -112,13 +114,13 @@ export const SocketProvider = ({
 
   const socketEmit: SocketEmit = useCallback(
     (event, ...args) => {
-      if (!socketConnected) {
+      if (!socketReady) {
         return;
       }
 
       socket?.emit(event, ...args);
     },
-    [socket, socketConnected],
+    [socket, socketReady],
   );
 
   return (
@@ -126,7 +128,7 @@ export const SocketProvider = ({
       value={{
         socket,
         socketStatus,
-        socketConnected,
+        socketReady,
         socketEmit,
       }}
     >
