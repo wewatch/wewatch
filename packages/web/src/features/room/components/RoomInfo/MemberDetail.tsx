@@ -14,7 +14,7 @@ const MemberDetail = ({
   member: { user, online },
   isSelf,
 }: PeerDetailProps): JSX.Element => (
-  <HStack width={"100%"}>
+  <HStack width="100%">
     <UserAvatar
       {...user}
       badge={

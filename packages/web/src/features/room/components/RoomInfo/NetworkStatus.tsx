@@ -16,7 +16,7 @@ const getNetworkStatusIcon = (
     return <Icon as={FaSignal} />;
   }
 
-  return <Spinner size="sm" verticalAlign={"middle"} />;
+  return <Spinner size="sm" verticalAlign="middle" />;
 };
 
 const getNetworkStatusLabel = (
@@ -52,7 +52,7 @@ const NetworkStatus = (): JSX.Element => {
     <Tooltip
       hasArrow
       label={getNetworkStatusLabel(socketStatus, rtt)}
-      placement={"top"}
+      placement="top"
     >
       <span>{getNetworkStatusIcon(socketStatus)}</span>
     </Tooltip>
