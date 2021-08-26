@@ -26,7 +26,7 @@ type SocketEmit = (
   ...args: EventParams<EventsMap, EventNames<EventsMap>>
 ) => void;
 
-interface SocketContextValue {
+export interface SocketContextValue {
   socket: Socket | null;
   socketStatus: SocketStatus;
   socketReady: boolean;
