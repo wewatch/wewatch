@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import _ from "lodash-es";
+import * as _ from "lodash-es";
 
 import type { Activities, Activity } from "@/actions";
 
