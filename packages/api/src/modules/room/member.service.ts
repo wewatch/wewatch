@@ -45,6 +45,20 @@ export class MemberService {
     return (await query.exec()) as never;
   }
 
+  async handlePing(roomId: string, user: UserDocument): Promise<void> {
+    await this.memberModel
+      .findOneAndUpdate(
+        {
+          room: roomId,
+          user: user.id,
+        },
+        {
+          lastPingAt: new Date(),
+        },
+      )
+      .exec();
+  }
+
   async handleAction(
     roomId: string,
     user: UserDocument,

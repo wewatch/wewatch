@@ -31,6 +31,12 @@ export class Member extends BaseSchema {
     default: false,
   })
   readyToNext!: boolean;
+
+  @Prop({
+    type: Date,
+    required: true,
+  })
+  lastPingAt!: Date;
 }
 
 export type MemberDocument = Member & Document;

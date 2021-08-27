@@ -127,7 +127,12 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage(SocketEvent.Ping)
-  async handlePing(): Promise<number> {
+  handlePing(@ConnectedSocket() socket: Socket): number {
+    if (hasData(socket)) {
+      const { roomId, user } = socket.data;
+      this.memberService.handlePing(roomId, user).then();
+    }
+
     return 0;
   }
 
