@@ -2,7 +2,7 @@ import { Icon, Spinner, Tooltip, useInterval } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { FaBan, FaSignal } from "react-icons/all";
 
-import { SocketEvent } from "@/constants";
+import { CLIENT_PING_INTERVAL, SocketEvent } from "@/constants";
 import { SocketContextValue, useSocket } from "contexts/Socket";
 
 const getNetworkStatusIcon = (
@@ -46,7 +46,7 @@ const NetworkStatus = (): JSX.Element => {
         setRtt(Date.now() - pingTimestamp.current);
       });
     }
-  }, 29_000);
+  }, CLIENT_PING_INTERVAL);
 
   return (
     <Tooltip

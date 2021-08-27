@@ -36,3 +36,5 @@ export enum SupportedProvider {
   YouTube = "YouTube",
   SoundCloud = "SoundCloud",
 }
+
+export const CLIENT_PING_INTERVAL = 29_000; // 29 seconds
