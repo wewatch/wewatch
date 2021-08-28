@@ -3,9 +3,9 @@ import { MongooseModule } from "@nestjs/mongoose";
 
 import { AuthModule } from "modules/auth";
 
-import { User, UserDocument, UserSchema } from "./model";
-import { UserService } from "./service";
 import { UserController } from "./user.controller";
+import { User, UserDocument, UserSchema } from "./user.model";
+import { UserService } from "./user.service";
 import { VisitorController } from "./visitor.controller";
 
 @Module({
@@ -24,4 +24,4 @@ import { VisitorController } from "./visitor.controller";
 })
 export class UserModule {}
 
-export { UserService, UserDocument };
+export { UserService, User, UserDocument };

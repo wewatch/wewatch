@@ -5,7 +5,7 @@ import { Model } from "mongoose";
 
 import { generateUsername } from "utils/misc";
 
-import { User, UserDocument } from "./model";
+import { User, UserDocument } from "./user.model";
 
 @Injectable()
 export class UserService {
@@ -58,5 +58,18 @@ export class UserService {
 
   async findByVisitorId(visitorId: string): Promise<UserDocument | null> {
     return await this.userModel.findOne({ visitorId }).exec();
+  }
+
+  async handlePing(userId: string): Promise<void> {
+    await this.userModel
+      .findOneAndUpdate(
+        {
+          _id: userId,
+        },
+        {
+          lastPingAt: new Date(),
+        },
+      )
+      .exec();
   }
 }

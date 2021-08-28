@@ -29,11 +29,18 @@ export class User extends BaseSchema {
     unique: true,
   })
   visitorId!: string;
+
+  @Prop({
+    type: Date,
+    required: true,
+  })
+  lastPingAt!: Date;
 }
 
 export type UserDocument = User & Document;
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
 UserSchema.index(
   {
     email: 1,
@@ -47,3 +54,7 @@ UserSchema.index(
     },
   },
 );
+
+UserSchema.index({
+  lastPingAt: 1,
+});

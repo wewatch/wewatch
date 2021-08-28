@@ -3,7 +3,7 @@ import { Body, Controller, HttpCode, Post } from "@nestjs/common";
 import { AccessTokenDTO, VisitorLoginDTO } from "@/schemas/user";
 
 import { AuthService } from "../auth";
-import { UserService } from "./service";
+import { UserService } from "./user.service";
 
 @Controller("visitors")
 export class VisitorController {

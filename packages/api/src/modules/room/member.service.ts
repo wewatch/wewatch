@@ -14,7 +14,7 @@ import {
 import { MemberDTO } from "@/schemas/member";
 import { InternalEvent, MemberActionEventData } from "utils/types";
 
-import { UserDocument } from "../user";
+import { UserDocument, UserService } from "../user";
 import { Member, MemberDocument } from "./member.model";
 import { RoomService } from "./room.service";
 
@@ -23,6 +23,7 @@ export class MemberService {
   constructor(
     @InjectModel(Member.name) private memberModel: Model<MemberDocument>,
     @Inject(forwardRef(() => RoomService)) private roomService: RoomService,
+    private userService: UserService,
     private schedulerRegistry: SchedulerRegistry,
     private eventEmitter: EventEmitter2,
   ) {}
@@ -58,6 +59,8 @@ export class MemberService {
         },
       )
       .exec();
+
+    await this.userService.handlePing(user.id);
   }
 
   async handleAction(

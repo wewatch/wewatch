@@ -15,7 +15,7 @@ import { Observable, tap } from "rxjs";
 import { Socket } from "socket.io";
 
 import { RoomActionDTO } from "@/actions/room";
-import { User } from "modules/user/model";
+import { User } from "modules/user";
 import { RequestWithUser } from "utils/interface";
 
 const SENSITIVE_HEADERS: (keyof IncomingHttpHeaders)[] = [

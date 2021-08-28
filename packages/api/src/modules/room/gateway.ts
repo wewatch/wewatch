@@ -30,7 +30,7 @@ import {
 } from "@/constants";
 import { COMMON_INTERCEPTORS } from "interceptors";
 import { AuthService } from "modules/auth";
-import { UserDocument } from "modules/user/model";
+import { UserDocument } from "modules/user";
 import { WsValidationPipe } from "pipes/validation";
 import {
   InternalEvent,

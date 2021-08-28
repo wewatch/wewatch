@@ -20,7 +20,7 @@ import { AuthService, UseAuthGuard } from "modules/auth";
 import { InvalidCredentials } from "utils/exceptions";
 import { RequestWithUser } from "utils/interface";
 
-import { UserService } from "./service";
+import { UserService } from "./user.service";
 
 @Controller("users")
 export class UserController {
