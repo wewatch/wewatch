@@ -104,6 +104,7 @@ export class MemberService {
         },
         {
           online: true,
+          lastPingAt: new Date(),
           $setOnInsert: {
             _id: nanoid(),
           },

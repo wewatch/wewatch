@@ -33,6 +33,7 @@ export class User extends BaseSchema {
   @Prop({
     type: Date,
     required: true,
+    default: () => new Date(),
   })
   lastPingAt!: Date;
 }
