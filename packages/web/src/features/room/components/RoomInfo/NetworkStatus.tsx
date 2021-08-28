@@ -42,7 +42,7 @@ const NetworkStatus = (): JSX.Element => {
   useInterval(() => {
     if (socket) {
       pingTimestamp.current = Date.now();
-      socket.emit(SocketEvent.Ping, () => {
+      socket.volatile.emit(SocketEvent.Ping, () => {
         setRtt(Date.now() - pingTimestamp.current);
       });
     }
