@@ -68,7 +68,7 @@ export class UserService {
           _id: userId,
         },
         {
-          lastPingAt: new Date(),
+          lastActivityAt: new Date(),
         },
       )
       .exec();

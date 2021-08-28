@@ -35,7 +35,7 @@ export class User extends BaseSchema {
     required: true,
     default: () => new Date(),
   })
-  lastPingAt!: Date;
+  lastActivityAt!: Date;
 }
 
 export type UserDocument = User & Document;
@@ -57,5 +57,5 @@ UserSchema.index(
 );
 
 UserSchema.index({
-  lastPingAt: 1,
+  lastActivityAt: 1,
 });
