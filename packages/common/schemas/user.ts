@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-import { UserType, UserTypes } from "@/constants";
+import { UserType } from "@/constants";
 
 import { withSchema } from "./utils";
 
@@ -41,7 +41,7 @@ export class AccessTokenDTO {
 
 export const userInfoSchema = yup.object({
   id: yup.string().required(),
-  type: yup.mixed<UserType>().required().oneOf(UserTypes),
+  type: yup.mixed<UserType>().required().oneOf(Object.values(UserType)),
   name: yup.string().required(),
 });
 

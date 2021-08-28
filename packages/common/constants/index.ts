@@ -1,7 +1,9 @@
 import type { Activity } from "@/actions";
 
-export type UserType = "user" | "visitor";
-export const UserTypes: UserType[] = ["user", "visitor"];
+export enum UserType {
+  User = "user",
+  Visitor = "visitor",
+}
 
 export enum MemberEventPayload {
   ReadyToNext = "readyToNext",
