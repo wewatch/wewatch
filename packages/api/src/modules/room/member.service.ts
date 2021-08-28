@@ -3,6 +3,7 @@ import { EventEmitter2 } from "@nestjs/event-emitter";
 import { InjectModel } from "@nestjs/mongoose";
 import { SchedulerRegistry } from "@nestjs/schedule";
 import { FilterQuery, Model } from "mongoose";
+import { nanoid } from "nanoid";
 
 import {
   MemberActionDTO as ActionDTO,
@@ -100,6 +101,9 @@ export class MemberService {
         },
         {
           online: true,
+          $setOnInsert: {
+            _id: nanoid(),
+          },
         },
         {
           upsert: true,

@@ -5,7 +5,7 @@ import { UserModule } from "modules/user";
 
 import { RoomController } from "./controller";
 import { RoomGateway } from "./gateway";
-import { Member, MemberSchema } from "./member.model";
+import { Member, MemberDocument, MemberSchema } from "./member.model";
 import { MemberService } from "./member.service";
 import { Room, RoomSchema } from "./room.model";
 import { RoomService } from "./room.service";
@@ -26,8 +26,8 @@ import { RoomService } from "./room.service";
   ],
   controllers: [RoomController],
   providers: [RoomService, MemberService, RoomGateway],
-  exports: [RoomService, MemberService],
+  exports: [MongooseModule, RoomService, MemberService],
 })
 export class RoomModule {}
 
-export { RoomService };
+export { RoomService, Member, MemberDocument };

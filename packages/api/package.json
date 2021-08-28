@@ -27,7 +27,7 @@
     "@nestjs/passport": "^8.0.0",
     "@nestjs/platform-fastify": "^8.0.0",
     "@nestjs/platform-socket.io": "^8.0.0",
-    "@nestjs/schedule": "^1.0.0",
+    "@nestjs/schedule": "^1.0.1",
     "@nestjs/websockets": "^8.0.0",
     "@ntegral/nestjs-sentry": "^3.0.3",
     "@sentry/node": "^6.11.0",

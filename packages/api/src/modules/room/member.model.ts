@@ -51,3 +51,8 @@ MemberSchema.index(
     unique: true,
   },
 );
+
+MemberSchema.index({
+  online: 1,
+  lastPingAt: 1,
+});
