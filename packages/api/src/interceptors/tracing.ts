@@ -27,12 +27,16 @@ const SENSITIVE_HEADERS: (keyof IncomingHttpHeaders)[] = [
 @Injectable()
 export class TracingInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
+    const cls = context.getClass();
+    const handler = context.getHandler();
+
     const transaction = Sentry.startTransaction({
-      name: context.getHandler().name,
+      name: handler.name,
     });
 
     Sentry.configureScope((scope) => {
       scope.setSpan(transaction);
+      transaction.setTag("class", cls.name);
       this.setTransactionAttributes(transaction, context);
       scope.addEventProcessor((event) =>
         this.setEventAttributes(event, context),
