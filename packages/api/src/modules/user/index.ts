@@ -20,7 +20,7 @@ import { VisitorController } from "./visitor.controller";
   ],
   controllers: [UserController, VisitorController],
   providers: [UserService],
-  exports: [UserService],
+  exports: [MongooseModule, UserService],
 })
 export class UserModule {}
 

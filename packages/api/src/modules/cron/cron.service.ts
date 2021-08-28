@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Injectable } from "@nestjs/common";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { InjectModel } from "@nestjs/mongoose";
@@ -6,9 +8,12 @@ import { Model } from "mongoose";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 
 import { memberActions as actions } from "@/actions/member";
-import { CLIENT_PING_INTERVAL } from "@/constants";
+import { CLIENT_PING_INTERVAL, UserType } from "@/constants";
 import { Member, MemberDocument } from "modules/room";
+import { User, UserDocument } from "modules/user";
 import { InternalEvent, MemberActionEventData } from "utils/types";
+
+const DAY_AS_MILLISECONDS = 24 * 60 * 60 * 1000;
 
 const log = (
   target: any,
@@ -25,7 +30,7 @@ const log = (
     try {
       await original.apply(this, args);
     } catch (err) {
-      logger.error(err, `An error occurred when running ${jobName}`);
+      logger.error(err, `An error occurred when running ${jobName}.`);
     } finally {
       const endTimestamp = Date.now();
       const responseTime = endTimestamp - startTimestamp;
@@ -34,7 +39,7 @@ const log = (
         {
           responseTime,
         },
-        `${jobName} ran successfully`,
+        `${jobName} ran successfully.`,
       );
     }
   };
@@ -47,6 +52,7 @@ export class CronService {
   constructor(
     @InjectPinoLogger(CronService.name) private readonly logger: PinoLogger,
     @InjectModel(Member.name) private memberModel: Model<MemberDocument>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
     private eventEmitter: EventEmitter2,
   ) {}
 
@@ -89,5 +95,47 @@ export class CronService {
       };
       this.eventEmitter.emit(InternalEvent.MemberAction, eventData);
     }
+  }
+
+  @Cron("0 0 * * *")
+  @log
+  async cleanUpVisitors(): Promise<void> {
+    const usersToDelete = await this.userModel
+      .find({
+        type: UserType.Visitor,
+        lastActivityAt: {
+          $lt: new Date(Date.now() - 3 * DAY_AS_MILLISECONDS),
+        },
+      })
+      .select("_id")
+      .exec();
+
+    if (usersToDelete.length === 0) {
+      return;
+    }
+
+    const userIdsToDelete: string[] = usersToDelete.map((user) => user._id);
+
+    const result = await this.userModel
+      .deleteMany({
+        _id: {
+          $in: userIdsToDelete,
+        },
+      })
+      .exec();
+
+    if (!result.ok) {
+      throw new Error("Cannot deleted visitors.");
+    }
+
+    this.logger.info(`Deleted ${result.deletedCount} visitors.`);
+
+    await this.memberModel
+      .deleteMany({
+        user: {
+          $in: userIdsToDelete,
+        },
+      })
+      .exec();
   }
 }

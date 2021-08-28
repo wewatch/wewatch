@@ -54,6 +54,10 @@ MemberSchema.index(
 );
 
 MemberSchema.index({
+  user: 1,
+});
+
+MemberSchema.index({
   online: 1,
   lastPingAt: 1,
 });
