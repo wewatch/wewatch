@@ -75,21 +75,22 @@ export function useLocalStorage<TValue = string>(
       : tryParse(storage.getItem(key) ?? ""),
   );
 
-  const onLocalStorageChange = (
-    event: LocalStorageChanged<TValue> | StorageEvent,
-  ) => {
-    // An event value can be of TValue when `localStorage.setItem` is called, or null when
-    // `localStorage.removeItem` is called.
-    if (isTypeOfLocalStorageChanged<TValue>(event)) {
-      if (event.detail.key === key) {
-        updateLocalState(event.detail.value);
+  const onLocalStorageChange = useCallback(
+    (event: LocalStorageChanged<TValue> | StorageEvent) => {
+      // An event value can be of TValue when `localStorage.setItem` is called, or null when
+      // `localStorage.removeItem` is called.
+      if (isTypeOfLocalStorageChanged<TValue>(event)) {
+        if (event.detail.key === key) {
+          updateLocalState(event.detail.value);
+        }
+      } else if (event.key === key) {
+        updateLocalState(
+          event.newValue === null ? null : tryParse(event.newValue),
+        );
       }
-    } else if (event.key === key) {
-      updateLocalState(
-        event.newValue === null ? null : tryParse(event.newValue),
-      );
-    }
-  };
+    },
+    [key],
+  );
 
   useEffect(() => {
     // The custom storage event allows us to update our component
@@ -112,7 +113,7 @@ export function useLocalStorage<TValue = string>(
       window.removeEventListener(LocalStorageChanged.eventName, listener);
       window.removeEventListener("storage", listener);
     };
-  }, [key]);
+  }, [key, defaultValue, onLocalStorageChange]);
 
   const writeState = useCallback(
     (value: TValue) => writeStorage(key, value),
