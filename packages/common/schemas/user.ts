@@ -51,3 +51,12 @@ export class UserInfoDTO {
   type!: UserType;
   name!: string;
 }
+
+export const updateUserInfoSchema = yup.object({
+  name: yup.string().max(32).required(),
+});
+
+@withSchema(updateUserInfoSchema)
+export class UpdateUserInfoDTO {
+  name!: string;
+}

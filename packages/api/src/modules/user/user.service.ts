@@ -4,6 +4,7 @@ import * as bcrypt from "bcrypt";
 import { Model } from "mongoose";
 
 import { UserType } from "@/constants";
+import { UpdateUserInfoDTO } from "@/schemas/user";
 import { generateUsername } from "utils/misc";
 
 import { User, UserDocument } from "./user.model";
@@ -39,6 +40,17 @@ export class UserService {
 
   async get(id: string): Promise<UserDocument | null> {
     return await this.userModel.findById(id).exec();
+  }
+
+  async update(
+    id: string,
+    payload: UpdateUserInfoDTO,
+  ): Promise<UserDocument | null> {
+    return await this.userModel
+      .findByIdAndUpdate(id, payload, {
+        new: true,
+      })
+      .exec();
   }
 
   async findByEmailAndPassword(

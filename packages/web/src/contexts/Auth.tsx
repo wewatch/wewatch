@@ -10,6 +10,7 @@ import {
 
 import { UserInfoDTO } from "@/schemas/user";
 import authApi from "api/auth";
+import userApi from "api/user";
 import { StorageKey } from "common/enums";
 import LoadingScreen from "components/LoadingScreen";
 import { useLocalStorage } from "hooks/local-storage";
@@ -18,12 +19,14 @@ interface AuthContextValue {
   accessToken: string | null;
   visitorId: string;
   user: UserInfoDTO | null;
+  setUser: (user: UserInfoDTO) => void;
 }
 
 const defaultContext: AuthContextValue = {
   accessToken: null,
   visitorId: "",
   user: null,
+  setUser: () => {},
 };
 
 const AuthContext = createContext<AuthContextValue>(defaultContext);
@@ -43,7 +46,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
   const [
     triggerGetUserInfo,
     { data: getUserInfoData, error: getUserInfoError },
-  ] = authApi.endpoints.getUserInfo.useLazyQuery();
+  ] = userApi.endpoints.getUserInfo.useLazyQuery();
   const [triggerVisitorLogin, { data: visitorLoginData }] =
     authApi.endpoints.visitorLogin.useMutation();
 
@@ -89,6 +92,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
         accessToken,
         visitorId,
         user,
+        setUser,
       }}
     >
       {user === null && router.route !== "/" ? <LoadingScreen /> : children}

@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { memberActions as actions } from "@/actions/member";
 import { MemberDTO } from "@/schemas/member";
 import roomApi from "api/room";
+import userApi from "api/user";
 
 // Map userId => member
 export type MembersState = Record<string, MemberDTO>;
@@ -40,6 +41,16 @@ const slice = createSlice({
               state[userId] = member;
             }
           });
+        },
+      )
+      .addMatcher(
+        userApi.endpoints.updateUserInfo.matchFulfilled,
+        (state, action) => {
+          const user = action.payload;
+          if (user.id in state) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            state[user.id]!.user = user;
+          }
         },
       ),
 });

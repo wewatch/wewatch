@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Post,
+  Put,
   Request,
 } from "@nestjs/common";
 import { MongoError } from "mongodb";
@@ -12,6 +13,7 @@ import { MongoError } from "mongodb";
 import {
   AccessTokenDTO,
   CreateUserDTO,
+  UpdateUserInfoDTO,
   UserInfoDTO,
   UserLoginDTO,
 } from "@/schemas/user";
@@ -67,5 +69,24 @@ export class UserController {
   @Schema(UserInfoDTO)
   getUserInfo(@Request() request: RequestWithUser): UserInfoDTO {
     return request.user;
+  }
+
+  @UseAuthGuard
+  @Put("me")
+  @Schema(UserInfoDTO)
+  async updateUserInfo(
+    @Request() request: RequestWithUser,
+    @Body() updateUserInfoDTO: UpdateUserInfoDTO,
+  ): Promise<UserInfoDTO> {
+    const user = await this.userService.update(
+      request.user.id,
+      updateUserInfoDTO,
+    );
+
+    if (user === null) {
+      throw new InvalidCredentials();
+    }
+
+    return user;
   }
 }
