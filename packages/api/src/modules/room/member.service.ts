@@ -48,19 +48,29 @@ export class MemberService {
   }
 
   async handlePing(roomId: string, user: UserDocument): Promise<void> {
-    await this.memberModel
+    const member = await this.memberModel
       .findOneAndUpdate(
         {
           room: roomId,
           user: user.id,
         },
         {
+          online: true,
           lastPingAt: new Date(),
         },
       )
       .exec();
 
     await this.userService.handlePing(user.id);
+
+    if (member?.online === false) {
+      const eventData: MemberActionEventData = {
+        roomId,
+        userId: user.id,
+        action: actions.joinRoom(user),
+      };
+      this.eventEmitter.emit(InternalEvent.MemberAction, eventData);
+    }
   }
 
   async handleAction(
