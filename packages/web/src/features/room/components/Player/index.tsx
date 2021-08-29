@@ -108,7 +108,7 @@ const Player = (): JSX.Element => {
         ) : (
           <ReactPlayer
             playing={playing}
-            url={url ?? undefined}
+            url={url}
             volume={volume}
             muted={muted}
             width="100%"
