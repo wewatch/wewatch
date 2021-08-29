@@ -14,8 +14,9 @@ import {
   PopoverTrigger,
   VStack,
 } from "@chakra-ui/react";
-import { Field, FieldProps, Form, FormikProps, withFormik } from "formik";
-import { MutableRefObject, useEffect, useRef } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
 import { FaPlus, FaSearch } from "react-icons/fa";
 
 import { SearchDTO, searchSchema } from "@/schemas/search";
@@ -25,60 +26,24 @@ import useNotify from "hooks/notification";
 
 import SearchResultItem from "./SearchResultItem";
 
-interface InnerFormProps {
-  inputRef: MutableRefObject<null>;
-  isLoading: boolean;
-}
-
-const InnerForm = (props: InnerFormProps & FormikProps<SearchDTO>) => {
-  const { touched, errors, inputRef, isLoading } = props;
-
-  return (
-    <Form>
-      <Field name="query">
-        {({ field }: FieldProps) => (
-          <FormControl isInvalid={!!(errors.query && touched.query)}>
-            <InputGroup>
-              <Input placeholder="search" {...field} ref={inputRef} />
-              <InputRightAddon paddingX={0}>
-                <IconButton
-                  icon={<FaSearch />}
-                  aria-label="search videos"
-                  isLoading={isLoading}
-                  type="submit"
-                  variant="ghost"
-                />
-              </InputRightAddon>
-            </InputGroup>
-            <FormErrorMessage>{errors.query}</FormErrorMessage>
-          </FormControl>
-        )}
-      </Field>
-    </Form>
-  );
-};
-
-interface SearchFormProps extends InnerFormProps {
-  search: (values: SearchDTO) => Promise<unknown>;
-}
-
-const SearchForm = withFormik<SearchFormProps, SearchDTO>({
-  mapPropsToValues: () => ({
-    query: "",
-  }),
-
-  validationSchema: searchSchema,
-
-  handleSubmit: async (values, { props: { search } }) => {
-    await search(values);
-  },
-})(InnerForm);
-
 const SearchBox = (): JSX.Element => {
   const inputRef = useRef(null);
-  const [triggerSearchVideo, { data, error, isLoading }] =
+  const [triggerSearchVideo, { data, error }] =
     roomApi.endpoints.searchVideo.useMutation();
   const notify = useNotify();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting, errors },
+  } = useForm<SearchDTO>({
+    resolver: yupResolver(searchSchema),
+    defaultValues: {
+      query: "",
+    },
+  });
+
+  const showPopoverBody = data !== undefined;
 
   useEffect(() => {
     if (error) {
@@ -98,20 +63,47 @@ const SearchBox = (): JSX.Element => {
       <PopoverContent maxHeight="50vh" boxShadow="dark-lg">
         <PopoverArrow />
         <PopoverCloseButton />
-        <PopoverHeader paddingRight={10}>
-          <SearchForm
-            search={triggerSearchVideo}
-            isLoading={isLoading}
-            inputRef={inputRef}
-          />
+        <PopoverHeader
+          paddingRight={10}
+          borderBottomStyle={showPopoverBody ? "solid" : "hidden"}
+        >
+          <form onSubmit={handleSubmit(triggerSearchVideo)}>
+            <FormControl isInvalid={!!errors.query}>
+              <InputGroup>
+                <Input
+                  {...register("query")}
+                  ref={inputRef}
+                  placeholder="search"
+                />
+                <InputRightAddon paddingX={0}>
+                  <IconButton
+                    icon={<FaSearch />}
+                    aria-label="search videos"
+                    isLoading={isSubmitting}
+                    type="submit"
+                    variant="ghost"
+                  />
+                </InputRightAddon>
+              </InputGroup>
+              <FormErrorMessage marginTop={0}>
+                {errors.query?.message}
+              </FormErrorMessage>
+            </FormControl>
+          </form>
         </PopoverHeader>
-        <PopoverBody overflow="auto">
-          <VStack>
-            {(data ?? []).map((video) => (
-              <SearchResultItem video={video} key={video.url} />
-            ))}
-          </VStack>
-        </PopoverBody>
+        {showPopoverBody && (
+          <PopoverBody overflow="auto">
+            {data?.length ? (
+              <VStack>
+                {data.map((video) => (
+                  <SearchResultItem video={video} key={video.url} />
+                ))}
+              </VStack>
+            ) : (
+              "No results"
+            )}
+          </PopoverBody>
+        )}
       </PopoverContent>
     </Popover>
   );

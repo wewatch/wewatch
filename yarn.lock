@@ -1918,6 +1918,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hookform/resolvers@npm:^2.8.0":
+  version: 2.8.0
+  resolution: "@hookform/resolvers@npm:2.8.0"
+  peerDependencies:
+    react-hook-form: ^7.0.0
+  checksum: 07211099568dfd02855d4d0e355dd95bcbeaf31dadfa8ca24f7eeb5d869e40ab32042a0619d91381b3001b655608d6929dc371e2ff893092dbadb5919734e673
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.5.0":
   version: 0.5.0
   resolution: "@humanwhocodes/config-array@npm:0.5.0"
@@ -4996,6 +5005,7 @@ __metadata:
     "@wewatch/lexorank": ^1.0.3
     nanoid: ^3.1.23
     redux: ^4.1.0
+    yup: ^0.32.9
   languageName: unknown
   linkType: soft
 
@@ -5016,6 +5026,7 @@ __metadata:
     "@chakra-ui/utils": ^1.8.2
     "@emotion/react": ^11.4.1
     "@emotion/styled": ^11.3.0
+    "@hookform/resolvers": ^2.8.0
     "@next/bundle-analyzer": ^11.1.0
     "@reduxjs/toolkit": ^1.6.0
     "@testing-library/jest-dom": ^5.14.1
@@ -5035,7 +5046,6 @@ __metadata:
     eslint-plugin-jsx-a11y: ^6.4.1
     eslint-plugin-react-hooks: ^4.2.0
     eslint-plugin-testing-library: ^4.12.0
-    formik: ^2.2.9
     framer-motion: ^4.1.17
     lodash-es: ^4.17.21
     nanoid: ^3.1.23
@@ -5044,11 +5054,13 @@ __metadata:
     react: ^17.0.2
     react-beautiful-dnd: ^13.1.0
     react-dom: ^17.0.2
+    react-hook-form: ^7.14.0
     react-icons: ^4.2.0
     react-player: ^2.9.0
     react-redux: ^7.2.4
     redux: ^4.1.0
     socket.io-client: ^4.1.2
+    yup: ^0.32.9
   languageName: unknown
   linkType: soft
 
@@ -7285,13 +7297,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deepmerge@npm:^2.1.1":
-  version: 2.2.1
-  resolution: "deepmerge@npm:2.2.1"
-  checksum: 8394eb5ab19010e4e856e96ffb570528cad00e4af35e1e774898b52fd986fa6840dbce3e9217a7a1e38683c170cf0cbfe19c67323b89d329afad0ffa72db382e
-  languageName: node
-  linkType: hard
-
 "deepmerge@npm:^4.0.0, deepmerge@npm:^4.2.2":
   version: 4.2.2
   resolution: "deepmerge@npm:4.2.2"
@@ -8801,23 +8806,6 @@ __metadata:
   version: 1.2.2
   resolution: "formidable@npm:1.2.2"
   checksum: 9fe5ef38d5881ac16cc8ca78bd3229fbf32b10e0fd3b718ec20f86ea1de7302aa0ffcfa9a9163cec02fc3f825faf9d0533f24539bb20ae6d73b580b526c25edb
-  languageName: node
-  linkType: hard
-
-"formik@npm:^2.2.9":
-  version: 2.2.9
-  resolution: "formik@npm:2.2.9"
-  dependencies:
-    deepmerge: ^2.1.1
-    hoist-non-react-statics: ^3.3.0
-    lodash: ^4.17.21
-    lodash-es: ^4.17.21
-    react-fast-compare: ^2.0.1
-    tiny-warning: ^1.0.2
-    tslib: ^1.10.0
-  peerDependencies:
-    react: ">=16.8.0"
-  checksum: ff8db894ccbb23660ffb0455341ce679b1069233742f2a0e7b8c790a12231b60057c6e48ea21d4b3ee3db371c8785365c13ddfeaf1d45d111a4f7312891b5e75
   languageName: node
   linkType: hard
 
@@ -13922,13 +13910,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-fast-compare@npm:^2.0.1":
-  version: 2.0.4
-  resolution: "react-fast-compare@npm:2.0.4"
-  checksum: 4e4bfc3597414a36ee35977259012fff30c4f13a0e5dcabf958e91991bef8e9a3faee9dd666cfbdb0c2a0f0ddaf242ac2912054caa956a793c4cdff274dc5aec
-  languageName: node
-  linkType: hard
-
 "react-focus-lock@npm:2.5.0":
   version: 2.5.0
   resolution: "react-focus-lock@npm:2.5.0"
@@ -13942,6 +13923,15 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0
   checksum: 92df64722be6f06b93c1246fa1fddb2897e5fc977d1d1c166ac14a19e272ec4e65908cee5780e3bc45f3be4c32717470900b61eeec061090ef4e08e08f37d8ae
+  languageName: node
+  linkType: hard
+
+"react-hook-form@npm:^7.14.0":
+  version: 7.14.0
+  resolution: "react-hook-form@npm:7.14.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17
+  checksum: c5f5cfbc34c14c5dba49ab5914a236818adacb21e6fc0f85f18b8dcb44eb28f690e7da99727a64e1fc8c5308c87144480419d8628bc6df745a84034da5bc9eea
   languageName: node
   linkType: hard
 
@@ -15848,13 +15838,6 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"tiny-warning@npm:^1.0.2":
-  version: 1.0.3
-  resolution: "tiny-warning@npm:1.0.3"
-  checksum: 6cf9f66cb765b893976b8cd1c1310338861f30fb04d02ef2c8e0a748cbc2ed5acd8bb1954b78c15f640ad4116def67134d7d705f2a0c9bf27e6e2eb3e92bff29
-  languageName: node
-  linkType: hard
-
 "tinycolor2@npm:1.4.2":
   version: 1.4.2
   resolution: "tinycolor2@npm:1.4.2"
@@ -16132,7 +16115,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"tslib@npm:^1.0.0, tslib@npm:^1.10.0, tslib@npm:^1.8.1, tslib@npm:^1.9.0, tslib@npm:^1.9.3":
+"tslib@npm:^1.0.0, tslib@npm:^1.8.1, tslib@npm:^1.9.0, tslib@npm:^1.9.3":
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: f44fe7f216946b17d3e3074df3746372703cf24e9127b4c045511456e8e4bf25515fb0a1bb3937676cc305651c5d4fcb6377b0588a4c6a957e748c4c28905d17
