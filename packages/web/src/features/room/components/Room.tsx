@@ -9,7 +9,9 @@ import { SocketProvider } from "contexts/Socket";
 import useNotify from "hooks/notification";
 import { useAppDispatch, useAppStore } from "hooks/redux";
 
+import { JoinRoomProvider } from "../contexts/JoinRoom";
 import { addActivity } from "../slices/activities";
+import JoinRoomModal from "./JoinRoomModal";
 import Player from "./Player";
 import Playlist from "./Playlist";
 import RoomInfo from "./RoomInfo";
@@ -91,17 +93,20 @@ const Room = ({ roomId }: RoomProps): JSX.Element | null => {
       socketOpts={socketOpts}
       eventHandlers={socketEventHandlers}
     >
-      <Grid templateColumns="2.5fr 1fr" gap={2}>
-        <GridItem>
-          <VStack marginTop={2} height="calc(100vh - 56px)" overflowY="auto">
-            <Player />
-            <RoomInfo />
-          </VStack>
-        </GridItem>
-        <GridItem>
-          <Playlist />
-        </GridItem>
-      </Grid>
+      <JoinRoomProvider>
+        <JoinRoomModal />
+        <Grid templateColumns="2.5fr 1fr" gap={2}>
+          <GridItem>
+            <VStack marginTop={2} height="calc(100vh - 56px)" overflowY="auto">
+              <Player />
+              <RoomInfo />
+            </VStack>
+          </GridItem>
+          <GridItem>
+            <Playlist />
+          </GridItem>
+        </Grid>
+      </JoinRoomProvider>
     </SocketProvider>
   );
 };

@@ -8,7 +8,7 @@ import {
   useBoolean,
 } from "@chakra-ui/react";
 import { skipToken } from "@reduxjs/toolkit/query";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { FaPlus } from "react-icons/fa";
 import ReactPlayer from "react-player/lazy";
 
@@ -22,6 +22,7 @@ import { useLocalStorage } from "hooks/local-storage";
 import { useAppDispatch } from "hooks/redux";
 import { usePlayerState, useRoomId } from "hooks/room";
 
+import { useJoinRoom } from "../../contexts/JoinRoom";
 import { setDuration, setProgress } from "../../slices/progress";
 import Controls from "./Controls";
 
@@ -39,6 +40,8 @@ const Player = (): JSX.Element => {
   const progressSynced = useRef(false);
   const [volume, setVolume] = useLocalStorage(StorageKey.Volume, 1);
   const [muted, setMuted] = useBoolean(false);
+  const playerRef = useRef<ReactPlayer>(null);
+  const { joinedRoom } = useJoinRoom();
 
   const { isLoading: isGetRoomLoading } = roomApi.endpoints.getRoom.useQuery(
     roomId ?? skipToken,
@@ -54,7 +57,7 @@ const Player = (): JSX.Element => {
     [dispatch, playing, socketEmit],
   );
 
-  const handleReady = useCallback(
+  const syncProgress = useCallback(
     (player: ReactPlayer) => {
       if (progressSynced.current) {
         return;
@@ -64,7 +67,9 @@ const Player = (): JSX.Element => {
         SocketEvent.Sync,
         SyncType.Progress,
         (playedSeconds: SyncValues[SyncType.Progress]) => {
-          progressSynced.current = true;
+          if (joinedRoom) {
+            progressSynced.current = true;
+          }
 
           if (playedSeconds > 0) {
             player.seekTo(playedSeconds, "seconds");
@@ -72,8 +77,16 @@ const Player = (): JSX.Element => {
         },
       );
     },
-    [socketEmit],
+    [socketEmit, joinedRoom],
   );
+
+  // Sync progress after joining room
+  useEffect(() => {
+    const player = playerRef.current;
+    if (joinedRoom && player) {
+      syncProgress(player);
+    }
+  }, [syncProgress, joinedRoom]);
 
   const handleEnded = useCallback(
     () => socketEmit(SocketEvent.MemberAction, memberActions.readyToNext()),
@@ -107,13 +120,14 @@ const Player = (): JSX.Element => {
           </Center>
         ) : (
           <ReactPlayer
-            playing={playing}
+            ref={playerRef}
+            playing={joinedRoom && playing}
             url={url}
             volume={volume}
             muted={muted}
             width="100%"
             height="100%"
-            onReady={handleReady}
+            onReady={syncProgress}
             onEnded={handleEnded}
             onProgress={handleProgressChange}
             onDuration={handleDurationChange}
