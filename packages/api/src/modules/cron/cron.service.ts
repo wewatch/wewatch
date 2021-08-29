@@ -72,11 +72,14 @@ export class CronService {
       return;
     }
 
+    const memberIdsToCleanUp: string[] = membersToCleanUp.map((m) => m._id);
+    this.logger.info({ memberIdsToCleanUp }, "Cleaning up members.");
+
     await this.memberModel
       .updateMany(
         {
           _id: {
-            $in: membersToCleanUp.map((m) => m.id),
+            $in: memberIdsToCleanUp,
           },
         },
         {
