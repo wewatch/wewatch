@@ -10,7 +10,7 @@ import {
 import { skipToken } from "@reduxjs/toolkit/query";
 import { useCallback, useRef } from "react";
 import { FaPlus } from "react-icons/fa";
-import ReactPlayer from "react-player";
+import ReactPlayer from "react-player/lazy";
 
 import { memberActions } from "@/actions/member";
 import { roomActions } from "@/actions/room";
