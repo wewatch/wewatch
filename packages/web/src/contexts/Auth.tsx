@@ -34,12 +34,16 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
   const router = useRouter();
-  const [accessToken, setAccessToken] = useLocalStorage(StorageKey.AccessToken);
+  const [accessToken, setAccessToken, deleteAccessToken] = useLocalStorage(
+    StorageKey.AccessToken,
+  );
   const [visitorId, setVisitorId] = useLocalStorage(StorageKey.VisitorId, "");
   const [user, setUser] = useState<UserInfoDTO | null>(null);
 
-  const [triggerGetUserInfo, { data: getUserInfoData }] =
-    authApi.endpoints.getUserInfo.useLazyQuery();
+  const [
+    triggerGetUserInfo,
+    { data: getUserInfoData, error: getUserInfoError },
+  ] = authApi.endpoints.getUserInfo.useLazyQuery();
   const [triggerVisitorLogin, { data: visitorLoginData }] =
     authApi.endpoints.visitorLogin.useMutation();
 
@@ -64,6 +68,14 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
       setUser(getUserInfoData);
     }
   }, [getUserInfoData]);
+
+  useEffect(() => {
+    if (getUserInfoError) {
+      if ("status" in getUserInfoError && getUserInfoError.status === 401) {
+        deleteAccessToken();
+      }
+    }
+  }, [getUserInfoError, deleteAccessToken]);
 
   useEffect(() => {
     if (visitorLoginData) {
