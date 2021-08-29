@@ -16,19 +16,17 @@ const variants = {
 
 const Activities = (): JSX.Element => {
   const dispatch = useAppDispatch();
-  const { socketEmit, socketReady } = useSocket();
+  const { socketEmit } = useSocket();
 
   useEffect(() => {
-    if (socketReady) {
-      socketEmit(
-        SocketEvent.Sync,
-        SyncType.Activities,
-        (activities: SyncValues[SyncType.Activities]) => {
-          dispatch(addActivities(activities));
-        },
-      );
-    }
-  }, [dispatch, socketEmit, socketReady]);
+    socketEmit(
+      SocketEvent.Sync,
+      SyncType.Activities,
+      (activities: SyncValues[SyncType.Activities]) => {
+        dispatch(addActivities(activities));
+      },
+    );
+  }, [dispatch, socketEmit]);
 
   const activities = useAppSelector((state) => state.activities);
 
