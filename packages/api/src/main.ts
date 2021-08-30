@@ -3,9 +3,6 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from "@nestjs/platform-fastify";
-import { FastifyInstance } from "fastify";
-import fastifyHelmet from "fastify-helmet";
-import fp from "fastify-plugin";
 import { Logger } from "nestjs-pino";
 
 import { RateLimitExceptionFilter } from "filters/rate-limit";
@@ -15,28 +12,16 @@ import { AppModule } from "modules/app";
 import { ConfigService } from "modules/config";
 import { ValidationPipe } from "pipes/validation";
 
+import { fastifyInstance } from "./fastify-instance";
 import { IoAdapter } from "./io.adapter";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter(),
+    new FastifyAdapter(fastifyInstance),
   );
 
   app.enableCors();
-  await app.register(fastifyHelmet);
-  await app.register(
-    fp(async (fastify: FastifyInstance) => {
-      fastify.addHook("onRequest", async (req, reply) => {
-        reply.headers({
-          "Surrogate-Control": "no-store",
-          "Cache-Control": "no-store, max-age=0, must-revalidate",
-          Pragma: "no-cache",
-          Expires: "0",
-        });
-      });
-    }),
-  );
 
   const logger = app.get(Logger);
   app.useLogger(logger);
