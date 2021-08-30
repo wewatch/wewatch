@@ -11,7 +11,7 @@ const Home = (): JSX.Element => {
   const notify = useNotify();
   const { user } = useAuth();
 
-  const [createRoom, { data, isError, isSuccess }] =
+  const [createRoom, { data, isLoading, isError, isSuccess }] =
     roomApi.endpoints.createRoom.useMutation();
 
   useEffect(() => {
@@ -36,6 +36,7 @@ const Home = (): JSX.Element => {
         colorScheme="blue"
         onClick={() => createRoom(null)}
         isDisabled={user === null}
+        isLoading={isLoading}
       >
         Create a new room
       </Button>
