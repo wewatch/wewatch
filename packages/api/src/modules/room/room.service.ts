@@ -102,11 +102,7 @@ export class RoomService {
 
     const videos = [...playlist.videos].sort(compareVideo);
     const currentVideo = videos.find((v) => v.url === room.playerState.url);
-    if (!currentVideo) {
-      return null;
-    }
-
-    const index = videos.indexOf(currentVideo);
+    const index = currentVideo ? videos.indexOf(currentVideo) : -1;
     const candidateVideo = videos[(index + 1) % videos.length];
     if (
       candidateVideo === undefined ||
