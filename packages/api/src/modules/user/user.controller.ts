@@ -8,6 +8,7 @@ import {
   Put,
   Request,
 } from "@nestjs/common";
+import type { FastifyRequest } from "fastify";
 import { MongoError } from "mongodb";
 
 import {
@@ -19,8 +20,10 @@ import {
 } from "@/schemas/user";
 import { Schema } from "decorators/Schema";
 import { AuthService, UseAuthGuard } from "modules/auth";
+import { RateLimitService } from "modules/rate-limit";
 import { InvalidCredentials } from "utils/exceptions";
-import { RequestWithUser } from "utils/interface";
+import type { RequestWithUser } from "utils/interface";
+import { getClientIP } from "utils/misc";
 
 import { UserService } from "./user.service";
 
@@ -29,12 +32,17 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly authService: AuthService,
+    private readonly rateLimitService: RateLimitService,
   ) {}
 
   @Post()
   async createUser(
     @Body() createUserDTO: CreateUserDTO,
+    @Request() request: FastifyRequest,
   ): Promise<AccessTokenDTO> {
+    const clientIp = getClientIP(request);
+    await this.rateLimitService.loginRateLimiter.consume(clientIp);
+
     try {
       const { email, password } = createUserDTO;
       const user = await this.userService.createUser(email, password);
@@ -52,7 +60,13 @@ export class UserController {
 
   @Post("login")
   @HttpCode(200)
-  async login(@Body() loginDTO: UserLoginDTO): Promise<AccessTokenDTO> {
+  async login(
+    @Body() loginDTO: UserLoginDTO,
+    @Request() request: FastifyRequest,
+  ): Promise<AccessTokenDTO> {
+    const clientIp = getClientIP(request);
+    await this.rateLimitService.loginRateLimiter.consume(clientIp);
+
     const { email, password } = loginDTO;
     const user = await this.userService.findByEmailAndPassword(email, password);
     if (user === null) {
@@ -67,7 +81,10 @@ export class UserController {
   @UseAuthGuard
   @Get("me")
   @Schema(UserInfoDTO)
-  getUserInfo(@Request() request: RequestWithUser): UserInfoDTO {
+  async getUserInfo(@Request() request: RequestWithUser): Promise<UserInfoDTO> {
+    const clientIp = getClientIP(request);
+    await this.rateLimitService.interactionRateLimiter.consume(clientIp);
+
     return request.user;
   }
 
@@ -78,6 +95,9 @@ export class UserController {
     @Request() request: RequestWithUser,
     @Body() updateUserInfoDTO: UpdateUserInfoDTO,
   ): Promise<UserInfoDTO> {
+    const clientIp = getClientIP(request);
+    await this.rateLimitService.interactionRateLimiter.consume(clientIp);
+
     const user = await this.userService.update(
       request.user.id,
       updateUserInfoDTO,

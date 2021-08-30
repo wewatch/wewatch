@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 
+import { RateLimitModule } from "modules/rate-limit";
 import { UserModule } from "modules/user";
 
 import { RoomController } from "./controller";
@@ -23,6 +24,7 @@ import { RoomService } from "./room.service";
       },
     ]),
     UserModule,
+    RateLimitModule,
   ],
   controllers: [RoomController],
   providers: [RoomService, MemberService, RoomGateway],

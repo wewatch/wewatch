@@ -2,30 +2,11 @@ import { Injectable } from "@nestjs/common";
 import * as dotenv from "dotenv";
 import { LevelWithSilent } from "pino";
 import * as yup from "yup";
+import { Asserts } from "yup/lib/util/types";
 
 type Env = "local" | "development" | "production" | "test";
 
-type Config = {
-  NODE_ENV: Env;
-  PORT: number;
-  LOG_LEVEL: LevelWithSilent;
-
-  DB_URI: string;
-  DB_USERNAME?: string;
-  DB_PASSWORD?: string;
-  DB_AUTH_SOURCE?: string;
-
-  JWT_SECRET: string;
-  JWT_EXPIRE_INTERVAL: string;
-
-  SEARCH_SERVICE_URL: string;
-  SEARCH_SERVICE_API_KEY: string;
-
-  SENTRY_ENABLED: boolean;
-  SENTRY_DSN: string;
-};
-
-export const configSchema: yup.SchemaOf<Config> = yup.object({
+export const configSchema = yup.object({
   NODE_ENV: yup
     .mixed<Env>()
     .required()
@@ -50,11 +31,20 @@ export const configSchema: yup.SchemaOf<Config> = yup.object({
 
   SENTRY_ENABLED: yup.boolean().default(false),
   SENTRY_DSN: yup.string().required(),
+
+  RATE_LIMIT_CREATE_ROOM_POINT: yup.number().required(),
+  RATE_LIMIT_CREATE_ROOM_DURATION: yup.number().required(),
+  RATE_LIMIT_SEARCH_POINT: yup.number().required(),
+  RATE_LIMIT_SEARCH_DURATION: yup.number().required(),
+  RATE_LIMIT_LOGIN_POINT: yup.number().required(),
+  RATE_LIMIT_LOGIN_DURATION: yup.number().required(),
+  RATE_LIMIT_INTERACTION_POINT: yup.number().required(),
+  RATE_LIMIT_INTERACTION_DURATION: yup.number().required(),
 });
 
 @Injectable()
 export class ConfigService {
-  cfg: Config;
+  cfg: Asserts<typeof configSchema>;
 
   constructor() {
     dotenv.config();

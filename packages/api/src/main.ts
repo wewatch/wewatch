@@ -8,6 +8,7 @@ import fastifyHelmet from "fastify-helmet";
 import fp from "fastify-plugin";
 import { Logger } from "nestjs-pino";
 
+import { RateLimitExceptionFilter } from "filters/rate-limit";
 import { COMMON_INTERCEPTORS } from "interceptors";
 import { SerializerInterceptor } from "interceptors/serializer";
 import { AppModule } from "modules/app";
@@ -45,6 +46,7 @@ async function bootstrap() {
     new SerializerInterceptor(app.get(Reflector)),
     ...COMMON_INTERCEPTORS,
   );
+  app.useGlobalFilters(new RateLimitExceptionFilter());
 
   app.useWebSocketAdapter(new IoAdapter(app));
 

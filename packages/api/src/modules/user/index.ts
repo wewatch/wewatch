@@ -2,6 +2,7 @@ import { forwardRef, Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 
 import { AuthModule } from "modules/auth";
+import { RateLimitModule } from "modules/rate-limit";
 
 import { UserController } from "./user.controller";
 import { User, UserDocument, UserSchema } from "./user.model";
@@ -17,6 +18,7 @@ import { VisitorController } from "./visitor.controller";
       },
     ]),
     forwardRef(() => AuthModule),
+    RateLimitModule,
   ],
   controllers: [UserController, VisitorController],
   providers: [UserService],

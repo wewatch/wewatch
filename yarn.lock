@@ -4986,6 +4986,7 @@ __metadata:
     nestjs-pino: ^1.4.0
     passport: ^0.4.1
     passport-jwt: ^4.0.0
+    rate-limiter-flexible: ^2.2.4
     reflect-metadata: ^0.1.13
     rimraf: ^3.0.2
     rxjs: ^7.2.0
@@ -13846,6 +13847,13 @@ __metadata:
     randombytes: ^2.0.5
     safe-buffer: ^5.1.0
   checksum: 24658ce99e0a325f27d157fbff9b111f9fa2f56876031ac9a09bcd6c5ae53d3c3f1b124d7e1b813803ee1b09e50dd1561ac7f7a8ba2930319cbcda5e827602ab
+  languageName: node
+  linkType: hard
+
+"rate-limiter-flexible@npm:^2.2.4":
+  version: 2.2.4
+  resolution: "rate-limiter-flexible@npm:2.2.4"
+  checksum: 5ba118409ac52b83a4dfe6d9e3977d856844948d97c853c7641ba55b7a0e611f78439f48ae47aec329e2885a677b4a11cd082c29b8686552176ba1f9936af035
   languageName: node
   linkType: hard
 
