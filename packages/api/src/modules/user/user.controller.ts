@@ -41,7 +41,9 @@ export class UserController {
     @Request() request: FastifyRequest,
   ): Promise<AccessTokenDTO> {
     const clientIp = getClientIP(request);
-    await this.rateLimitService.loginRateLimiter.consume(clientIp);
+    await this.rateLimitService
+      .getRateLimiter(6)
+      .consume(`createUser:${clientIp}`);
 
     try {
       const { email, password } = createUserDTO;
@@ -65,7 +67,9 @@ export class UserController {
     @Request() request: FastifyRequest,
   ): Promise<AccessTokenDTO> {
     const clientIp = getClientIP(request);
-    await this.rateLimitService.loginRateLimiter.consume(clientIp);
+    await this.rateLimitService
+      .getRateLimiter(2)
+      .consume(`userLogin:${clientIp}`);
 
     const { email, password } = loginDTO;
     const user = await this.userService.findByEmailAndPassword(email, password);
@@ -83,7 +87,9 @@ export class UserController {
   @Schema(UserInfoDTO)
   async getUserInfo(@Request() request: RequestWithUser): Promise<UserInfoDTO> {
     const clientIp = getClientIP(request);
-    await this.rateLimitService.interactionRateLimiter.consume(clientIp);
+    await this.rateLimitService
+      .getRateLimiter(1)
+      .consume(`getUserInfo:${clientIp}`);
 
     return request.user;
   }
@@ -96,7 +102,9 @@ export class UserController {
     @Body() updateUserInfoDTO: UpdateUserInfoDTO,
   ): Promise<UserInfoDTO> {
     const clientIp = getClientIP(request);
-    await this.rateLimitService.interactionRateLimiter.consume(clientIp);
+    await this.rateLimitService
+      .getRateLimiter(1)
+      .consume(`updateUserInfo:${clientIp}`);
 
     const user = await this.userService.update(
       request.user.id,

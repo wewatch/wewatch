@@ -32,14 +32,11 @@ export const configSchema = yup.object({
   SENTRY_ENABLED: yup.boolean().default(false),
   SENTRY_DSN: yup.string().required(),
 
-  RATE_LIMIT_CREATE_ROOM_POINT: yup.number().required(),
-  RATE_LIMIT_CREATE_ROOM_DURATION: yup.number().required(),
-  RATE_LIMIT_SEARCH_POINT: yup.number().required(),
-  RATE_LIMIT_SEARCH_DURATION: yup.number().required(),
-  RATE_LIMIT_LOGIN_POINT: yup.number().required(),
-  RATE_LIMIT_LOGIN_DURATION: yup.number().required(),
-  RATE_LIMIT_INTERACTION_POINT: yup.number().required(),
-  RATE_LIMIT_INTERACTION_DURATION: yup.number().required(),
+  RATE_LIMIT_DURATIONS: yup
+    .array()
+    .of(yup.number().min(1).required())
+    .length(6)
+    .ensure(),
 });
 
 @Injectable()

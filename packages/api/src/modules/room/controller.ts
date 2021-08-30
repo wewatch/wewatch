@@ -25,7 +25,9 @@ export class RoomController {
   @Schema(IdDTO)
   async createRoom(@Request() request: FastifyRequest): Promise<IdDTO> {
     const clientIp = getClientIP(request);
-    await this.rateLimitService.createRoomRateLimiter.consume(clientIp);
+    await this.rateLimitService
+      .getRateLimiter(6)
+      .consume(`createRoom:${clientIp}`);
 
     return await this.roomService.create();
   }
@@ -37,7 +39,9 @@ export class RoomController {
     @Request() request: FastifyRequest,
   ): Promise<RoomDTO> {
     const clientIp = getClientIP(request);
-    await this.rateLimitService.interactionRateLimiter.consume(clientIp);
+    await this.rateLimitService
+      .getRateLimiter(1)
+      .consume(`getRoom:${clientIp}`);
 
     return await this.roomService.getRoom(roomId);
   }
@@ -49,7 +53,9 @@ export class RoomController {
     @Request() request: FastifyRequest,
   ): Promise<MemberDTO[]> {
     const clientIp = getClientIP(request);
-    await this.rateLimitService.interactionRateLimiter.consume(clientIp);
+    await this.rateLimitService
+      .getRateLimiter(1)
+      .consume(`getRoomMembers:${clientIp}`);
 
     return await this.memberService.getMembers(roomId, true);
   }

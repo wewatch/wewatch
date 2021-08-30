@@ -23,7 +23,7 @@ export class SearchController {
     @Request() request: FastifyRequest,
   ): Promise<SearchVideoResultDTO> {
     const clientIp = getClientIP(request);
-    await this.rateLimitService.searchRateLimiter.consume(clientIp);
+    await this.rateLimitService.getRateLimiter(2).consume(`search:${clientIp}`);
 
     return await this.searchService.search(searchVideoDTO);
   }

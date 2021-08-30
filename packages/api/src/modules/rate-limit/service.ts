@@ -1,36 +1,28 @@
 import { Injectable } from "@nestjs/common";
 import { RateLimiterAbstract, RateLimiterMemory } from "rate-limiter-flexible";
 
-import { ConfigService } from "../config";
+import { ConfigService } from "modules/config";
+
+type RateLimitTier = 1 | 2 | 3 | 4 | 5 | 6;
 
 @Injectable()
 export class RateLimitService {
-  readonly createRoomRateLimiter: RateLimiterAbstract;
-  readonly searchRateLimiter: RateLimiterAbstract;
-  readonly loginRateLimiter: RateLimiterAbstract;
-  readonly interactionRateLimiter: RateLimiterAbstract;
+  private readonly rateLimiters: Map<RateLimitTier, RateLimiterAbstract>;
 
   constructor(private readonly configService: ConfigService) {
-    const cfg = this.configService.cfg;
+    this.rateLimiters = new Map<RateLimitTier, RateLimiterAbstract>();
+    for (let tier = 1; tier <= 6; ++tier) {
+      this.rateLimiters.set(
+        tier as RateLimitTier,
+        new RateLimiterMemory({
+          points: 1,
+          duration: this.configService.cfg.RATE_LIMIT_DURATIONS[tier - 1],
+        }),
+      );
+    }
+  }
 
-    this.createRoomRateLimiter = new RateLimiterMemory({
-      points: cfg.RATE_LIMIT_CREATE_ROOM_POINT,
-      duration: cfg.RATE_LIMIT_CREATE_ROOM_DURATION,
-    });
-
-    this.searchRateLimiter = new RateLimiterMemory({
-      points: cfg.RATE_LIMIT_SEARCH_POINT,
-      duration: cfg.RATE_LIMIT_SEARCH_DURATION,
-    });
-
-    this.loginRateLimiter = new RateLimiterMemory({
-      points: cfg.RATE_LIMIT_LOGIN_POINT,
-      duration: cfg.RATE_LIMIT_LOGIN_DURATION,
-    });
-
-    this.interactionRateLimiter = new RateLimiterMemory({
-      points: cfg.RATE_LIMIT_INTERACTION_POINT,
-      duration: cfg.RATE_LIMIT_INTERACTION_DURATION,
-    });
+  getRateLimiter(tier: RateLimitTier): RateLimiterAbstract {
+    return this.rateLimiters.get(tier) as RateLimiterAbstract;
   }
 }

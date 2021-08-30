@@ -23,7 +23,9 @@ export class VisitorController {
     @Request() request: FastifyRequest,
   ): Promise<AccessTokenDTO> {
     const clientIp = getClientIP(request);
-    await this.rateLimitService.loginRateLimiter.consume(clientIp);
+    await this.rateLimitService
+      .getRateLimiter(5)
+      .consume(`visitorLogin:${clientIp}`);
 
     const { visitorId } = loginDTO;
     let user = await this.userService.findByVisitorId(visitorId);
