@@ -13,7 +13,7 @@ jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
 
     steps:
@@ -27,9 +27,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get current time
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y.%m.%d.%H.%M.%S')"
+      - name: Get tag
+        id: tag
+        run: echo "::set-output name=tag::$(date --utc +'%Y.%m.%d.%H.%M.%S')"
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -38,7 +38,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=raw,value=latest
-            type=raw,value=${{ steps.date.outputs.date }}
+            type=raw,value=${{ steps.tag.outputs.tag }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
@@ -48,3 +48,11 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Create git tag
+        id: git-tag/create
+        run: git tag ${{ steps.tag.outputs.tag }}
+
+      - name: Push git tag
+        id: git-tag/push
+        run: git push origin ${{ steps.tag.outputs.tag }}
