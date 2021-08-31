@@ -28,8 +28,10 @@ import {
   SyncType,
   SyncValue,
 } from "@/constants";
+import { RateLimitExceptionFilter } from "filters/rate-limit";
 import { COMMON_INTERCEPTORS } from "interceptors";
 import { AuthService } from "modules/auth";
+import { RateLimitService } from "modules/rate-limit";
 import { UserDocument } from "modules/user";
 import { WsValidationPipe } from "pipes/validation";
 import {
@@ -58,7 +60,7 @@ const hasData = (socket: Socket): socket is SocketWithData => {
   );
 };
 
-@UseFilters(new BaseWsExceptionFilter())
+@UseFilters(BaseWsExceptionFilter, RateLimitExceptionFilter)
 @UseInterceptors(...COMMON_INTERCEPTORS)
 @UsePipes(new WsValidationPipe())
 @WebSocketGateway({
@@ -70,6 +72,7 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly memberService: MemberService,
     private readonly jwtService: JwtService,
     private readonly authService: AuthService,
+    private readonly rateLimitService: RateLimitService,
   ) {}
 
   @WebSocketServer()
@@ -147,6 +150,10 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     const { roomId, user } = socket.data;
+
+    await this.rateLimitService
+      .getRateLimiter(1)
+      .consume(`handleRoomActionEvent:${roomId}:${user.id}`);
 
     try {
       const newAction = await this.roomService.handleAction(roomId, action);
